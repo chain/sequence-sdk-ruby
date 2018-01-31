@@ -1,0 +1,60 @@
+module Utilities
+  def chain
+    RSpec.configuration.sequence_client
+  end
+
+  def create_alias(name)
+    "#{name}-#{SecureRandom.uuid}"
+  end
+
+  def create_id(name)
+    "#{name}-#{SecureRandom.uuid}"
+  end
+
+  def create_key
+    chain.keys.create(alias: create_id('key'))
+  end
+
+  def create_asset(name)
+    chain.assets.create(
+      alias: create_alias(name),
+      keys: [create_key],
+      quorum: 1,
+    )
+  end
+
+  def create_account(name)
+    chain.accounts.create(
+      alias: create_id(name),
+      keys: [create_key],
+      quorum: 1,
+    )
+  end
+
+  def create_refdata(name)
+    { name => SecureRandom.uuid }
+  end
+
+  def issue(amount, asset, account, reference_data = {})
+    chain.transactions.transact do |b|
+      b.issue(
+        amount: amount,
+        asset_alias: asset.alias,
+        destination_account_id: account.id,
+        reference_data: reference_data,
+      )
+    end
+  end
+
+  def transfer(amount, asset, source, destination, reference_data = {})
+    chain.transactions.transact do |b|
+      b.transfer(
+        amount: amount,
+        asset_alias: asset.alias,
+        destination_account_id: destination.id,
+        reference_data: reference_data,
+        source_account_alias: source.alias,
+      )
+    end
+  end
+end

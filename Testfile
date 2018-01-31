@@ -1,0 +1,1 @@
+tests: $CHAIN/sdk/ruby/bin/tests
