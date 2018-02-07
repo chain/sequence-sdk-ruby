@@ -46,6 +46,7 @@ module Sequence
     attrib :account_id
 
     # @!attribute [r] account_alias
+    #   Deprecated. Use {#account_id} instead
     #   The alias of the account controlling the contract.
     # @return [String]
     attrib :account_alias

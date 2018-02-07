@@ -60,6 +60,7 @@ module Sequence
     attrib :source_account_id
 
     # @!attribute [r] source_account_alias
+    #   Deprecated. Use {#source_account_id} instead
     #   The alias of the source account executing the action.
     # @return [String]
     attrib :source_account_alias
@@ -75,6 +76,7 @@ module Sequence
     attrib :destination_account_id
 
     # @!attribute [r] destination_account_alias
+    #   Deprecated. Use {#destination_account_id} instead
     #   The alias of the destination account affected by the action.
     # @return [String]
     attrib :destination_account_alias

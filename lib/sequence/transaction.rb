@@ -128,6 +128,7 @@ module Sequence
       attrib :source_account_id
 
       # @!attribute [r] source_account_alias
+      #   Deprecated. Use {#source_account_id} instead
       #   The alias of the account serving as the source of asset units. Null
       #   for issuances.
       # @return [String]
@@ -145,6 +146,7 @@ module Sequence
       attrib :destination_account_id
 
       # @!attribute [r] destination_account_alias
+      #   Deprecated. Use {#destination_account_id} instead
       #   The alias of the account receiving the asset units. Null for
       #   retirements.
       # @return [String]
@@ -215,6 +217,7 @@ module Sequence
       #   ID of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
       # @option opts [String] :destination_account_alias
+      #   Deprecated. Use :destination_account_id instead
       #   Alias of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
       # @option opts [Hash] :reference_data
@@ -256,6 +259,7 @@ module Sequence
       #   ID of the account serving as the source of asset units. You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_account_alias
+      #   Deprecated. Use :source_account_id instead
       #   Alias of the account serving as the source of asset units You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_contract_id
@@ -265,6 +269,7 @@ module Sequence
       #   ID of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
       # @option opts [String] :destination_account_alias
+      #   Deprecated. Use :destination_account_id instead
       #   Alias of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
       # @option opts [Hash] :reference_data
@@ -317,6 +322,7 @@ module Sequence
       #   ID of the account serving as the source of asset units. You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_account_alias
+      #   Deprecated. Use :source_account_id instead
       #   Alias of the account serving as the source of asset units You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_contract_id
