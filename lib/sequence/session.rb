@@ -13,6 +13,7 @@ module Sequence
       @session_host = @opts[:session_host] || 'https://session-api.seq.com'
       @ledger = @opts[:ledger_name] || raise(ArgumentError, "missing ledger_name")
       @macaroon = @opts[:credential] || raise(ArgumentError, "missing credential")
+      @request_id = @opts[:request_id]
 
       # Start at 0 to trigger an immediate refresh
       @refresh_at = 0
@@ -42,7 +43,7 @@ module Sequence
     end
 
     def request(path, body = {})
-      request_full_resp(nil, path, body)[:parsed_body]
+      request_full_resp(@request_id, path, body)[:parsed_body]
     end
 
     def request_full_resp(id, path, body = {})
