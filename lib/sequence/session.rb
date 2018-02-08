@@ -37,9 +37,8 @@ module Sequence
       @ledger_api = HttpWrapper.new(@host, @macaroon, @opts)
     end
 
-    # Returns a copy of the configuration options
-    def opts
-      @opts.dup
+    def dup
+      Sequence::Session.new(@opts)
     end
 
     def request(path, body = {})

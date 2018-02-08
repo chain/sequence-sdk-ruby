@@ -4,6 +4,7 @@ require_relative './asset'
 require_relative './balance'
 require_relative './contract'
 require_relative './dev_utils'
+require_relative './feed'
 require_relative './key'
 require_relative './stats'
 require_relative './transaction'
@@ -73,6 +74,11 @@ module Sequence
     # @return [Transaction::ClientModule]
     def transactions
       @transactions ||= Transaction::ClientModule.new(self)
+    end
+
+    # @return [Feed::ClientModule]
+    def feeds
+      @feeds ||= Feed::ClientModule.new(self)
     end
 
     # @return [Contract::ClientModule]
