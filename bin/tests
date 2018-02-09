@@ -4,4 +4,4 @@ dropdb --if-exists ledger; createdb ledger
 cd $CHAIN/sdk/ruby
 gem install bundler --conservative
 bundle check || bundle install
-RATE_LIMIT_QPS=500 RATE_LIMIT_BURST=1000 with-ledgerd bin/rspec "$@"
+with-ledgerd bin/rspec "$@"
