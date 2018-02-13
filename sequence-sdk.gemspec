@@ -14,13 +14,4 @@ Gem::Specification.new do |s|
   s.files += Dir['lib/**/*.rb']
 
   s.require_path = 'lib'
-
-  s.add_development_dependency 'bundler', '~> 1.0'
-  s.add_development_dependency 'bundler-audit'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '~> 3.5.0', '>= 3.5.0'
-  s.add_development_dependency 'rspec-its', '~> 1.2.0'
-  s.add_development_dependency 'simplecov', '~> 0.14.1'
-  s.add_development_dependency 'webmock', '~> 2.3.2'
-  s.add_development_dependency 'yard', '~> 0.9.5', '>= 0.9.5'
 end

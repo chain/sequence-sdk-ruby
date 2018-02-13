@@ -1,5 +1,6 @@
-Gemfile.lock
-.yardoc
 *.gem
-doc/
+.yardoc
+Gemfile.lock
 coverage/
+doc/
+gemfiles/*.lock
