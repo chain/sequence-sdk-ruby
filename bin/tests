@@ -11,4 +11,5 @@ LEGACY_VERSION=1.0.4 \
 LEGACY_VERSION=1.1.0 \
   with-ledgerd bundle exec appraisal v1.1.0 \
   rspec "$@" --exclude-pattern "spec/**/1.2/*.rb"
-with-ledgerd bundle exec appraisal current-checkout rspec "$@"
+with-ledgerd bundle exec appraisal current-checkout \
+  rspec "$@" --exclude-pattern "spec/**/1.1/*.rb"

@@ -39,17 +39,30 @@ module Sequence
     # @return [Time]
     attrib :timestamp, rfc3339_time: true
 
+    # @!attribute [r] flavor_id
+    #   The ID of the flavor held by the action.
+    # @return [String]
+    attrib :flavor_id
+
+    # @!attribute [r] flavor_tags
+    #   The tags of the flavor held by the action.
+    # @return [Hash]
+    attrib :flavor_tags
+
     # @!attribute [r] asset_id
+    #   Deprecated. Use {#flavor_id} instead
     #   The ID of the asset held by the action.
     # @return [String]
     attrib :asset_id
 
     # @!attribute [r] asset_alias
+    #   Deprecated. Use {#flavor_id} instead
     #   The alias of the asset held by the action.
     # @return [String]
     attrib :asset_alias
 
     # @!attribute [r] asset_tags
+    #   Deprecated. Use {#flavor_tags} instead
     #   The tags of the asset held by the action.
     # @return [Hash]
     attrib :asset_tags

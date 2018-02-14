@@ -39,7 +39,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :asset_{id,alias}' do
+    context 'missing :flavor_id or :asset_{id,alias}' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -111,7 +111,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :asset_{id,alias}' do
+    context 'missing :flavor_id or :asset_{id,alias}' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -196,7 +196,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :asset_{id,alias}' do
+    context 'missing :flavor_id or :asset_{id,alias}' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
