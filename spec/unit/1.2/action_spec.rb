@@ -10,8 +10,16 @@ describe Sequence::Action do
         transaction_id: 'transaction-123',
         timestamp: time,
         flavor_id: 'flavor-123',
-        flavor_tags: {
-          'mint' => 'san-francisco',
+        snapshot: {
+          destination_account_tags: {
+            bank: 'first-republic',
+          },
+          flavor_tags: {
+            mint: 'san-francisco',
+          },
+          source_account_tags: {
+            bank: 'td-bank',
+          },
         },
         asset_id: 'asset-123',
         asset_alias: 'usd',

@@ -106,10 +106,11 @@ module Sequence
       # @return [String]
       attrib :flavor_id
 
-      # @!attribute [r] flavor_tags
-      #   The tags of the action's flavor.
+      # @!attribute [r] snapshot
+      #   A copy of the associated tags (flavor, source account, and destination
+      #   account) as they existed at the time of the transaction.
       # @return [Hash]
-      attrib :flavor_tags
+      attrib :snapshot
 
       # @!attribute [r] asset_id
       #   Deprecated. Use {#flavor_id} instead
@@ -124,7 +125,7 @@ module Sequence
       attrib :asset_alias
 
       # @!attribute [r] asset_tags
-      #   Deprecated. Use {#flavor_tags} instead
+      #   Deprecated. Use {#snapshot} instead
       #   The tags of the action's asset.
       # @return [Hash]
       attrib :asset_tags
@@ -148,6 +149,7 @@ module Sequence
       attrib :source_account_alias
 
       # @!attribute [r] source_account_tags
+      #   Deprecated. Use {#snapshot} instead
       #   The tags of the account serving as the source of flavor units.
       #   Null for issuances.
       # @return [String]
@@ -167,6 +169,7 @@ module Sequence
       attrib :destination_account_alias
 
       # @!attribute [r] destination_account_tags
+      #   Deprecated. Use {#snapshot} instead
       #   The tags of the account receiving the flavor units.
       #   Null for retirements.
       # @return [String]
