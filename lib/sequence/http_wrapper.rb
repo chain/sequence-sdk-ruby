@@ -116,6 +116,12 @@ module Sequence
     def setup_connection
       args = [@host.hostname, @host.port]
 
+      # Override host+port for local development.
+      env_addr = ENV['SEQADDR']
+      if env_addr
+        args = (env_addr.split(':') + [nil])[0...2]
+      end
+
       # Proxy configuration
       if @opts.key?(:proxy_addr)
         args += [@opts[:proxy_addr], @opts[:proxy_port]]
