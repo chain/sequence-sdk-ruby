@@ -1,5 +1,4 @@
 module Sequence
-
   # Base class for all errors raised by the Sequence SDK.
   class BaseError < StandardError; end
 
@@ -36,37 +35,53 @@ module Sequence
   class APIError < BaseError
     attr_accessor(
       :chain_message,
-      :code,
       :data,
       :detail,
       :request_id,
       :response,
       :retriable,
+      :seq_code,
       :temporary,
     )
+    # Use {#seq_code} instead.
+    # @deprecated
+    attr_accessor :code
 
     def initialize(body, response)
       self.code = body['code']
       self.chain_message = body['message']
       self.detail = body['detail']
       self.retriable = body['retriable']
+      self.seq_code = body['seq_code']
       self.temporary = body['retriable']
 
       self.response = response
       self.request_id = response['Chain-Request-ID'] if response
 
-      super self.class.format_error_message(code, chain_message, detail, request_id)
+      super(
+        self.class.format_error_message(
+          seq_code,
+          chain_message,
+          detail,
+          request_id,
+        )
+      )
     end
 
     def retriable?
-      self.retriable
+      retriable
     end
 
-    def self.format_error_message(code, message, detail, request_id)
+    # @private
+    def self.format_error_message(seq_code, message, detail, request_id)
       tokens = []
-      tokens << "Code: #{code}" if code.is_a?(String) && code.size > 0
+      if seq_code.is_a?(String) && !seq_code.empty?
+        tokens << "Code: #{seq_code}"
+      end
       tokens << "Message: #{message}"
-      tokens << "Detail: #{detail}" if detail.is_a?(String) && detail.size > 0
+      if detail.is_a?(String) && !detail.empty?
+        tokens << "Detail: #{detail}"
+      end
       tokens << "Request-ID: #{request_id}"
       tokens.join(' ')
     end
@@ -76,5 +91,4 @@ module Sequence
   # response status code is 401. This is a common error case, so a discrete
   # exception type is provided for convenience.
   class UnauthorizedError < APIError; end
-
 end
