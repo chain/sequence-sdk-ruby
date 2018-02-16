@@ -7,7 +7,7 @@ require_relative './response_object'
 
 module Sequence
   # A type or class of value that can be tracked on a ledger.
-  # @deprecated Use {#Flavor} instead.
+  # @deprecated Use {Flavor} instead.
   class Asset < ResponseObject
     # @!attribute [r] id
     #   Unique, auto-generated identifier.

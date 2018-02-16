@@ -113,19 +113,19 @@ module Sequence
       attrib :snapshot
 
       # @!attribute [r] asset_id
-      #   Deprecated. Use {#flavor_id} instead
+      #   Deprecated. Use {#flavor_id} instead.
       #   The id of the action's asset.
       # @return [String]
       attrib :asset_id
 
       # @!attribute [r] asset_alias
-      #   Deprecated. Use {#flavor_id} instead
+      #   Deprecated. Use {#flavor_id} instead.
       #   The alias of the action's asset.
       # @return [String]
       attrib :asset_alias
 
       # @!attribute [r] asset_tags
-      #   Deprecated. Use {#snapshot} instead
+      #   Deprecated. Use {#snapshot} instead.
       #   The tags of the action's asset.
       # @return [Hash]
       attrib :asset_tags
@@ -142,14 +142,14 @@ module Sequence
       attrib :source_account_id
 
       # @!attribute [r] source_account_alias
-      #   Deprecated. Use {#source_account_id} instead
+      #   Deprecated. Use {#source_account_id} instead.
       #   The alias of the account serving as the source of asset units.
       #   Null for issuances.
       # @return [String]
       attrib :source_account_alias
 
       # @!attribute [r] source_account_tags
-      #   Deprecated. Use {#snapshot} instead
+      #   Deprecated. Use {#snapshot} instead.
       #   The tags of the account serving as the source of flavor units.
       #   Null for issuances.
       # @return [String]
@@ -162,14 +162,14 @@ module Sequence
       attrib :destination_account_id
 
       # @!attribute [r] destination_account_alias
-      #   Deprecated. Use {#destination_account_id} instead
+      #   Deprecated. Use {#destination_account_id} instead.
       #   The alias of the account receiving the asset units. Null for
       #   retirements.
       # @return [String]
       attrib :destination_account_alias
 
       # @!attribute [r] destination_account_tags
-      #   Deprecated. Use {#snapshot} instead
+      #   Deprecated. Use {#snapshot} instead.
       #   The tags of the account receiving the flavor units.
       #   Null for retirements.
       # @return [String]
@@ -227,18 +227,18 @@ module Sequence
       # @option opts [String] :flavor_id
       #   ID of the flavor to be issued.
       # @option opts [String] :asset_id
-      #   Deprecated. Use :flavor_id instead
+      #   Deprecated. Use :flavor_id instead.
       #   ID of the asset to be issued. You must specify either an ID or an
       #   alias.
       # @option opts [String] :asset_alias
-      #   Deprecated. Use :flavor_id instead
+      #   Deprecated. Use :flavor_id instead.
       #   Asset alias of the asset to be issued. You must specify either an ID
       #   or an alias.
       # @option opts [String] :destination_account_id
       #   ID of the account receiving the flavor units. You must specify a
       #   destination account ID or alias.
       # @option opts [String] :destination_account_alias
-      #   Deprecated. Use :destination_account_id instead
+      #   Deprecated. Use :destination_account_id instead.
       #   Alias of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
       # @option opts [Hash] :reference_data
@@ -274,18 +274,18 @@ module Sequence
       # @option opts [String] :flavor_id
       #   ID of the flavor to be transferred.
       # @option opts [String] :asset_id
-      #   Deprecated. Use :flavor_id instead
+      #   Deprecated. Use :flavor_id instead.
       #   ID of the asset to be transferred. You must specify either an ID or an
       #   alias.
       # @option opts [String] :asset_alias
-      #   Deprecated. Use :flavor_id instead
+      #   Deprecated. Use :flavor_id instead.
       #   Asset alias of the asset to be transferred. You must specify either an
       #   ID or an alias.
       # @option opts [String] :source_account_id
       #   ID of the account serving as the source of flavor units. You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_account_alias
-      #   Deprecated. Use :source_account_id instead
+      #   Deprecated. Use :source_account_id instead.
       #   Alias of the account serving as the source of asset units You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_contract_id
@@ -295,7 +295,7 @@ module Sequence
       #   ID of the account receiving the flavor units. You must specify a
       #   destination account ID or alias.
       # @option opts [String] :destination_account_alias
-      #   Deprecated. Use :destination_account_id instead
+      #   Deprecated. Use :destination_account_id instead.
       #   Alias of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
       # @option opts [Hash] :reference_data
@@ -342,18 +342,18 @@ module Sequence
       # @option opts [String] :flavor_id
       #   ID of the flavor to be retired.
       # @option opts [String] :asset_id
-      #   Deprecated. Use :flavor_id instead
+      #   Deprecated. Use :flavor_id instead.
       #   ID of the asset to be retired. You must specify either an ID or an
       #   alias.
       # @option opts [String] :asset_alias
-      #   Deprecated. Use :flavor_id instead
+      #   Deprecated. Use :flavor_id instead.
       #   Asset alias of the asset to be retired. You must specify either an ID
       #   or an alias.
       # @option opts [String] :source_account_id
       #   ID of the account serving as the source of flavor units. You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_account_alias
-      #   Deprecated. Use :source_account_id instead
+      #   Deprecated. Use :source_account_id instead.
       #   Alias of the account serving as the source of asset units You must
       #   specify a source account ID, account alias, or contract ID.
       # @option opts [String] :source_contract_id

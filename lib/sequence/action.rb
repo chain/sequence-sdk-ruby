@@ -51,19 +51,19 @@ module Sequence
     attrib :snapshot
 
     # @!attribute [r] asset_id
-    #   Deprecated. Use {#flavor_id} instead
+    #   Deprecated. Use {#flavor_id} instead.
     #   The ID of the asset held by the action.
     # @return [String]
     attrib :asset_id
 
     # @!attribute [r] asset_alias
-    #   Deprecated. Use {#flavor_id} instead
+    #   Deprecated. Use {#flavor_id} instead.
     #   The alias of the asset held by the action.
     # @return [String]
     attrib :asset_alias
 
     # @!attribute [r] asset_tags
-    #   Deprecated. Use {#snapshot} instead
+    #   Deprecated. Use {#snapshot} instead.
     #   The tags of the asset held by the action.
     # @return [Hash]
     attrib :asset_tags
@@ -74,13 +74,13 @@ module Sequence
     attrib :source_account_id
 
     # @!attribute [r] source_account_alias
-    #   Deprecated. Use {#source_account_id} instead
+    #   Deprecated. Use {#source_account_id} instead.
     #   The alias of the source account executing the action.
     # @return [String]
     attrib :source_account_alias
 
     # @!attribute [r] source_account_tags
-    #   Deprecated. Use {#snapshot} instead
+    #   Deprecated. Use {#snapshot} instead.
     #   The tags of the source account executing the action.
     # @return [Hash]
     attrib :source_account_tags
@@ -91,13 +91,13 @@ module Sequence
     attrib :destination_account_id
 
     # @!attribute [r] destination_account_alias
-    #   Deprecated. Use {#destination_account_id} instead
+    #   Deprecated. Use {#destination_account_id} instead.
     #   The alias of the destination account affected by the action.
     # @return [String]
     attrib :destination_account_alias
 
     # @!attribute [r] destination_account_tags
-    #   Deprecated. Use {#snapshot} instead
+    #   Deprecated. Use {#snapshot} instead.
     #   The tags of the destination account affected by the action.
     # @return [Hash]
     attrib :destination_account_tags
