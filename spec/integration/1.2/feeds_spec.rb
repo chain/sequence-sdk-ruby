@@ -209,6 +209,30 @@ describe 'Feed', nonparallel: true do
     end
   end
 
+  describe '#create' do
+    it 'creates feeds with filter params' do
+      gold = create_asset('gold')
+      silver = create_asset('silver')
+      alice = create_account('alice')
+      _gold_tx = issue(1, gold, alice)
+      silver_tx = issue(1, silver, alice)
+
+      feed = chain.feeds.create(
+        id: create_id('issue'),
+        type: 'transaction',
+        filter: "actions(type=$1 AND asset_id=$2)",
+        filter_params: ['issue', silver.id],
+      )
+
+      consumed = []
+      feed.consume do |tx|
+        consumed << tx.id
+        break
+      end
+      expect(consumed).to eq([silver_tx.id])
+    end
+  end
+
   describe '#query' do
     it 'queries feeds' do
       pre_list = chain.feeds.query.map(&:id)

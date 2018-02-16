@@ -22,6 +22,11 @@ module Sequence
     # @return [String]
     attrib :filter
 
+    # @!attribute [r] filter_params
+    # A list of values that will be interpolated into the filter expression.
+    # @return [Array<String|Integer>]
+    attrib :filter_params
+
     # @!attribute [r] cursor
     # The position where the next call to consume should begin.
     # @return [String]
@@ -78,6 +83,7 @@ module Sequence
       # @option opts [String] id A unique id for the feed.
       # @option opts [String] type The type of the feed: "action" or "transaction".
       # @option opts [String] filter A valid filter string. The feed will be composed of items that match the filter.
+      # @option opts [Array<String|Integer>] filter_params A list of values that will be interpolated into the filter expression.
       # @return [Feed] Newly created feed.
       def create(opts)
         Feed.new(client.session.request('create-feed', opts), client.session)
