@@ -26,9 +26,9 @@ module Sequence
 
     attr_accessor :dis_macaroon
 
-    def initialize(host, macaroon, opts = {})
+    def initialize(base_url, macaroon, opts = {})
       @mutex = Mutex.new
-      @host = URI(host)
+      @base_url = URI(base_url)
       @macaroon = macaroon
       @dis_macaroon = nil
       @opts = opts
@@ -114,13 +114,7 @@ module Sequence
     end
 
     def setup_connection
-      args = [@host.hostname, @host.port]
-
-      # Override host+port for local development.
-      env_addr = ENV['SEQADDR']
-      if env_addr
-        args = (env_addr.split(':') + [nil])[0...2]
-      end
+      args = [@base_url.hostname, @base_url.port]
 
       # Proxy configuration
       if @opts.key?(:proxy_addr)

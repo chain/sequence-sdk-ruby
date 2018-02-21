@@ -9,8 +9,6 @@ module Sequence
   class Session
     def initialize(opts)
       @opts = opts
-      @host = @opts[:host] || 'https://api.seq.com'
-      @session_host = @opts[:session_host] || 'https://session-api.seq.com'
       @ledger = @opts[:ledger_name] || raise(ArgumentError, "missing ledger_name")
       @macaroon = @opts[:credential] || raise(ArgumentError, "missing credential")
 
@@ -32,8 +30,9 @@ module Sequence
         end
       end
 
-      @session_api = HttpWrapper.new(@session_host, nil)
-      @ledger_api = HttpWrapper.new(@host, @macaroon, @opts)
+      addr = ENV['SEQADDR'] || 'api.seq.com'
+      @session_api = HttpWrapper.new('https://session-' + addr, nil)
+      @ledger_api = HttpWrapper.new('https://' + addr, @macaroon, @opts)
     end
 
     def dup
