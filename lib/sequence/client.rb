@@ -7,6 +7,7 @@ require_relative './dev_utils'
 require_relative './flavor'
 require_relative './key'
 require_relative './stats'
+require_relative './token'
 require_relative './transaction'
 
 module Sequence
@@ -74,6 +75,11 @@ module Sequence
     # @return [Key::ClientModule]
     def keys
       @keys ||= Key::ClientModule.new(self)
+    end
+
+    # @return [Token::ClientModule]
+    def tokens
+      @tokens ||= Token::ClientModule.new(self)
     end
 
     # @return [Transaction::ClientModule]

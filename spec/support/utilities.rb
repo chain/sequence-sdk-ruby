@@ -23,6 +23,14 @@ module Utilities
     )
   end
 
+  def create_flavor(name)
+    chain.flavors.create(
+      id: create_id(name),
+      keys: [create_key],
+      quorum: 1,
+    )
+  end
+
   def create_account(name)
     chain.accounts.create(
       alias: create_id(name),
@@ -33,6 +41,17 @@ module Utilities
 
   def create_refdata(name)
     { name => SecureRandom.uuid }
+  end
+
+  def issue_flavor(amount, flavor, account, reference_data = {})
+    chain.transactions.transact do |b|
+      b.issue(
+        amount: amount,
+        flavor_id: flavor.id,
+        destination_account_id: account.id,
+        reference_data: reference_data,
+      )
+    end
   end
 
   def issue(amount, asset, account, reference_data = {})
