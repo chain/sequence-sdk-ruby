@@ -3,6 +3,7 @@ require_relative './page'
 module Sequence
   class Query
     include ::Enumerable
+    include Sequence::Validations
 
     # @private
     # @return [Client]
@@ -48,6 +49,15 @@ module Sequence
       PageQuery.new(client, query, method(:fetch), method(:translate))
     end
 
+    def page(opts = {})
+      validate_inclusion_of!(opts, :size, :cursor)
+      unless opts[:size].nil? || opts[:size].zero?
+        opts[:page_size] = opts.delete(:size)
+      end
+      @query = @query.merge(opts)
+      pages.page
+    end
+
     # @private
     class PageQuery
       include ::Enumerable
@@ -74,6 +84,10 @@ module Sequence
           # anyway as a defensive measure.
           break if page.items.empty?
         end
+      end
+
+      def page
+        Page.new(@fetch.call(@query), @translate)
       end
 
       alias_method :all, :to_a
