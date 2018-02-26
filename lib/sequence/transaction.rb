@@ -286,6 +286,10 @@ module Sequence
       #   Deprecated. Use :flavor_id instead.
       #   ID of the asset to be transferred. You must specify either an ID or an
       #   alias.
+      # @option opts [String] filter
+      #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
+      # @option opts [Array<String|Integer>] filter_params
+      #   A list of parameter values for filter string (if needed).
       # @option opts [String] :asset_alias
       #   Deprecated. Use :flavor_id instead.
       #   Asset alias of the asset to be transferred. You must specify either an
@@ -319,6 +323,8 @@ module Sequence
           opts,
           :amount,
           :flavor_id,
+          :filter,
+          :filter_params,
           :asset_id,
           :asset_alias,
           :source_account_id,
@@ -353,6 +359,10 @@ module Sequence
       #   Amount of the flavor to be retired.
       # @option opts [String] :flavor_id
       #   ID of the flavor to be retired.
+      # @option opts [String] filter
+      #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
+      # @option opts [Array<String|Integer>] filter_params
+      #   A list of parameter values for filter string (if needed).
       # @option opts [String] :asset_id
       #   Deprecated. Use :flavor_id instead.
       #   ID of the asset to be retired. You must specify either an ID or an
@@ -381,6 +391,8 @@ module Sequence
           opts,
           :amount,
           :flavor_id,
+          :filter,
+          :filter_params,
           :asset_id,
           :asset_alias,
           :source_account_id,
