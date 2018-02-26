@@ -1,1 +1,2 @@
 tests: $CHAIN/sdk/ruby/bin/tests
+legacy: $CHAIN/sdk/ruby/bin/tests-legacy
