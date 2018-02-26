@@ -43,13 +43,14 @@ module Utilities
     { name => SecureRandom.uuid }
   end
 
-  def issue_flavor(amount, flavor, account, reference_data = {})
+  def issue_flavor(amount, flavor, account, opts = {})
     chain.transactions.transact do |b|
       b.issue(
-        amount: amount,
-        flavor_id: flavor.id,
-        destination_account_id: account.id,
-        reference_data: reference_data,
+        opts.merge(
+          amount: amount,
+          flavor_id: flavor.id,
+          destination_account_id: account.id,
+        ),
       )
     end
   end

@@ -25,6 +25,12 @@ module Sequence
     # @return [Integer]
     attrib :sequence_number
 
+    # @!attribute [r] token_tags
+    #   User specified, unstructured data embedded within a token
+    #   (possibly null).
+    # @return [Hash]
+    attrib :token_tags
+
     # @!attribute [r] reference_data
     #   User-specified key-value data embedded into the transaction.
     # @return [Hash]
@@ -241,6 +247,8 @@ module Sequence
       #   Deprecated. Use :destination_account_id instead.
       #   Alias of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
+      # @option opts [Hash] :token_tags
+      #   Tags to add to the receiving tokens.
       # @option opts [Hash] :reference_data
       #   Reference data for the action.
       # @return [Builder]
@@ -253,6 +261,7 @@ module Sequence
           :asset_alias,
           :destination_account_id,
           :destination_account_alias,
+          :token_tags,
           :reference_data,
         )
         validate_either!(opts, :flavor_id, :asset_id, :asset_alias)
@@ -298,6 +307,8 @@ module Sequence
       #   Deprecated. Use :destination_account_id instead.
       #   Alias of the account receiving the asset units. You must specify a
       #   destination account ID or alias.
+      # @option opts [Hash] :token_tags
+      #   Tags to add to the receiving tokens.
       # @option opts [Hash] :reference_data
       #   reference data for the action.
       # @option opts [Hash] :change_reference_data
@@ -315,6 +326,7 @@ module Sequence
           :source_contract_id,
           :destination_account_id,
           :destination_account_alias,
+          :token_tags,
           :reference_data,
           :change_reference_data,
         )

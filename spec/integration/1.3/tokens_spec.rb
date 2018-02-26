@@ -17,7 +17,6 @@ describe 'tokens' do
         expect(item.flavor_tags).to be_nil
         expect(item.account_id).to eq(alice.id)
         expect(item.account_tags).to be_nil
-        expect(item.tags).to be_nil
       end
     end
 
@@ -47,6 +46,30 @@ describe 'tokens' do
         expect(item.amount).to eq 1
         expect(item.flavor_id).to eq(q5.id)
         expect(item.account_id).to eq(oakland.id)
+      end
+    end
+
+    context 'with filter for tags' do
+      it 'returns list of token groups' do
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        token_tags = create_refdata('due_date')
+        issue_flavor(100, cash, bob, token_tags: token_tags)
+        issue_flavor(100, cash, bob)
+
+        items = chain.tokens.list(
+          filter: 'tags.due_date=$1',
+          filter_params: [token_tags['due_date']],
+        )
+
+        expect(items.all.size).to eq 1
+        item = items.first
+        expect(item.amount).to eq 100
+        expect(item.flavor_id).to eq(cash.id)
+        expect(item.flavor_tags).to be_nil
+        expect(item.account_id).to eq(bob.id)
+        expect(item.account_tags).to be_nil
+        expect(item.tags).to eq(token_tags)
       end
     end
   end
