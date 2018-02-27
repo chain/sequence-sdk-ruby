@@ -1,6 +1,6 @@
 describe Sequence::Action::ClientModule do
   describe '#list' do
-    context 'with :size, :cursor' do
+    context 'with :size, :cursor, using .page' do
       it 'paginates results with cursor' do
         ref_data = create_refdata('test')
         alice = create_account('alice')
@@ -20,6 +20,75 @@ describe Sequence::Action::ClientModule do
         second_page = chain.actions.list.page(cursor: cursor)
 
         expect(second_page.items.size).to eq(1)
+      end
+    end
+
+    context 'using .all' do
+      it 'iterates through the result set' do
+        ref_data = create_refdata('test')
+        alice = create_account('alice')
+        gold = create_flavor('gold')
+        3.times do
+          issue_flavor(1, gold, alice, reference_data: ref_data)
+        end
+
+        results = []
+        chain.actions.list(
+          filter: "reference_data.test='#{ref_data['test']}'",
+        ).all.each do |x|
+          results << x
+        end
+
+        expect(results.size).to eq(3)
+      end
+    end
+  end
+
+  describe '#sum' do
+    context 'with :size, :cursor, :group_by, using .page' do
+      it 'paginates results with cursor' do
+        ref_data = create_refdata('test')
+        alice = create_account('alice')
+        bob = create_account('bob')
+        carol = create_account('carol')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice, reference_data: ref_data)
+        issue_flavor(1, gold, bob, reference_data: ref_data)
+        issue_flavor(1, gold, carol, reference_data: ref_data)
+
+        first_page = chain.actions.sum(
+          filter: "reference_data.test='#{ref_data['test']}'",
+          group_by: ['destination_account_id'],
+        ).page(size: 2)
+
+        expect(first_page).to be_a(Sequence::Page)
+        expect(first_page.items.size).to eq(2)
+
+        cursor = first_page.cursor
+        second_page = chain.actions.sum.page(cursor: cursor)
+
+        expect(second_page.items.size).to eq(1)
+      end
+    end
+
+    context 'with :group_by, using .all' do
+      it 'iterates through the result set' do
+        ref_data = create_refdata('test')
+        alice = create_account('alice')
+        bob = create_account('bob')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice, reference_data: ref_data)
+        issue_flavor(1, gold, bob, reference_data: ref_data)
+
+        results = []
+        chain.actions.sum(
+          filter: "reference_data.test='#{ref_data['test']}'",
+          group_by: ['destination_account_id'],
+        ).all.each do |x|
+          results << x
+        end
+
+        expect(results.size).to eq(2)
       end
     end
   end

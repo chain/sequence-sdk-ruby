@@ -73,7 +73,7 @@ describe 'tokens' do
       end
     end
 
-    context 'with :size, :cursor' do
+    context 'with :size, :cursor, using .page' do
       it 'paginates results with cursor' do
         chain.dev_utils.reset
 
@@ -92,6 +92,25 @@ describe 'tokens' do
         second_page = chain.tokens.list.page(cursor: cursor)
 
         expect(second_page.items.size).to eq(1)
+      end
+    end
+
+    context 'using .all' do
+      it 'iterates through the result set' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice, token_tags: { due: 'today' })
+        issue_flavor(1, gold, alice, token_tags: { due: 'tomorrow' })
+        issue_flavor(1, gold, alice, token_tags: { due: 'next week' })
+
+        results = []
+        chain.tokens.list.all.each do |x|
+          results << x
+        end
+
+        expect(results.size).to eq(3)
       end
     end
   end
@@ -139,7 +158,7 @@ describe 'tokens' do
       end
     end
 
-    context 'with :size, :cursor' do
+    context 'with :size, :cursor, using .page' do
       it 'paginates results with cursor' do
         chain.dev_utils.reset
 
@@ -158,6 +177,27 @@ describe 'tokens' do
         second_page = chain.tokens.sum.page(cursor: cursor)
 
         expect(second_page.items.size).to eq(1)
+      end
+    end
+
+    context 'with :group_by, using .all' do
+      it 'iterates through the result set' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        bob = create_account('bob')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice)
+        issue_flavor(1, gold, bob)
+
+        results = []
+        chain.tokens.sum(
+          group_by: ['account_id'],
+        ).all.each do |x|
+          results << x
+        end
+
+        expect(results.size).to eq(2)
       end
     end
   end
