@@ -72,6 +72,28 @@ describe 'tokens' do
         expect(item.tags).to eq(token_tags)
       end
     end
+
+    context 'with :size, :cursor' do
+      it 'paginates results with cursor' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice, token_tags: { due: 'today' })
+        issue_flavor(1, gold, alice, token_tags: { due: 'tomorrow' })
+        issue_flavor(1, gold, alice, token_tags: { due: 'next week' })
+
+        first_page = chain.tokens.list.page(size: 2)
+
+        expect(first_page).to be_a(Sequence::Page)
+        expect(first_page.items.size).to eq(2)
+
+        cursor = first_page.cursor
+        second_page = chain.tokens.list.page(cursor: cursor)
+
+        expect(second_page.items.size).to eq(1)
+      end
+    end
   end
 
   describe '#sum' do
@@ -114,6 +136,28 @@ describe 'tokens' do
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq cert.id
         expect(item.account_id).to eq alice.id
+      end
+    end
+
+    context 'with :size, :cursor' do
+      it 'paginates results with cursor' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        bob = create_account('bob')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice)
+        issue_flavor(1, gold, bob)
+
+        first_page = chain.tokens.sum(group_by: ['account_id']).page(size: 1)
+
+        expect(first_page).to be_a(Sequence::Page)
+        expect(first_page.items.size).to eq(1)
+
+        cursor = first_page.cursor
+        second_page = chain.tokens.sum.page(cursor: cursor)
+
+        expect(second_page.items.size).to eq(1)
       end
     end
   end
