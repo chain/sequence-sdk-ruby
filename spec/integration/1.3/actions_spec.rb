@@ -1,6 +1,6 @@
 describe Sequence::Action::ClientModule do
   describe '#list' do
-    context 'with :size, :cursor, using .page' do
+    context '#page with :size, :cursor' do
       it 'paginates results with cursor' do
         ref_data = create_refdata('test')
         alice = create_account('alice')
@@ -23,7 +23,24 @@ describe Sequence::Action::ClientModule do
       end
     end
 
-    context 'using .all' do
+    context '#page#each' do
+      it 'yields the items in the page to the block' do
+        ref_data = create_refdata('test')
+        alice = create_account('alice')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice, reference_data: ref_data)
+        issue_flavor(1, gold, alice, reference_data: ref_data)
+
+        chain.actions.list(
+          filter: "reference_data.test='#{ref_data['test']}'",
+        ).page.each do |action|
+          expect(action).to be_a(Sequence::Action)
+          expect(action.amount).to eq(1)
+        end
+      end
+    end
+
+    context '#all#each' do
       it 'iterates through the result set' do
         ref_data = create_refdata('test')
         alice = create_account('alice')
@@ -45,7 +62,7 @@ describe Sequence::Action::ClientModule do
   end
 
   describe '#sum' do
-    context 'with :size, :cursor, :group_by, using .page' do
+    context '#page with :size, :cursor, :group_by' do
       it 'paginates results with cursor' do
         ref_data = create_refdata('test')
         alice = create_account('alice')
@@ -68,6 +85,25 @@ describe Sequence::Action::ClientModule do
         second_page = chain.actions.sum.page(cursor: cursor)
 
         expect(second_page.items.size).to eq(1)
+      end
+    end
+
+    context '#page#each' do
+      it 'yields the items in the page to the block' do
+        ref_data = create_refdata('test')
+        alice = create_account('alice')
+        gold = create_flavor('gold')
+        issue_flavor(1, gold, alice, reference_data: ref_data)
+        issue_flavor(1, gold, alice, reference_data: ref_data)
+
+        chain.actions.sum(
+          filter: 'reference_data.test=$1',
+          filter_params: [ref_data['test']],
+          group_by: ['destination_account_id'],
+        ).page.each do |action|
+          expect(action).to be_a(Sequence::Action)
+          expect(action.amount).to eq(2)
+        end
       end
     end
 

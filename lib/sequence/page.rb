@@ -31,7 +31,7 @@ module Sequence
     end
 
     def each
-      @items.each_key do |item|
+      @items.to_a.each do |item|
         yield item
       end
     end
