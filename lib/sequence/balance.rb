@@ -6,6 +6,7 @@ module Sequence
   # A summation of contract amounts. Contracts are selected using a filter, and
   # their values are summed using the common values of one or more contract
   # fields.
+  # @deprecated Use {Token::ClientModule#sum} instead.
   class Balance < ResponseObject
     # @!attribute [r] amount
     #   Summation of contract amounts.

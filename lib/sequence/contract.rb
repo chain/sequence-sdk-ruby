@@ -4,6 +4,7 @@ require_relative './query'
 
 module Sequence
   # An entry in the ledger that contains value that can be spent.
+  # @deprecated Use {Token::ClientModule#list} instead.
   class Contract < ResponseObject
     # @!attribute [r] id
     #   A unique ID.
