@@ -64,4 +64,75 @@ describe 'transactions' do
       end
     end
   end
+
+  describe '#list' do
+    context 'with invalid option' do
+      it 'raises argument error' do
+        expect {
+          chain.transactions.list(id: 'bad')
+        }.to raise_error(ArgumentError)
+
+        expect {
+          chain.transactions.list(page_size: 1)
+        }.to raise_error(ArgumentError)
+      end
+    end
+
+    context 'with filter parameters and :size, :cursor pagination' do
+      it 'paginates results' do
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        issue_flavor(100, usd, alice)
+        issue_flavor(100, usd, alice)
+        issue_flavor(100, usd, alice)
+
+        page1 = chain.transactions.list(
+          filter: 'actions(destination_account_id=$1)',
+          filter_params: [alice.id],
+        ).page(size: 2)
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(2)
+
+        cursor = page1.cursor
+        page2 = chain.transactions.list.page(cursor: cursor)
+
+        expect(page2.items.size).to eq(1)
+      end
+    end
+
+    context '#page#each' do
+      it 'yields transactions in the page to the block' do
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        tx = issue_flavor(100, usd, alice)
+
+        chain.transactions.list(
+          filter: 'actions(destination_account_id=$1)',
+          filter_params: [alice.id],
+        ).page.each do |item|
+          expect(item).to be_a(Sequence::Transaction)
+          expect(item.id).to eq(tx.id)
+        end
+      end
+    end
+
+    context '#all#each' do
+      it 'yields transactions to the block' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        issue_flavor(100, usd, alice)
+        issue_flavor(100, usd, alice)
+
+        results = []
+        chain.transactions.list.all.each do |item|
+          expect(item).to be_a(Sequence::Transaction)
+          results << item
+        end
+
+        expect(results.size).to eq(2)
+      end
+    end
+  end
 end

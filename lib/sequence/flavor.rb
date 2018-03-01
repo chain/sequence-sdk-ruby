@@ -69,7 +69,7 @@ module Sequence
       # @return [void]
       def update_tags(opts = {})
         validate_inclusion_of!(opts, :id, :tags)
-        if (opts[:id].nil? || opts[:id].empty?)
+        if opts[:id].nil? || opts[:id].empty?
           raise ArgumentError, ':id must be provided'
         end
         client.session.request('update-flavor-tags', opts)
@@ -88,8 +88,6 @@ module Sequence
           opts,
           :filter,
           :filter_params,
-          :page_size,
-          :after,
         )
         Query.new(client, opts)
       end

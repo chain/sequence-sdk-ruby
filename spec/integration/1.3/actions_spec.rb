@@ -1,4 +1,4 @@
-describe Sequence::Action::ClientModule do
+describe 'actions' do
   describe '#list' do
     context '#page with :size, :cursor' do
       it 'paginates results with cursor' do
@@ -9,17 +9,17 @@ describe Sequence::Action::ClientModule do
           issue_flavor(1, gold, alice, reference_data: ref_data)
         end
 
-        first_page = chain.actions.list(
+        page1 = chain.actions.list(
           filter: "reference_data.test='#{ref_data['test']}'",
         ).page(size: 2)
 
-        expect(first_page).to be_a(Sequence::Page)
-        expect(first_page.items.size).to eq(2)
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(2)
 
-        cursor = first_page.cursor
-        second_page = chain.actions.list.page(cursor: cursor)
+        cursor = page1.cursor
+        page2 = chain.actions.list.page(cursor: cursor)
 
-        expect(second_page.items.size).to eq(1)
+        expect(page2.items.size).to eq(1)
       end
     end
 
@@ -73,18 +73,18 @@ describe Sequence::Action::ClientModule do
         issue_flavor(1, gold, bob, reference_data: ref_data)
         issue_flavor(1, gold, carol, reference_data: ref_data)
 
-        first_page = chain.actions.sum(
+        page1 = chain.actions.sum(
           filter: "reference_data.test='#{ref_data['test']}'",
           group_by: ['destination_account_id'],
         ).page(size: 2)
 
-        expect(first_page).to be_a(Sequence::Page)
-        expect(first_page.items.size).to eq(2)
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(2)
 
-        cursor = first_page.cursor
-        second_page = chain.actions.sum.page(cursor: cursor)
+        cursor = page1.cursor
+        page2 = chain.actions.sum.page(cursor: cursor)
 
-        expect(second_page.items.size).to eq(1)
+        expect(page2.items.size).to eq(1)
       end
     end
 

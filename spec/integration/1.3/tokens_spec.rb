@@ -1,5 +1,17 @@
 describe 'tokens' do
   describe '#list' do
+    context 'with invalid option' do
+      it 'raises argument error' do
+        expect {
+          chain.tokens.list(id: 'bad')
+        }.to raise_error(ArgumentError)
+
+        expect {
+          chain.tokens.list(page_size: 1)
+        }.to raise_error(ArgumentError)
+      end
+    end
+
     context 'with filter for flavor_id' do
       it 'returns list of token groups' do
         alice = create_account('alice')
@@ -83,15 +95,15 @@ describe 'tokens' do
         issue_flavor(1, gold, alice, token_tags: { due: 'tomorrow' })
         issue_flavor(1, gold, alice, token_tags: { due: 'next week' })
 
-        first_page = chain.tokens.list.page(size: 2)
+        page1 = chain.tokens.list.page(size: 2)
 
-        expect(first_page).to be_a(Sequence::Page)
-        expect(first_page.items.size).to eq(2)
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(2)
 
-        cursor = first_page.cursor
-        second_page = chain.tokens.list.page(cursor: cursor)
+        cursor = page1.cursor
+        page2 = chain.tokens.list.page(cursor: cursor)
 
-        expect(second_page.items.size).to eq(1)
+        expect(page2.items.size).to eq(1)
       end
     end
 
@@ -168,15 +180,15 @@ describe 'tokens' do
         issue_flavor(1, gold, alice)
         issue_flavor(1, gold, bob)
 
-        first_page = chain.tokens.sum(group_by: ['account_id']).page(size: 1)
+        page1 = chain.tokens.sum(group_by: ['account_id']).page(size: 1)
 
-        expect(first_page).to be_a(Sequence::Page)
-        expect(first_page.items.size).to eq(1)
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(1)
 
-        cursor = first_page.cursor
-        second_page = chain.tokens.sum.page(cursor: cursor)
+        cursor = page1.cursor
+        page2 = chain.tokens.sum.page(cursor: cursor)
 
-        expect(second_page.items.size).to eq(1)
+        expect(page2.items.size).to eq(1)
       end
     end
 

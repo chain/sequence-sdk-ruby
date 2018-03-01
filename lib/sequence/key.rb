@@ -41,10 +41,28 @@ module Sequence
       # @option opts [Array<String>] ids
       #   A list of ids of keys to retrieve.
       # @option opts [Integer>] page_size
+      #   Deprecated. Use list.page(size: size) instead.
       #   The number of items to return in the result set.
       # @return [Query]
       def query(opts = {})
         validate_inclusion_of!(opts, :aliases, :ids, :page_size, :after)
+        Query.new(client, opts)
+      end
+
+      # Executes a query, returning an enumerable over individual keys.
+      # @param [Hash] opts
+      #   Options hash
+      # @option opts [String] filter
+      #   A filter expression.
+      # @option opts [Array<String|Integer>] filter_params
+      #   A list of values that will be interpolated into the filter expression.
+      # @return [Query]
+      def list(opts = {})
+        validate_inclusion_of!(
+          opts,
+          :filter,
+          :filter_params,
+        )
         Query.new(client, opts)
       end
     end

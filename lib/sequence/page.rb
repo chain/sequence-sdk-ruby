@@ -11,6 +11,7 @@ module Sequence
     attrib :items
 
     # @!attribute [r] next
+    # Deprecated. Use {#cursor} instead.
     # Query object to request next page of items.
     # @return [Hash]
     attrib :next

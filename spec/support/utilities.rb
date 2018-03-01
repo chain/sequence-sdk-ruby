@@ -23,19 +23,23 @@ module Utilities
     )
   end
 
-  def create_flavor(name)
+  def create_flavor(name, opts = {})
     chain.flavors.create(
-      id: create_id(name),
-      keys: [create_key],
-      quorum: 1,
+      opts.merge(
+        id: create_id(name),
+        keys: [create_key],
+        quorum: 1,
+      ),
     )
   end
 
-  def create_account(name)
+  def create_account(name, opts = {})
     chain.accounts.create(
-      alias: create_id(name),
-      keys: [create_key],
-      quorum: 1,
+      opts.merge(
+        alias: create_id(name),
+        keys: [create_key],
+        quorum: 1,
+      ),
     )
   end
 

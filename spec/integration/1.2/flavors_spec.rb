@@ -109,11 +109,7 @@ describe 'flavors' do
 
     context 'with filter parameters' do
       it 'finds the flavor' do
-        key = create_key
-        flavor = chain.flavors.create(
-          keys: [key],
-          tags: { type: 'checking' },
-        )
+        flavor = create_flavor('usd', tags: { type: 'checking' })
 
         list = chain.flavors.list(
           filter: 'tags.type=$1',
