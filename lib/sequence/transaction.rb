@@ -334,6 +334,7 @@ module Sequence
       # @option opts [Hash] :reference_data
       #   reference data for the action.
       # @option opts [Hash] :change_reference_data
+      #   Deprecated. This happens automatically when using token tags.
       #   reference data for the change contract.
       # @return [Builder]
       def transfer(opts = {})
@@ -402,6 +403,7 @@ module Sequence
       # @option opts [Hash] :reference_data
       #   Reference data for the action.
       # @option opts [Hash] :change_reference_data
+      #   Deprecated. This happens automatically when using token tags.
       #   Reference data for the change contract.
       # @return [Builder]
       def retire(opts = {})
