@@ -1,3 +1,3 @@
 module Sequence
-  VERSION = '1.2.0'.freeze
+  VERSION = '1.3'.freeze
 end
