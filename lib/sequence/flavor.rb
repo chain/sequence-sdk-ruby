@@ -55,7 +55,6 @@ module Sequence
         if opts[:keys].nil? || opts[:keys].empty?
           raise ArgumentError, ':keys must be provided'
         end
-        opts = { client_token: SecureRandom.uuid }.merge(opts)
         Flavor.new(client.session.request('create-flavor', opts))
       end
 
