@@ -86,6 +86,7 @@ module Sequence
         client.session.request('update-account-tags', opts)
       end
 
+      # @deprecated Use list instead.
       # Executes a query, returning an enumerable over individual accounts.
       # @param [Hash] opts
       #   Options hash

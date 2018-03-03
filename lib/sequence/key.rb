@@ -32,6 +32,7 @@ module Sequence
         Key.new(client.session.request('create-key', opts))
       end
 
+      # @deprecated Use list instead.
       # Executes a query, returning an enumerable over individual keys.
       # @param [Hash] opts
       #   Options hash

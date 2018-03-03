@@ -69,6 +69,7 @@ module Sequence
         )
       end
 
+      # @deprecated Use list instead.
       # Executes a query, returning an enumerable over individual transactions.
       # @param [Hash] opts Options hash
       # @option opts [String] filter
