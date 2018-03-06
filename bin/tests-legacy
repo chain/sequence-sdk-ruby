@@ -7,7 +7,7 @@ bundle check || bundle install
 bundle exec appraisal install
 LEGACY_VERSION=1.0.4 \
   with-ledgerd bundle exec appraisal v1.0.4 \
-  rspec "$@" --exclude-pattern "spec/**/1.{1,2,3}/*.rb"
+  rspec "$@" --exclude-pattern "spec/**/1.{1,2,3,4}/*.rb"
 LEGACY_VERSION=1.1.0 \
   with-ledgerd bundle exec appraisal v1.1.0 \
-  rspec "$@" --exclude-pattern "spec/**/1.{2,3}/*.rb"
+  rspec "$@" --exclude-pattern "spec/**/1.{2,3,4}/*.rb"

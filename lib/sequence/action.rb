@@ -103,7 +103,13 @@ module Sequence
     # @return [Hash]
     attrib :destination_account_tags
 
+    # @!attribute [r] tags
+    #   User-specified key-value data embedded in the action.
+    # @return [Hash]
+    attrib :tags
+
     # @!attribute [r] reference_data
+    #   Deprecated. Use {#tags} instead.
     #   User-specified key-value data embedded in the action.
     # @return [Hash]
     attrib :reference_data

@@ -200,7 +200,13 @@ module Sequence
       # @return [String]
       attrib :destination_account_tags
 
+      # @!attribute [r] tags
+      #   User-specified, key-value data embedded into the action.
+      # @return [Hash]
+      attrib :tags
+
       # @!attribute [r] reference_data
+      #   Deprecated. Use {#tags} instead.
       #   User-specified, key-value data embedded into the action.
       # @return [Hash]
       attrib :reference_data
@@ -243,7 +249,7 @@ module Sequence
         self
       end
 
-      # Issues new units of a flavor to a destination account.
+      # Issues new tokens to a destination account.
       #
       # @param [Hash] opts
       #   Options hash
@@ -268,7 +274,10 @@ module Sequence
       #   destination account ID or alias.
       # @option opts [Hash] :token_tags
       #   Tags to add to the receiving tokens.
+      # @option opts [Hash] :action_tags
+      #   Tags to add to the action.
       # @option opts [Hash] :reference_data
+      #   Deprecated. Use :token_tags or :action_tags instead.
       #   Reference data for the action.
       # @return [Builder]
       def issue(opts = {})
@@ -281,6 +290,7 @@ module Sequence
           :destination_account_id,
           :destination_account_alias,
           :token_tags,
+          :action_tags,
           :reference_data,
         )
         validate_either!(opts, :flavor_id, :asset_id, :asset_alias)
@@ -292,7 +302,7 @@ module Sequence
         add_action(opts.merge(type: :issue))
       end
 
-      # Moves units of a flavor from a source (an account or contract) to a
+      # Moves tokens from a source (an account or contract) to a
       # destination account.
       #
       # @param [Hash] opts
@@ -332,7 +342,10 @@ module Sequence
       #   destination account ID or alias.
       # @option opts [Hash] :token_tags
       #   Tags to add to the receiving tokens.
+      # @option opts [Hash] :action_tags
+      #   Tags to add to the action.
       # @option opts [Hash] :reference_data
+      #   Deprecated. Use :token_tags or :action_tags instead.
       #   reference data for the action.
       # @option opts [Hash] :change_reference_data
       #   Deprecated. This happens automatically when using token tags.
@@ -353,6 +366,7 @@ module Sequence
           :destination_account_id,
           :destination_account_alias,
           :token_tags,
+          :action_tags,
           :reference_data,
           :change_reference_data,
         )
@@ -371,7 +385,7 @@ module Sequence
         add_action(opts.merge(type: :transfer))
       end
 
-      # Takes units of a flavor from a source (an account or contract) and
+      # Takes tokens from a source (an account or contract) and
       # retires them.
       #
       # @param [Hash] opts Options hash
@@ -401,7 +415,10 @@ module Sequence
       # @option opts [String] :source_contract_id
       #   ID of the contract serving as the source of flavor units. You must
       #   specify a source account ID, account alias, or contract ID.
+      # @option opts [Hash] :action_tags
+      #   Tags to add to the action.
       # @option opts [Hash] :reference_data
+      #   Deprecated. Use :token_tags or :action_tags instead.
       #   Reference data for the action.
       # @option opts [Hash] :change_reference_data
       #   Deprecated. This happens automatically when using token tags.
@@ -419,6 +436,7 @@ module Sequence
           :source_account_id,
           :source_account_alias,
           :source_contract_id,
+          :action_tags,
           :reference_data,
           :change_reference_data,
         )
