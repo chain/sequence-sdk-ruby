@@ -59,13 +59,8 @@ module Sequence
           builder = Builder.new(&block)
         end
 
-        tpl = client.session.request('build-transaction', builder)
-        tpl = client.session.request(
-          '/sign-transaction',
-          transaction: tpl,
-        )
         Transaction.new(
-          client.session.request('submit-transaction', transaction: tpl),
+          client.session.request('transact', builder)
         )
       end
 
