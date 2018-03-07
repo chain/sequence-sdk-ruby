@@ -1,5 +1,16 @@
 # Sequence Ruby SDK changelog
 
+## 1.4 (20180306)
+
+For full details on the 1.4 release and how to migrate your code,
+[visit the Sequence changelog](https://dashboard.seq.com/docs/changelog#release-v1-4).
+
+* Added `tags` to `Action`.
+* Added `action_tags` on `Transaction` builder's actions.
+* Added timestamp inequalities in filters.
+* `reference_data` on `Transaction` builder's actions has been deprecated. You
+  can now use `action_tags` instead.
+
 ## 1.3 (20180301)
 
 For full details on the 1.3 release and how to migrate your code,
