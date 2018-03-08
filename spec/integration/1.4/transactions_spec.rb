@@ -91,4 +91,76 @@ describe 'transactions' do
       end
     end
   end
+
+  describe '#list with filter' do
+    context 'by timestamp' do
+      it 'lists transactions occurring after a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        first_tx = issue_flavor(100, usd, alice)
+        second_tx = issue_flavor(200, usd, alice)
+
+        items = chain.transactions.list(
+          filter: 'timestamp > $1',
+          filter_params: [first_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+        expect(items.all.size).to eq 1
+        expect(items.all.first.id).to eq second_tx.id
+      end
+
+      it 'lists transactions occurring at or after a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        _first_tx = issue_flavor(100, usd, alice)
+        second_tx = issue_flavor(200, usd, alice)
+        third_tx = issue_flavor(300, usd, alice)
+
+        items = chain.transactions.list(
+          filter: 'timestamp >= $1',
+          filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+        expect(items.all.size).to eq 2
+        expect(items.all.last.id).to eq second_tx.id
+        expect(items.all.first.id).to eq third_tx.id
+      end
+
+      it 'lists transactions occurring before a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        first_tx = issue_flavor(100, usd, alice)
+        second_tx = issue_flavor(200, usd, alice)
+
+        items = chain.transactions.list(
+          filter: 'timestamp < $1',
+          filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+        expect(items.all.size).to eq 1
+        expect(items.all.first.id).to eq first_tx.id
+      end
+
+      it 'lists transactions occurring at or before a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        first_tx = issue_flavor(100, usd, alice)
+        second_tx = issue_flavor(200, usd, alice)
+        _third_tx = issue_flavor(300, usd, alice)
+
+        items = chain.transactions.list(
+          filter: 'timestamp <= $1',
+          filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+        expect(items.all.size).to eq 2
+        expect(items.all.last.id).to eq first_tx.id
+        expect(items.all.first.id).to eq second_tx.id
+      end
+    end
+  end
 end

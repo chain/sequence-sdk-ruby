@@ -21,6 +21,80 @@ describe 'actions' do
         expect(item.tags).to eq(action_tags)
       end
     end
+
+    context 'with filter for timestamp' do
+      it 'returns list of actions occurring after a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        first_tx = issue_flavor(100, cash, bob)
+        _second_tx = issue_flavor(200, cash, bob)
+
+        items = chain.actions.list(
+          filter: 'timestamp > $1',
+          filter_params: [first_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 1
+        expect(items.all.first.amount).to eq 200
+      end
+
+      it 'returns list of actions occurring at or after a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        _first_tx = issue_flavor(100, cash, bob)
+        second_tx = issue_flavor(200, cash, bob)
+        _third_tx = issue_flavor(300, cash, bob)
+
+        items = chain.actions.list(
+          filter: 'timestamp >= $1',
+          filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 2
+        expect(items.all.first.amount).to eq 300
+        expect(items.all.last.amount).to eq 200
+      end
+
+      it 'returns list of actions occurring before a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        _first_tx = issue_flavor(100, cash, bob)
+        second_tx = issue_flavor(200, cash, bob)
+
+        items = chain.actions.list(
+          filter: 'timestamp < $1',
+          filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 1
+        expect(items.all.first.amount).to eq 100
+      end
+
+      it 'returns list of actions occurring at or before a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        _first_tx = issue_flavor(100, cash, bob)
+        second_tx = issue_flavor(200, cash, bob)
+        _third_tx = issue_flavor(300, cash, bob)
+
+        items = chain.actions.list(
+          filter: 'timestamp <= $1',
+          filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 2
+        expect(items.all.first.amount).to eq 200
+        expect(items.all.last.amount).to eq 100
+      end
+    end
   end
 
   describe '#sum' do
@@ -41,6 +115,78 @@ describe 'actions' do
         expect(items.all.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
+      end
+    end
+
+    context 'with filter for timestamp' do
+      it 'returns sum of actions occurring after a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        first_tx = issue_flavor(100, cash, bob)
+        _second_tx = issue_flavor(200, cash, bob)
+
+        items = chain.actions.sum(
+          filter: 'destination_account_id=$1 AND timestamp > $2',
+          filter_params: [bob.id, first_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 1
+        expect(items.all.first.amount).to eq 200
+      end
+
+      it 'returns sum of actions occurring at or after a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        _first_tx = issue_flavor(100, cash, bob)
+        second_tx = issue_flavor(200, cash, bob)
+        _third_tx = issue_flavor(300, cash, bob)
+
+        items = chain.actions.sum(
+          filter: 'destination_account_id=$1 AND timestamp >= $2',
+          filter_params: [bob.id, second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 1
+        expect(items.all.first.amount).to eq 500
+      end
+
+      it 'returns sum of actions occurring before a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        _first_tx = issue_flavor(100, cash, bob)
+        second_tx = issue_flavor(200, cash, bob)
+
+        items = chain.actions.sum(
+          filter: 'destination_account_id=$1 AND timestamp < $2',
+          filter_params: [bob.id, second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 1
+        expect(items.all.first.amount).to eq 100
+      end
+
+      it 'returns sum of actions occurring at or before a given point' do
+        chain.dev_utils.reset
+
+        bob = create_account('bob')
+        cash = create_flavor('cash')
+        _first_tx = issue_flavor(100, cash, bob)
+        second_tx = issue_flavor(200, cash, bob)
+        _third_tx = issue_flavor(300, cash, bob)
+
+        items = chain.actions.sum(
+          filter: 'destination_account_id=$1 AND timestamp <= $2',
+          filter_params: [bob.id, second_tx.timestamp.to_datetime.rfc3339(3)],
+        )
+
+        expect(items.all.size).to eq 1
+        expect(items.all.first.amount).to eq 300
       end
     end
   end
