@@ -97,22 +97,33 @@ module Sequence
         @data[key]
       end
 
+      # A snapshot of the actions's tags at the time of action creation
+      # @return [Hash]
       def action_tags
         @data['action_tags']
       end
 
+      # A snapshot of the destination account's tags at the time of action
+      # creation
+      # @return [Hash]
       def destination_account_tags
         @data['destination_account_tags']
       end
 
+      # A snapshot of the flavor's tags at the time of action creation
+      # @return [Hash]
       def flavor_tags
         @data['flavor_tags']
       end
 
+      # A snapshot of the source account's tags at the time of action creation
+      # @return [Hash]
       def source_account_tags
         @data['source_account_tags']
       end
 
+      # A snapshot of the token's tags at the time of action creation
+      # @return [Hash]
       def token_tags
         @data['token_tags']
       end
