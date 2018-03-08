@@ -49,7 +49,7 @@ module Sequence
     #   account, action, and token) as they existed at the time of the
     #   transaction.
     # @return [Hash]
-    attrib :snapshot
+    attrib :snapshot, snapshot: true
 
     # @!attribute [r] asset_id
     #   Deprecated. Use {#flavor_id} instead.

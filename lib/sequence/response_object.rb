@@ -62,6 +62,7 @@ module Sequence
       attrib_name = attrib_name.to_sym
       opts = attrib_opts[attrib_name]
 
+      return Snapshot.new(raw_value) if opts[:snapshot]
       return Time.parse(raw_value) if opts[:rfc3339_time]
       return raw_value if opts[:translate].nil?
 
@@ -85,6 +86,36 @@ module Sequence
       end
 
       raw_value
+    end
+
+    class Snapshot
+      def initialize(data)
+        @data = data
+      end
+
+      def [](key)
+        @data[key]
+      end
+
+      def action_tags
+        @data['action_tags']
+      end
+
+      def destination_account_tags
+        @data['destination_account_tags']
+      end
+
+      def flavor_tags
+        @data['flavor_tags']
+      end
+
+      def source_account_tags
+        @data['source_account_tags']
+      end
+
+      def token_tags
+        @data['token_tags']
+      end
     end
 
     class TranslateError < StandardError
