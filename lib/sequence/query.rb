@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './page'
 
 module Sequence
@@ -25,24 +27,24 @@ module Sequence
     # @return [void]
     def each
       pages.each do |page|
-        page.items.each do |item, index|
+        page.items.each do |item|
           yield item
         end
       end
     end
 
     # @private
-    def fetch(query)
+    def fetch(_query)
       raise NotImplementedError
     end
 
     # Overwrite to translate API response data to a different Ruby object.
     # @private
-    def translate(response_object)
+    def translate(_response_object)
       raise NotImplementedError
     end
 
-    alias_method :all, :to_a
+    alias all to_a
 
     # @private
     def pages
@@ -90,7 +92,7 @@ module Sequence
         Page.new(@fetch.call(@query), @translate)
       end
 
-      alias_method :all, :to_a
+      alias all to_a
     end
   end
 end

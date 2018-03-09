@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http'
 require 'net/https'
 require 'openssl'
@@ -82,7 +84,7 @@ module Sequence
             end
           end
           if status / 100 != 2
-            klass = status == 401 ? UnauthorizedError : APIError
+            status == 401 ? klass = UnauthorizedError : klass = APIError
             raise klass.new(parsed_body, response)
           end
 

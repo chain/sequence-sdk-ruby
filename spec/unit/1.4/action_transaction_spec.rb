@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Sequence::Action do
   describe '#snapshot' do
     it 'is Hash-like' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Utilities
   def chain
     RSpec.configuration.sequence_client

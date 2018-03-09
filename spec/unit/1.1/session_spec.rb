@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Sequence::Session do
   describe '#request' do
     it 'makes requests against ledger API using refresh method' do

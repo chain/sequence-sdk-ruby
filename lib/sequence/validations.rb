@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sequence
   # Module for validating options.
   # @private

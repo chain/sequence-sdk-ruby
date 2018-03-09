@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'tokens' do
   describe '#list' do
     context 'with invalid option' do

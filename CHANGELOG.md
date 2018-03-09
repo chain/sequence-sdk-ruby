@@ -1,5 +1,11 @@
 # Sequence Ruby SDK changelog
 
+## 1.5 (2018????)
+
+* Optimize Ruby garbarge collection with
+  `# frozen_string_literal: true` "magic comments".
+* `Transaction#reference_data` has been deprecated; Use `Action#tags` instead.
+
 ## 1.4 (20180308)
 
 For full details on the 1.4 release and how to migrate your code,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 require_relative './http_wrapper'
@@ -9,8 +11,14 @@ module Sequence
   class Session
     def initialize(opts)
       @opts = opts
-      @ledger = @opts[:ledger_name] || raise(ArgumentError, "missing ledger_name")
-      @macaroon = @opts[:credential] || raise(ArgumentError, "missing credential")
+      @ledger = @opts[:ledger_name] || raise(
+        ArgumentError,
+        'missing ledger_name',
+      )
+      @macaroon = @opts[:credential] || raise(
+        ArgumentError,
+        'missing credential',
+      )
 
       # Start at 0 to trigger an immediate refresh
       @refresh_at = 0
@@ -22,11 +30,14 @@ module Sequence
       # new discharge macaroon.
       @refresh_method = @opts[:refresh_method]
       if @refresh_method
-        if !@refresh_method.respond_to?(:call)
-          raise(ArgumentError, "refresh_method is not a lambda")
+        unless @refresh_method.respond_to?(:call)
+          raise ArgumentError, 'refresh_method is not a lambda'
         end
         if @refresh_method.arity != 1
-          raise(ArgumentError, "refresh_method must take 1 argument. (the macaroon)")
+          raise(
+            ArgumentError,
+            'refresh_method must take 1 argument. (the macaroon)',
+          )
         end
       end
 
@@ -54,8 +65,8 @@ module Sequence
         # a Sequence load balancer. This error will be retried by
         # HttpWrapper.post.
         req_id = response['Chain-Request-ID']
-        unless req_id.is_a?(String) && req_id.size > 0
-          raise InvalidRequestIDError.new(response)
+        unless req_id.is_a?(String) && !req_id.empty?
+          raise InvalidRequestIDError, response
         end
       end
     end
@@ -63,17 +74,21 @@ module Sequence
     private
 
     def ledger_url(path)
-      path = path[1..-1] if path.start_with?("/")
+      path = path[1..-1] if path.start_with?('/')
       "/#{@team_name}/#{@ledger}/#{path}"
     end
 
     def refresh!(id)
       return if @refresh_at > Time.now.to_i
 
-      result = if @refresh_method
-        @refresh_method.call(@macaroon)
+      if @refresh_method
+        result = @refresh_method.call(@macaroon)
       else
-        @session_api.post(id, '/sessions/validate', macaroon: @macaroon)[:parsed_body]
+        result = @session_api.post(
+          id,
+          '/sessions/validate',
+          macaroon: @macaroon,
+        )[:parsed_body]
       end
 
       @team_name = result['team_name']

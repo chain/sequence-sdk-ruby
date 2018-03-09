@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'stats' do
   it 'counts assets, accounts, and transactions' do
     # assume the ledger is not empty

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # To run:
 # ruby five_minute_guide.rb
 

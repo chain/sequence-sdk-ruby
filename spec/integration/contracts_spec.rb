@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'contracts' do
   describe '#query' do
     context 'with invalid option' do

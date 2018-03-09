@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'time'
 
@@ -11,16 +13,14 @@ module Sequence
     end
 
     def to_h
-      self.class.attrib_opts.keys.reduce({}) do |memo, name|
+      self.class.attrib_opts.keys.each_with_object({}) do |name, memo|
         memo[name] = instance_variable_get("@#{name}")
-        memo
       end
     end
 
-    def to_json(opts = nil)
-      h = to_h.reduce({}) do |memo, (k, v)|
+    def to_json(_opts = nil)
+      h = to_h.each_with_object({}) do |(k, v), memo|
         memo[k] = self.class.detranslate(k, v)
-        memo
       end
 
       h.to_json
@@ -28,14 +28,18 @@ module Sequence
 
     def [](attrib_name)
       attrib_name = attrib_name.to_sym
-      raise KeyError.new("key not found: #{attrib_name}") unless self.class.attrib_opts.key?(attrib_name)
+      unless self.class.attrib_opts.key?(attrib_name)
+        raise KeyError, "key not found: #{attrib_name}"
+      end
 
       instance_variable_get "@#{attrib_name}"
     end
 
     def []=(attrib_name, value)
       attrib_name = attrib_name.to_sym
-      raise KeyError.new("key not found: #{attrib_name}") unless self.class.attrib_opts.key?(attrib_name)
+      unless self.class.attrib_opts.key?(attrib_name)
+        raise KeyError, "key not found: #{attrib_name}"
+      end
 
       instance_variable_set "@#{attrib_name}", value
     end
@@ -68,7 +72,7 @@ module Sequence
 
       begin
         opts[:translate].call raw_value
-      rescue => e
+      rescue StandardError => e
         raise TranslateError.new(attrib_name, raw_value, e)
       end
     end
@@ -80,7 +84,7 @@ module Sequence
       if opts[:rfc3339_time]
         begin
           return raw_value.to_datetime.rfc3339
-        rescue => e
+        rescue StandardError => e
           raise DetranslateError.new(attrib_name, raw_value, e)
         end
       end

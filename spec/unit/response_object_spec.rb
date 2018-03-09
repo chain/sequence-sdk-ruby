@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Foo < Sequence::ResponseObject
   attrib :time, rfc3339_time: true
 end
@@ -8,9 +10,7 @@ class Bar < Sequence::ResponseObject
 end
 
 describe Sequence::ResponseObject do
-
   describe 'translation and detranslation' do
-
     it 'handles nested time translation' do
       # DateTime's to_rfc3339 method uses numeric timezones, so this is what
       # we'll match against here.
@@ -18,7 +18,7 @@ describe Sequence::ResponseObject do
       t2 = '2018-01-01T00:00:00+00:00'
       t3 = '2019-01-01T00:00:00+00:00'
 
-      raw = {time: t1, foos: [{time: t2}, {time: t3}]}
+      raw = { time: t1, foos: [{ time: t2 }, { time: t3 }] }
       b = Bar.new(raw)
 
       expect(b.time).to eql(Time.parse(t1))
@@ -26,7 +26,5 @@ describe Sequence::ResponseObject do
       expect(b.foos[1].time).to eql(Time.parse(t3))
       expect(b.to_json).to eql(raw.to_json)
     end
-
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'flavors' do
   describe '#list' do
     context 'with filter parameters and :size, :cursor pagination' do

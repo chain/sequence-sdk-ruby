@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Sequence::Action do
   describe '#new' do
     it 'translates' do

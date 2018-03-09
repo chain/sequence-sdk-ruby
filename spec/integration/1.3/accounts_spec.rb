@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'accounts' do
   describe '#list' do
     context 'with invalid option' do

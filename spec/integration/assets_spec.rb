@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'assets' do
   describe '#create' do
     context 'with invalid option' do

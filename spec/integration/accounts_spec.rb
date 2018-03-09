@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'accounts' do
   describe '#create' do
     context 'with invalid option' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'keys' do
   describe '#create' do
     context 'with invalid option' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './client_module'
 require_relative './response_object'
 require_relative './query'

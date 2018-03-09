@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Sequence::Client do
   describe '#new' do
     context 'when nonempty :ledger_name and nonempty :ledger' do

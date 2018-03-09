@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Sequence::APIError do
   describe '#new' do
     it 'includes deprecated #code and current #seq_code' do

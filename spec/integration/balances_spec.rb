@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '#balances' do
   describe '#query' do
     context 'with invalid option' do

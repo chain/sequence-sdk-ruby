@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'actions' do
   describe '#list' do
     context '#page with :size, :cursor' do

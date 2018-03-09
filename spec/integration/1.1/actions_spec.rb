@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Sequence::Action::ClientModule do
   describe '#list' do
     context 'with invalid option' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sequence
   # Base class for all errors raised by the Sequence SDK.
   class BaseError < StandardError; end
@@ -16,8 +18,8 @@ module Sequence
   end
 
   # JSONError should be very rare, and will only arise if there is a bug in the
-  # Sequence API, or if the upstream server is spoofing common Sequence API response
-  # headers.
+  # Sequence API, or if the upstream server is spoofing common Sequence API
+  # response headers.
   class JSONError < BaseError
     attr_accessor :request_id
     attr_accessor :response

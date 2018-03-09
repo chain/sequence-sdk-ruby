@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'transactions' do
   describe '#issue' do
     context 'with tags' do

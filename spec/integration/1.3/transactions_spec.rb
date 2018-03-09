@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'transactions' do
   describe '#transfer' do
     context 'with filter' do
