@@ -55,6 +55,7 @@ module Sequence
           req['Content-Type'] = 'application/json'
           req['Id'] = attempt_id
           req['Idempotency-Key'] = idempotency_key
+          req['Name-Set'] = 'snake'
           req['User-Agent'] = 'chain-sdk-ruby/' + Sequence::VERSION
           if !@macaroon.nil? && !@dis_macaroon.nil?
             req['Macaroon'] = @macaroon
