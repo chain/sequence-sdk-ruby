@@ -3,7 +3,7 @@
 describe Sequence::Action do
   describe '#new' do
     it 'translates' do
-      # DateTime's to_rfc3339 method uses numeric timezones
+      # DateTime#rfc3339 uses numeric timezones
       time = '2017-01-01T00:00:00+00:00'
       raw = {
         amount: 100,
@@ -46,7 +46,17 @@ describe Sequence::Action do
       result = described_class.new(raw)
 
       expect(result.timestamp).to eql(Time.parse(time))
-      expect(result.to_json).to eql(raw.to_json)
+      raw.delete(:timestamp)
+
+      unless result.snapshot.is_a?(Sequence::ResponseObject::Snapshot)
+        expect(result.to_h[:snapshot].to_json)
+          .to eql(raw.to_h[:snapshot].to_json)
+      end
+      raw.delete(:snapshot)
+
+      raw.each_key do |key|
+        expect(result.to_h[key].to_json).to eql(raw.to_h[key].to_json)
+      end
     end
   end
 end

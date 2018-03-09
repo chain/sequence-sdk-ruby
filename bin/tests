@@ -5,5 +5,4 @@ cd $CHAIN/sdk/ruby
 gem install bundler --conservative
 bundle check || bundle install
 bundle exec appraisal install
-with-ledgerd bundle exec appraisal current-checkout \
-  rspec "$@" --exclude-pattern "spec/**/1.{1,2}/*.rb"
+with-ledgerd bundle exec appraisal current-checkout rspec "$@"
