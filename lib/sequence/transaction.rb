@@ -25,12 +25,6 @@ module Sequence
     # @return [Integer]
     attrib :sequence_number
 
-    # @!attribute [r] token_tags
-    #   User specified, unstructured data embedded within a token
-    #   (possibly null).
-    # @return [Hash]
-    attrib :token_tags
-
     # @!attribute [r] reference_data
     #   User-specified key-value data embedded into the transaction.
     # @return [Hash]
