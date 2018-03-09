@@ -101,6 +101,10 @@ module Sequence
         @data[key]
       end
 
+      def to_json(_opts = nil)
+        @data.to_json
+      end
+
       # A snapshot of the actions's tags at the time of action creation
       # @return [Hash]
       def action_tags

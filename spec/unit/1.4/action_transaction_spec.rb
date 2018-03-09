@@ -23,6 +23,28 @@ describe Sequence::Action do
       expect(snapshot['token_tags']).to eq(token_tags)
     end
 
+    it 'prints the snapshot as nested json' do
+      action = described_class.new(
+        timestamp: DateTime.now.rfc3339,
+        snapshot: {
+          'action_tags' => action_tags,
+          'destination_account_tags' => destination_account_tags,
+          'flavor_tags' => flavor_tags,
+          'source_account_tags' => source_account_tags,
+          'token_tags' => token_tags,
+        },
+      )
+
+      json = action.to_json
+      expect(JSON.parse(json)['snapshot']).to eq ({
+        'action_tags' => action_tags,
+        'destination_account_tags' => destination_account_tags,
+        'flavor_tags' => flavor_tags,
+        'source_account_tags' => source_account_tags,
+        'token_tags' => token_tags,
+      })
+    end
+
     it 'can access tags via dot notation' do
       action = described_class.new(
         snapshot: {
