@@ -62,6 +62,127 @@ describe 'transactions' do
         expect(item.type).to eq('transfer')
       end
     end
+
+    context 'with filter by timestamp' do
+      it 'spends tokens from after a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        bob = create_account('bob')
+        usd = create_flavor('usd')
+        first_tx = issue_flavor(
+          200,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'false' },
+        )
+        _second_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
+        )
+
+        chain.transactions.transact do |b|
+          b.transfer(
+            amount: 100,
+            flavor_id: usd.id,
+            source_account_id: alice.id,
+            destination_account_id: bob.id,
+            filter: 'tags.expiration:time > $1',
+            filter_params: [first_tx.actions.first.snapshot.token_tags['expiration']],
+          )
+        end
+
+        unspent_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['false'],
+        )
+        remaining_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['true'],
+        )
+
+        expect(unspent_tokens.all.size).to eq 1
+        expect(unspent_tokens.all.first.amount).to eq 200
+        expect(remaining_tokens.all.size).to eq 0
+      end
+
+      it 'spends tokens from before a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        bob = create_account('bob')
+        usd = create_flavor('usd')
+        _first_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
+        )
+        second_tx = issue_flavor(
+          200,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'false' },
+        )
+
+        chain.transactions.transact do |b|
+          b.transfer(
+            amount: 100,
+            flavor_id: usd.id,
+            source_account_id: alice.id,
+            destination_account_id: bob.id,
+            filter: 'tags.expiration:time < $1',
+            filter_params: [second_tx.actions.first.snapshot.token_tags['expiration']],
+          )
+        end
+
+        unspent_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['false'],
+        )
+        remaining_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['true'],
+        )
+
+        expect(unspent_tokens.all.size).to eq 1
+        expect(unspent_tokens.all.first.amount).to eq 200
+        expect(remaining_tokens.all.size).to eq 0
+      end
+
+      it 'fails to spend tokens if not from before given point' do
+        alice = create_account('alice')
+        bob = create_account('bob')
+        usd = create_flavor('usd')
+        _first_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3) },
+        )
+        second_tx = issue_flavor(
+          200,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3) },
+        )
+
+        expect {
+          chain.transactions.transact do |b|
+            b.transfer(
+              amount: 200,
+              flavor_id: usd.id,
+              source_account_id: alice.id,
+              destination_account_id: bob.id,
+              filter: 'tags.expiration:time < $1',
+              filter_params: [second_tx.actions.first.snapshot.token_tags['expiration']],
+            )
+          end
+        }.to raise_error(Sequence::APIError)
+      end
+    end
   end
 
   describe '#retire' do
@@ -90,6 +211,134 @@ describe 'transactions' do
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(usd.id)
         expect(item.type).to eq('retire')
+      end
+    end
+
+    context 'with filter by timestamp' do
+      it 'retires tokens from at or after a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        _first_tx = issue_flavor(
+          200,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'false' },
+        )
+        second_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
+        )
+
+        _third_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
+        )
+
+        chain.transactions.transact do |b|
+          b.retire(
+            amount: 200,
+            flavor_id: usd.id,
+            source_account_id: alice.id,
+            filter: 'tags.expiration:time >= $1',
+            filter_params: [second_tx.actions.first.snapshot.token_tags['expiration']],
+          )
+        end
+
+        unspent_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['false'],
+        )
+        remaining_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['true'],
+        )
+
+        expect(unspent_tokens.all.size).to eq 1
+        expect(unspent_tokens.all.first.amount).to eq 200
+        expect(remaining_tokens.all.size).to eq 0
+      end
+
+      it 'retires tokens from at or before a given point' do
+        chain.dev_utils.reset
+
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        _first_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
+        )
+        second_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
+        )
+        _third_tx = issue_flavor(
+          200,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'false' },
+        )
+
+        chain.transactions.transact do |b|
+          b.retire(
+            amount: 200,
+            flavor_id: usd.id,
+            source_account_id: alice.id,
+            filter: 'tags.expiration:time <= $1',
+            filter_params: [second_tx.actions.first.snapshot.token_tags['expiration']],
+          )
+        end
+
+        unspent_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['false'],
+        )
+        remaining_tokens = chain.tokens.list(
+          filter: 'tags.spend_me=$1',
+          filter_params: ['true'],
+        )
+
+        expect(unspent_tokens.all.size).to eq 1
+        expect(unspent_tokens.all.first.amount).to eq 200
+        expect(remaining_tokens.all.size).to eq 0
+      end
+
+      it 'fails to retire tokens if not from after given point' do
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        first_tx = issue_flavor(
+          200,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3) },
+        )
+        _second_tx = issue_flavor(
+          100,
+          usd,
+          alice,
+          token_tags: { expiration: DateTime.now.rfc3339(3) },
+        )
+
+        expect {
+          chain.transactions.transact do |b|
+            b.retire(
+              amount: 200,
+              flavor_id: usd.id,
+              source_account_id: alice.id,
+              filter: 'tags.expiration:time > $1',
+              filter_params: [first_tx.actions.first.snapshot.token_tags['expiration']],
+            )
+          end
+        }.to raise_error(Sequence::APIError)
       end
     end
   end
