@@ -26,6 +26,7 @@ module Sequence
     attrib :sequence_number
 
     # @!attribute [r] reference_data
+    #   Deprecated. Use {Sequence::Action#tags} instead.
     #   User-specified key-value data embedded into the transaction.
     # @return [Hash]
     attrib :reference_data
@@ -205,6 +206,7 @@ module Sequence
     class Builder
       include Sequence::Validations
 
+      # @deprecated Use {Sequence::Action#tags} instead.
       attr_accessor :reference_data
 
       def initialize(&block)
