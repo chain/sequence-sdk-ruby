@@ -19,7 +19,14 @@ module Sequence
     # @return [String]
     attrib :alias
 
+    # @!attribute [r] key_ids
+    #   The set of key IDs used for signing transactions that spend from the
+    #   account.
+    # @return [Array<String>]
+    attrib(:key_ids)
+
     # @!attribute [r] keys
+    #   Deprecated. Use {#key_ids} instead.
     #   The set of keys used for signing transactions that spend from the
     #   account.
     # @return [Array<Key>]
@@ -50,7 +57,10 @@ module Sequence
       # @option opts [String] alias
       #   Deprecated. Use :id instead.
       #   Unique, user-specified identifier.
+      # @option opts [Array<String>] key_ids
+      #   The key IDs used for signing transactions that spend from the account.
       # @option opts [Array<Hash>, Array<Sequence::Key>] keys
+      #   Deprecated. Use :key_ids instead.
       #   The keys used for signing transactions that spend from the account. A
       #   key can be either a key object, or a hash containing either an `id` or
       #   `alias` field.
@@ -61,8 +71,22 @@ module Sequence
       #   User-specified key-value data describing the account.
       # @return [Account]
       def create(opts = {})
-        validate_inclusion_of!(opts, :alias, :id, :keys, :quorum, :tags)
-        validate_required!(opts, :keys)
+        validate_inclusion_of!(
+          opts,
+          :alias,
+          :id,
+          :key_ids,
+          :keys,
+          :quorum,
+          :tags,
+        )
+        if (opts[:key_ids].nil? || opts[:key_ids].empty?) &&
+           (opts[:keys].nil? || opts[:keys].empty?)
+          raise(
+            ArgumentError,
+            ':key_ids or :keys (but not both) must be provided',
+          )
+        end
         Account.new(client.session.request('create-account', opts))
       end
 

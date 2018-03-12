@@ -17,9 +17,9 @@ alice = "alice-#{uuid}"
 bob = "bob-#{uuid}"
 
 key = ledger.keys.create
-ledger.assets.create(alias: usd, keys: [key])
-ledger.accounts.create(id: alice, keys: [key])
-ledger.accounts.create(id: bob, keys: [key])
+ledger.assets.create(alias: usd, key_ids: [key.id])
+ledger.accounts.create(id: alice, key_ids: [key.id])
+ledger.accounts.create(id: bob, key_ids: [key.id])
 
 ledger.transactions.transact do |builder|
   builder.issue(

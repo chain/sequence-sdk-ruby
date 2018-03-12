@@ -3,6 +3,8 @@
 ## 1.5 (2018????)
 
 * Added `Feed`s. [More info](https://dashboard.seq.com/docs/feeds)
+* The `keys` field on `Account` and `Flavor` has been deprecated; the new field
+  is `key_ids`, containing key ID strings.
 * Optimize Ruby garbarge collection with
   `# frozen_string_literal: true` "magic comments".
 * `Transaction#reference_data` has been deprecated; Use `Action#tags` instead.

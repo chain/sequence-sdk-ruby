@@ -14,7 +14,7 @@ describe 'flavors' do
       it 'raises argument error' do
         expect {
           chain.flavors.create
-        }.to raise_error(ArgumentError, ':keys must be provided')
+        }.to raise_error(ArgumentError)
       end
     end
 
@@ -22,7 +22,7 @@ describe 'flavors' do
       it 'raises argument error' do
         expect {
           chain.flavors.create(keys: [])
-        }.to raise_error(ArgumentError, ':keys must be provided')
+        }.to raise_error(ArgumentError)
       end
     end
 

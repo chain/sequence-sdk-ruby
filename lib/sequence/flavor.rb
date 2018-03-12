@@ -15,7 +15,14 @@ module Sequence
     # @return [String]
     attrib :id
 
+    # @!attribute [r] key_ids
+    #   The set of key IDs used to sign transactions that issue tokens of the
+    #   flavor.
+    # @return [Array<String>]
+    attrib(:key_ids)
+
     # @!attribute [r] keys
+    #   Deprecated. Use {#key_ids} instead.
     #   The set of keys used to sign transactions that issue tokens of the
     #   flavor.
     # @return [Array<Key>]
@@ -42,7 +49,11 @@ module Sequence
       #   Options hash
       # @option opts [String] id
       #   Unique, user-specified identifier.
+      # @option opts [Array<String>] key_ids
+      #   The set of key IDs used for signing transactions that issue tokens of
+      #   the flavor.
       # @option opts [Array<Hash>, Array<Sequence::Key>] keys
+      #   Deprecated. Use :key_ids instead.
       #   The set of keys used for signing transactions that issue tokens of the
       #   flavor. A key can be either a key object, or a hash containing an
       #   `id` field.
@@ -53,9 +64,13 @@ module Sequence
       #   User-specified key-value data describing the flavor.
       # @return [Flavor]
       def create(opts = {})
-        validate_inclusion_of!(opts, :id, :keys, :quorum, :tags)
-        if opts[:keys].nil? || opts[:keys].empty?
-          raise ArgumentError, ':keys must be provided'
+        validate_inclusion_of!(opts, :id, :key_ids, :keys, :quorum, :tags)
+        if (opts[:key_ids].nil? || opts[:key_ids].empty?) &&
+           (opts[:keys].nil? || opts[:keys].empty?)
+          raise(
+            ArgumentError,
+            ':key_ids or :keys (but not both) must be provided',
+          )
         end
         Flavor.new(client.session.request('create-flavor', opts))
       end
