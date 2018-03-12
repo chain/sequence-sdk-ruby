@@ -2,6 +2,7 @@
 
 ## 1.5 (2018????)
 
+* Added `Feed`s. [More info](https://dashboard.seq.com/docs/feeds)
 * Optimize Ruby garbarge collection with
   `# frozen_string_literal: true` "magic comments".
 * `Transaction#reference_data` has been deprecated; Use `Action#tags` instead.
@@ -22,7 +23,7 @@ For full details on the 1.4 release and how to migrate your code,
 For full details on the 1.3 release and how to migrate your code,
 [visit the Sequence changelog](https://dashboard.seq.com/docs/changelog#release-v1-3).
 
-* Added `Token`. [More info](https://dashboard.seq.com/docs/changelog#release-v1-3)
+* Added `Token`s. [More info](https://dashboard.seq.com/docs/tokens).
 * Added `token_tags` on `Transaction` builder's `issue`/`transfer` actions.
 * Added `filter` on `Transaction` builder's `transfer`/`retire` actions.
 * Updated pagination interfaces:
@@ -63,7 +64,7 @@ For full details on the 1.1 release and how to migrate your code,
 
 * Ruby >= 2.2 is required. We recommend upgrading to Ruby >= 2.3.
 * New interface `ledger.actions.list` and `ledger.actions.sum` available.
-  See https://dashboard.seq.com/docs/actions for more information.
+  [More info](https://dashboard.seq.com/docs/actions).
 * Invalid parameters raise `ArgumentError`s when creating or querying objects.
 * Improved retry logic for network errors.
 * `Sequence::Client` instances now use persistent TLS connections.

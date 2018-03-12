@@ -45,6 +45,24 @@ module Utilities
     )
   end
 
+  def create_tx_feed(type, assets)
+    filter = assets.map { |a| "asset_id='#{a.id}'" }.join(' OR ')
+    chain.feeds.create(
+      id: create_id(type),
+      type: 'transaction',
+      filter: "actions(type='#{type}' AND (#{filter}))",
+    )
+  end
+
+  def create_action_feed(type, assets)
+    filter = assets.map { |a| "asset_id='#{a.id}'" }.join(' OR ')
+    chain.feeds.create(
+      id: create_id(type),
+      type: 'action',
+      filter: "type='#{type}' AND (#{filter})",
+    )
+  end
+
   def create_refdata(name)
     { name => SecureRandom.uuid }
   end
