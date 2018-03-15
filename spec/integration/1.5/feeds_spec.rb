@@ -296,30 +296,51 @@ describe Sequence::Feed do
     end
 
     it 'deletes a feed' do
-      pre_list = chain.feeds.query.map(&:id)
+      pre_list = chain.feeds.list.all.map(&:id)
       silver = create_asset('silver')
       issuances_feed = create_tx_feed('issue', [silver])
       spends_feed = create_tx_feed('transfer', [silver])
 
       chain.feeds.delete(id: issuances_feed.id)
 
-      post_list = chain.feeds.query.map(&:id)
+      post_list = chain.feeds.list.all.map(&:id)
       list = post_list - pre_list
       expect(list).to eq([spends_feed.id])
     end
   end
 
-  describe '#query' do
-    it 'queries feeds' do
-      pre_list = chain.feeds.query.map(&:id)
-      gold = create_asset('gold')
-      issuances_feed = create_tx_feed('issue', [gold])
-      spends_feed = create_tx_feed('transfer', [gold])
+  describe '#list' do
+    context '#page with :size, :cursor pagination' do
+      it 'paginates results' do
+        gold = create_asset('gold')
+        create_tx_feed('issue', [gold])
+        create_tx_feed('transfer', [gold])
+        create_action_feed('issue', [gold])
 
-      post_list = chain.feeds.query.map(&:id)
+        page1 = chain.feeds.list.page(size: 1)
 
-      list = post_list - pre_list
-      expect(list).to match_array([spends_feed.id, issuances_feed.id])
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(1)
+
+        cursor = page1.cursor
+        page2 = chain.feeds.list.page(cursor: cursor)
+
+        expect(page2.items.size).to eq(1)
+        expect(page2.last_page).to eq(false)
+      end
+    end
+
+    context '#all' do
+      it 'returns feeds' do
+        chain.dev_utils.reset
+        gold = create_asset('gold')
+        feed1 = create_tx_feed('issue', [gold])
+        feed2 = create_tx_feed('transfer', [gold])
+
+        result = chain.feeds.list.all
+
+        expect(result.map(&:id)).to match_array([feed1.id, feed2.id])
+      end
     end
   end
 end

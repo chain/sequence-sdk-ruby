@@ -124,9 +124,9 @@ module Sequence
         nil
       end
 
-      # List all feeds
+      # Executes a query, returning an enumerable over individual feeds.
       # @return [Query]
-      def query
+      def list
         Query.new(client)
       end
     end
