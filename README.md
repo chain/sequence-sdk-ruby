@@ -14,7 +14,7 @@ for the language's schedule for security and bug fixes.
 Add the following to your `Gemfile`:
 
 ```ruby
-gem 'sequence-sdk', '~> 1.4.0'
+gem 'sequence-sdk', '~> 1.5'
 ```
 
 ### In your code

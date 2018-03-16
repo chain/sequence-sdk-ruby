@@ -1,6 +1,6 @@
 # Sequence Ruby SDK changelog
 
-## 1.5 (2018????)
+## 1.5 (20180316)
 
 * Added `Feed`s. [More info](https://dashboard.seq.com/docs/feeds)
 * The `keys` field on `Account` and `Flavor` has been deprecated; the new field
@@ -8,6 +8,7 @@
 * Optimize Ruby garbarge collection with
   `# frozen_string_literal: true` "magic comments".
 * `Transaction#reference_data` has been deprecated; Use `Action#tags` instead.
+* `action.snapshot.*_tags` can now be accessed with dot syntax.
 
 ## 1.4 (20180308)
 
