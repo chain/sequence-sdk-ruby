@@ -6,7 +6,8 @@ require_relative './query'
 require_relative './response_object'
 
 module Sequence
-  # A container for asset balances on a ledger.
+  # An account is an object in Sequence that tracks ownership of tokens on a
+  # blockchain by creating and tracking control programs.
   class Account < ResponseObject
     # @!attribute [r] id
     #   Unique, auto-generated identifier.

@@ -23,11 +23,6 @@ describe Sequence::Action do
             bank: 'td-bank',
           },
         },
-        asset_id: 'asset-123',
-        asset_alias: 'usd',
-        asset_tags: {
-          'mint' => 'san-francisco',
-        },
         source_account_id: 'source-account-id-123',
         source_account_alias: 'alice',
         source_account_tags: {

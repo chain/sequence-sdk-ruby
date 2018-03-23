@@ -53,24 +53,6 @@ module Sequence
     # @return [Hash]
     attrib :snapshot, snapshot: true
 
-    # @!attribute [r] asset_id
-    #   Deprecated. Use {#flavor_id} instead.
-    #   The ID of the asset held by the action.
-    # @return [String]
-    attrib :asset_id
-
-    # @!attribute [r] asset_alias
-    #   Deprecated. Use {#flavor_id} instead.
-    #   The alias of the asset held by the action.
-    # @return [String]
-    attrib :asset_alias
-
-    # @!attribute [r] asset_tags
-    #   Deprecated. Use {#snapshot} instead.
-    #   The tags of the asset held by the action.
-    # @return [Hash]
-    attrib :asset_tags
-
     # @!attribute [r] source_account_id
     #   The ID of the source account executing the action.
     # @return [String]

@@ -7,8 +7,8 @@ describe 'actions' do
         bob = create_account('bob')
         cash = create_flavor('cash')
         action_tags = { 'acting_party' => SecureRandom.uuid }
-        issue_flavor(100, cash, bob, action_tags: action_tags)
-        issue_flavor(100, cash, bob)
+        issue(100, cash, bob, action_tags: action_tags)
+        issue(100, cash, bob)
 
         items = chain.actions.list(
           filter: 'tags.acting_party=$1',
@@ -30,8 +30,8 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        first_tx = issue_flavor(100, cash, bob)
-        _second_tx = issue_flavor(200, cash, bob)
+        first_tx = issue(100, cash, bob)
+        _second_tx = issue(200, cash, bob)
 
         items = chain.actions.list(
           filter: 'timestamp > $1',
@@ -47,9 +47,9 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        _first_tx = issue_flavor(100, cash, bob)
-        second_tx = issue_flavor(200, cash, bob)
-        _third_tx = issue_flavor(300, cash, bob)
+        _first_tx = issue(100, cash, bob)
+        second_tx = issue(200, cash, bob)
+        _third_tx = issue(300, cash, bob)
 
         items = chain.actions.list(
           filter: 'timestamp >= $1',
@@ -66,8 +66,8 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        _first_tx = issue_flavor(100, cash, bob)
-        second_tx = issue_flavor(200, cash, bob)
+        _first_tx = issue(100, cash, bob)
+        second_tx = issue(200, cash, bob)
 
         items = chain.actions.list(
           filter: 'timestamp < $1',
@@ -83,9 +83,9 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        _first_tx = issue_flavor(100, cash, bob)
-        second_tx = issue_flavor(200, cash, bob)
-        _third_tx = issue_flavor(300, cash, bob)
+        _first_tx = issue(100, cash, bob)
+        second_tx = issue(200, cash, bob)
+        _third_tx = issue(300, cash, bob)
 
         items = chain.actions.list(
           filter: 'timestamp <= $1',
@@ -105,9 +105,9 @@ describe 'actions' do
         alice = create_account('alice')
         cert = create_flavor('stock-certificate')
         action_tags = { 'acting_party' => SecureRandom.uuid }
-        issue_flavor(50, cert, alice, action_tags: action_tags)
-        issue_flavor(50, cert, alice, action_tags: action_tags)
-        issue_flavor(50, cert, alice)
+        issue(50, cert, alice, action_tags: action_tags)
+        issue(50, cert, alice, action_tags: action_tags)
+        issue(50, cert, alice)
 
         items = chain.actions.sum(
           filter: 'tags.acting_party=$1',
@@ -126,8 +126,8 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        first_tx = issue_flavor(100, cash, bob)
-        _second_tx = issue_flavor(200, cash, bob)
+        first_tx = issue(100, cash, bob)
+        _second_tx = issue(200, cash, bob)
 
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp > $2',
@@ -143,9 +143,9 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        _first_tx = issue_flavor(100, cash, bob)
-        second_tx = issue_flavor(200, cash, bob)
-        _third_tx = issue_flavor(300, cash, bob)
+        _first_tx = issue(100, cash, bob)
+        second_tx = issue(200, cash, bob)
+        _third_tx = issue(300, cash, bob)
 
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp >= $2',
@@ -161,8 +161,8 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        _first_tx = issue_flavor(100, cash, bob)
-        second_tx = issue_flavor(200, cash, bob)
+        _first_tx = issue(100, cash, bob)
+        second_tx = issue(200, cash, bob)
 
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp < $2',
@@ -178,9 +178,9 @@ describe 'actions' do
 
         bob = create_account('bob')
         cash = create_flavor('cash')
-        _first_tx = issue_flavor(100, cash, bob)
-        second_tx = issue_flavor(200, cash, bob)
-        _third_tx = issue_flavor(300, cash, bob)
+        _first_tx = issue(100, cash, bob)
+        second_tx = issue(200, cash, bob)
+        _third_tx = issue(300, cash, bob)
 
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp <= $2',

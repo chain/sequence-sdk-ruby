@@ -7,7 +7,7 @@ describe 'transactions' do
         alice = create_account('alice')
         bob = create_account('bob')
         usd = create_flavor('usd')
-        issue_flavor(100, usd, alice, token_tags: { 'foo' => 'bar' })
+        issue(100, usd, alice, token_tags: { 'foo' => 'bar' })
 
         chain.transactions.transact do |b|
           b.transfer(
@@ -42,8 +42,8 @@ describe 'transactions' do
       it 'retires flavors tagged with given filter' do
         alice = create_account('alice')
         usd = create_flavor('usd')
-        issue_flavor(100, usd, alice, token_tags: { 'foo' => 'bar' })
-        issue_flavor(100, usd, alice)
+        issue(100, usd, alice, token_tags: { 'foo' => 'bar' })
+        issue(100, usd, alice)
 
         chain.transactions.transact do |b|
           b.retire(
@@ -84,9 +84,9 @@ describe 'transactions' do
       it 'paginates results' do
         alice = create_account('alice')
         usd = create_flavor('usd')
-        issue_flavor(100, usd, alice)
-        issue_flavor(100, usd, alice)
-        issue_flavor(100, usd, alice)
+        issue(100, usd, alice)
+        issue(100, usd, alice)
+        issue(100, usd, alice)
 
         page1 = chain.transactions.list(
           filter: 'actions(destination_account_id=$1)',
@@ -107,7 +107,7 @@ describe 'transactions' do
       it 'yields transactions in the page to the block' do
         alice = create_account('alice')
         usd = create_flavor('usd')
-        tx = issue_flavor(100, usd, alice)
+        tx = issue(100, usd, alice)
 
         chain.transactions.list(
           filter: 'actions(destination_account_id=$1)',
@@ -125,8 +125,8 @@ describe 'transactions' do
 
         alice = create_account('alice')
         usd = create_flavor('usd')
-        issue_flavor(100, usd, alice)
-        issue_flavor(100, usd, alice)
+        issue(100, usd, alice)
+        issue(100, usd, alice)
 
         results = []
         chain.transactions.list.all.each do |item|

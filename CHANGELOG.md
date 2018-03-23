@@ -1,5 +1,9 @@
 # Sequence Ruby SDK changelog
 
+## 2.0 (2018????)
+
+* Removed assets, balances, contracts, and all other deprecated code.
+
 ## 1.5 (20180316)
 
 For full details on the 1.5 release and how to migrate your code,

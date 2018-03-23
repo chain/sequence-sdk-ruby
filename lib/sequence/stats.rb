@@ -8,10 +8,10 @@ module Sequence
   # An object describing summary information about a ledger.
   # @private
   class Stats < ResponseObject
-    # @!attribute [r] asset_count
-    # The number of assets in the ledger.
+    # @!attribute [r] flavor_count
+    # The number of flavors in the ledger.
     # @return [Integer]
-    attrib :asset_count
+    attrib :flavor_count
 
     # @!attribute [r] account_count
     # The number of accounts in the ledger.

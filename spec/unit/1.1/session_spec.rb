@@ -7,12 +7,9 @@ describe Sequence::Session do
 
       result = chain.session.request('/stats')
 
-      expect(result).to eq(
-        'asset_count' => 0,
-        'account_count' => 0,
-        'flavor_count' => 0,
-        'tx_count' => 0,
-      )
+      expect(result['flavor_count']).to eq(0)
+      expect(result['account_count']).to eq(0)
+      expect(result['tx_count']).to eq(0)
     end
   end
 end

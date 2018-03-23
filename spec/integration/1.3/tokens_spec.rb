@@ -18,7 +18,7 @@ describe 'tokens' do
       it 'returns list of token groups' do
         alice = create_account('alice')
         cert = create_flavor('stock-certificate')
-        issue_flavor(100, cert, alice)
+        issue(100, cert, alice)
 
         items = chain.tokens.list(
           filter: "flavor_id='#{cert.id}'",
@@ -48,7 +48,7 @@ describe 'tokens' do
           },
           keys: [create_key],
         )
-        issue_flavor(1, q5, oakland)
+        issue(1, q5, oakland)
 
         items = chain.tokens.list(
           filter: 'flavor_tags.vin=$1 AND account_id=$2',
@@ -67,9 +67,9 @@ describe 'tokens' do
       it 'returns list of token groups' do
         bob = create_account('bob')
         cash = create_flavor('cash')
-        token_tags = create_refdata('due_date')
-        issue_flavor(100, cash, bob, token_tags: token_tags)
-        issue_flavor(100, cash, bob)
+        token_tags = create_tags('due_date')
+        issue(100, cash, bob, token_tags: token_tags)
+        issue(100, cash, bob)
 
         items = chain.tokens.list(
           filter: 'tags.due_date=$1',
@@ -93,9 +93,9 @@ describe 'tokens' do
 
         alice = create_account('alice')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice, token_tags: { due: 'today' })
-        issue_flavor(1, gold, alice, token_tags: { due: 'tomorrow' })
-        issue_flavor(1, gold, alice, token_tags: { due: 'next week' })
+        issue(1, gold, alice, token_tags: { due: 'today' })
+        issue(1, gold, alice, token_tags: { due: 'tomorrow' })
+        issue(1, gold, alice, token_tags: { due: 'next week' })
 
         page1 = chain.tokens.list.page(size: 2)
 
@@ -115,9 +115,9 @@ describe 'tokens' do
 
         alice = create_account('alice')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice, token_tags: { due: 'today' })
-        issue_flavor(1, gold, alice, token_tags: { due: 'tomorrow' })
-        issue_flavor(1, gold, alice, token_tags: { due: 'next week' })
+        issue(1, gold, alice, token_tags: { due: 'today' })
+        issue(1, gold, alice, token_tags: { due: 'tomorrow' })
+        issue(1, gold, alice, token_tags: { due: 'next week' })
 
         results = []
         chain.tokens.list.all.each do |x|
@@ -134,8 +134,8 @@ describe 'tokens' do
       it 'returns sum of tokens' do
         alice = create_account('alice')
         cert = create_flavor('stock-certificate')
-        issue_flavor(50, cert, alice)
-        issue_flavor(50, cert, alice)
+        issue(50, cert, alice)
+        issue(50, cert, alice)
 
         items = chain.tokens.sum(
           filter: "flavor_id='#{cert.id}'",
@@ -156,8 +156,8 @@ describe 'tokens' do
       it 'returns sum of tokens' do
         alice = create_account('alice')
         cert = create_flavor('stock-certificate')
-        issue_flavor(50, cert, alice)
-        issue_flavor(50, cert, alice)
+        issue(50, cert, alice)
+        issue(50, cert, alice)
 
         items = chain.tokens.sum(
           filter: "flavor_id='#{cert.id}'",
@@ -179,8 +179,8 @@ describe 'tokens' do
         alice = create_account('alice')
         bob = create_account('bob')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice)
-        issue_flavor(1, gold, bob)
+        issue(1, gold, alice)
+        issue(1, gold, bob)
 
         page1 = chain.tokens.sum(group_by: ['account_id']).page(size: 1)
 
@@ -207,8 +207,8 @@ describe 'tokens' do
         alice = create_account('alice')
         bob = create_account('bob')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice)
-        issue_flavor(1, gold, bob)
+        issue(1, gold, alice)
+        issue(1, gold, bob)
 
         results = []
         chain.tokens.sum(

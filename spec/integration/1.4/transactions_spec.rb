@@ -7,8 +7,8 @@ describe 'transactions' do
         alice = create_account('alice')
         usd = create_flavor('usd')
         eur = create_flavor('eur')
-        action_tags = create_refdata('acting_party')
-        issue_flavor(50, eur, alice)
+        action_tags = create_tags('acting_party')
+        issue(50, eur, alice)
 
         chain.transactions.transact do |b|
           b.issue(
@@ -37,9 +37,9 @@ describe 'transactions' do
       it 'adds tags to transfer action' do
         alice = create_account('alice')
         bob = create_account('bob')
-        action_tags = create_refdata('acting_party')
+        action_tags = create_tags('acting_party')
         usd = create_flavor('usd')
-        issue_flavor(100, usd, alice)
+        issue(100, usd, alice)
 
         chain.transactions.transact do |b|
           b.transfer(
@@ -70,13 +70,13 @@ describe 'transactions' do
         alice = create_account('alice')
         bob = create_account('bob')
         usd = create_flavor('usd')
-        first_tx = issue_flavor(
+        first_tx = issue(
           200,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'false' },
         )
-        _second_tx = issue_flavor(
+        _second_tx = issue(
           100,
           usd,
           alice,
@@ -114,13 +114,13 @@ describe 'transactions' do
         alice = create_account('alice')
         bob = create_account('bob')
         usd = create_flavor('usd')
-        _first_tx = issue_flavor(
+        _first_tx = issue(
           100,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
         )
-        second_tx = issue_flavor(
+        second_tx = issue(
           200,
           usd,
           alice,
@@ -156,13 +156,13 @@ describe 'transactions' do
         alice = create_account('alice')
         bob = create_account('bob')
         usd = create_flavor('usd')
-        _first_tx = issue_flavor(
+        _first_tx = issue(
           100,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3) },
         )
-        second_tx = issue_flavor(
+        second_tx = issue(
           200,
           usd,
           alice,
@@ -190,8 +190,8 @@ describe 'transactions' do
       it 'adds tags to retire action' do
         alice = create_account('alice')
         usd = create_flavor('usd')
-        action_tags = create_refdata('acting_party')
-        issue_flavor(100, usd, alice)
+        action_tags = create_tags('acting_party')
+        issue(100, usd, alice)
 
         chain.transactions.transact do |b|
           b.retire(
@@ -220,20 +220,20 @@ describe 'transactions' do
 
         alice = create_account('alice')
         usd = create_flavor('usd')
-        _first_tx = issue_flavor(
+        _first_tx = issue(
           200,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'false' },
         )
-        second_tx = issue_flavor(
+        second_tx = issue(
           100,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
         )
 
-        _third_tx = issue_flavor(
+        _third_tx = issue(
           100,
           usd,
           alice,
@@ -269,19 +269,19 @@ describe 'transactions' do
 
         alice = create_account('alice')
         usd = create_flavor('usd')
-        _first_tx = issue_flavor(
+        _first_tx = issue(
           100,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
         )
-        second_tx = issue_flavor(
+        second_tx = issue(
           100,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3), spend_me: 'true' },
         )
-        _third_tx = issue_flavor(
+        _third_tx = issue(
           200,
           usd,
           alice,
@@ -315,13 +315,13 @@ describe 'transactions' do
       it 'fails to retire tokens if not from after given point' do
         alice = create_account('alice')
         usd = create_flavor('usd')
-        first_tx = issue_flavor(
+        first_tx = issue(
           200,
           usd,
           alice,
           token_tags: { expiration: DateTime.now.rfc3339(3) },
         )
-        _second_tx = issue_flavor(
+        _second_tx = issue(
           100,
           usd,
           alice,
@@ -350,8 +350,8 @@ describe 'transactions' do
 
         alice = create_account('alice')
         usd = create_flavor('usd')
-        first_tx = issue_flavor(100, usd, alice)
-        second_tx = issue_flavor(200, usd, alice)
+        first_tx = issue(100, usd, alice)
+        second_tx = issue(200, usd, alice)
 
         items = chain.transactions.list(
           filter: 'timestamp > $1',
@@ -366,9 +366,9 @@ describe 'transactions' do
 
         alice = create_account('alice')
         usd = create_flavor('usd')
-        _first_tx = issue_flavor(100, usd, alice)
-        second_tx = issue_flavor(200, usd, alice)
-        third_tx = issue_flavor(300, usd, alice)
+        _first_tx = issue(100, usd, alice)
+        second_tx = issue(200, usd, alice)
+        third_tx = issue(300, usd, alice)
 
         items = chain.transactions.list(
           filter: 'timestamp >= $1',
@@ -384,8 +384,8 @@ describe 'transactions' do
 
         alice = create_account('alice')
         usd = create_flavor('usd')
-        first_tx = issue_flavor(100, usd, alice)
-        second_tx = issue_flavor(200, usd, alice)
+        first_tx = issue(100, usd, alice)
+        second_tx = issue(200, usd, alice)
 
         items = chain.transactions.list(
           filter: 'timestamp < $1',
@@ -400,9 +400,9 @@ describe 'transactions' do
 
         alice = create_account('alice')
         usd = create_flavor('usd')
-        first_tx = issue_flavor(100, usd, alice)
-        second_tx = issue_flavor(200, usd, alice)
-        _third_tx = issue_flavor(300, usd, alice)
+        first_tx = issue(100, usd, alice)
+        second_tx = issue(200, usd, alice)
+        _third_tx = issue(300, usd, alice)
 
         items = chain.transactions.list(
           filter: 'timestamp <= $1',

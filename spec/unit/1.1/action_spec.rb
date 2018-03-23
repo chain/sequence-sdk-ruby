@@ -11,11 +11,6 @@ describe Sequence::Action do
         id: 'id-123',
         transaction_id: 'transaction-123',
         timestamp: time,
-        asset_id: 'asset-123',
-        asset_alias: 'usd',
-        asset_tags: {
-          'mint' => 'san-francisco',
-        },
         source_account_id: 'source-account-id-123',
         source_account_alias: 'alice',
         source_account_tags: {

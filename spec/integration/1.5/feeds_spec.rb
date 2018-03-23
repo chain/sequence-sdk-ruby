@@ -3,8 +3,8 @@
 describe Sequence::Feed do
   describe '#consume' do
     it 'consumes every spend and every issuance transaction' do
-      gold = create_asset('gold')
-      silver = create_asset('silver')
+      gold = create_flavor('gold')
+      silver = create_flavor('silver')
       alice = create_account('alice')
       bob = create_account('bob')
       issuances_feed = create_tx_feed('issue', [gold, silver])
@@ -47,7 +47,7 @@ describe Sequence::Feed do
     end
 
     it 'consumes the same transaction in multiple threads' do
-      gold = create_asset('gold')
+      gold = create_flavor('gold')
       alice = create_account('alice')
       issuances_feed = create_tx_feed('issue', [gold])
       consumed = { first_thread: nil, second_thread: nil }
@@ -79,7 +79,7 @@ describe Sequence::Feed do
     end
 
     it 'consumes actions and transactions' do
-      gold = create_asset('gold')
+      gold = create_flavor('gold')
       alice = create_account('alice')
       bob = create_account('bob')
       carol = create_account('carol')
@@ -94,18 +94,18 @@ describe Sequence::Feed do
       produced_tx = chain.transactions.transact do |b|
         produced_issuance_action = b.issue(
           amount: 3,
-          asset_id: gold.id,
+          flavor_id: gold.id,
           destination_account_id: alice.id,
         )
         produced_transfer_actions << b.transfer(
           amount: 1,
-          asset_id: gold.id,
+          flavor_id: gold.id,
           source_account_id: alice.id,
           destination_account_id: bob.id,
         )
         produced_transfer_actions << b.transfer(
           amount: 2,
-          asset_id: gold.id,
+          flavor_id: gold.id,
           source_account_id: alice.id,
           destination_account_id: carol.id,
         )
@@ -121,7 +121,7 @@ describe Sequence::Feed do
       f.consume do |action|
         expect(action.transaction_id).to eq(produced_tx.id)
         expect(action.type).to eq('issue')
-        expect(action.asset_id).to eq(gold.id)
+        expect(action.flavor_id).to eq(gold.id)
         expect(action.amount).to eq(3)
         expect(action.destination_account_id).to eq(alice.id)
         break
@@ -132,7 +132,7 @@ describe Sequence::Feed do
       f.consume do |action|
         expect(action.transaction_id).to eq(produced_tx.id)
         expect(action.type).to eq('transfer')
-        expect(action.asset_id).to eq(gold.id)
+        expect(action.flavor_id).to eq(gold.id)
         if first
           expect(action.amount).to eq(1)
           expect(action.destination_account_id).to eq(bob.id)
@@ -149,7 +149,7 @@ describe Sequence::Feed do
 
   describe '#ack' do
     it 'checkpoints during consume' do
-      gold = create_asset('gold')
+      gold = create_flavor('gold')
       alice = create_account('alice')
       bob = create_account('bob')
 
@@ -158,14 +158,14 @@ describe Sequence::Feed do
       chain.transactions.transact do |b|
         b.issue(
           amount: 3,
-          asset_id: gold.id,
+          flavor_id: gold.id,
           destination_account_id: alice.id,
         )
       end
       chain.transactions.transact do |b|
         b.transfer(
           amount: 1,
-          asset_id: gold.id,
+          flavor_id: gold.id,
           source_account_id: alice.id,
           destination_account_id: bob.id,
         )
@@ -173,7 +173,7 @@ describe Sequence::Feed do
       chain.transactions.transact do |b|
         b.transfer(
           amount: 2,
-          asset_id: gold.id,
+          flavor_id: gold.id,
           source_account_id: alice.id,
           destination_account_id: bob.id,
         )
@@ -181,7 +181,7 @@ describe Sequence::Feed do
 
       feed.consume do |action|
         expect(action.type).to eq('transfer')
-        expect(action.asset_id).to eq(gold.id)
+        expect(action.flavor_id).to eq(gold.id)
         expect(action.amount).to eq(1)
         expect(action.source_account_id).to eq(alice.id)
         expect(action.destination_account_id).to eq(bob.id)
@@ -192,7 +192,7 @@ describe Sequence::Feed do
       # same action.
       feed.consume do |action|
         expect(action.type).to eq('transfer')
-        expect(action.asset_id).to eq(gold.id)
+        expect(action.flavor_id).to eq(gold.id)
         expect(action.amount).to eq(1)
         expect(action.source_account_id).to eq(alice.id)
         expect(action.destination_account_id).to eq(bob.id)
@@ -204,7 +204,7 @@ describe Sequence::Feed do
       # After checkpointing, should get the next action.
       feed.consume do |action|
         expect(action.type).to eq('transfer')
-        expect(action.asset_id).to eq(gold.id)
+        expect(action.flavor_id).to eq(gold.id)
         expect(action.amount).to eq(2)
         expect(action.source_account_id).to eq(alice.id)
         expect(action.destination_account_id).to eq(bob.id)
@@ -235,7 +235,7 @@ describe Sequence::Feed do
         expect {
           chain.feeds.create(
             type: 'not-action-or-transaction',
-            filter: "actions(type='issue' AND asset_id='foo')",
+            filter: "actions(type='issue' AND flavor_id='foo')",
           )
         }.to raise_error(
           ArgumentError,
@@ -245,8 +245,8 @@ describe Sequence::Feed do
     end
 
     it 'creates feeds with filter params' do
-      gold = create_asset('gold')
-      silver = create_asset('silver')
+      gold = create_flavor('gold')
+      silver = create_flavor('silver')
       alice = create_account('alice')
       _gold_tx = issue(1, gold, alice)
       silver_tx = issue(1, silver, alice)
@@ -254,7 +254,7 @@ describe Sequence::Feed do
       feed = chain.feeds.create(
         id: create_id('issue'),
         type: 'transaction',
-        filter: 'actions(type=$1 AND asset_id=$2)',
+        filter: 'actions(type=$1 AND flavor_id=$2)',
         filter_params: ['issue', silver.id],
       )
 
@@ -277,7 +277,7 @@ describe Sequence::Feed do
     end
 
     it 'gets a feed' do
-      silver = create_asset('silver')
+      silver = create_flavor('silver')
       feed = create_tx_feed('issue', [silver])
 
       result = chain.feeds.get(id: feed.id)
@@ -297,7 +297,7 @@ describe Sequence::Feed do
 
     it 'deletes a feed' do
       pre_list = chain.feeds.list.all.map(&:id)
-      silver = create_asset('silver')
+      silver = create_flavor('silver')
       issuances_feed = create_tx_feed('issue', [silver])
       spends_feed = create_tx_feed('transfer', [silver])
 
@@ -312,7 +312,7 @@ describe Sequence::Feed do
   describe '#list' do
     context '#page with :size, :cursor pagination' do
       it 'paginates results' do
-        gold = create_asset('gold')
+        gold = create_flavor('gold')
         create_tx_feed('issue', [gold])
         create_tx_feed('transfer', [gold])
         create_action_feed('issue', [gold])
@@ -333,7 +333,7 @@ describe Sequence::Feed do
     context '#all' do
       it 'returns feeds' do
         chain.dev_utils.reset
-        gold = create_asset('gold')
+        gold = create_flavor('gold')
         feed1 = create_tx_feed('issue', [gold])
         feed2 = create_tx_feed('transfer', [gold])
 

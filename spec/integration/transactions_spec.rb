@@ -2,7 +2,7 @@
 
 describe 'transactions' do
   describe '#issue' do
-    context 'for non-existent assets' do
+    context 'for non-existent flavors' do
       it 'raises API error' do
         alice = create_account('alice')
 
@@ -10,7 +10,7 @@ describe 'transactions' do
           chain.transactions.transact do |b|
             b.issue(
               amount: 100,
-              asset_alias: 'unobtanium',
+              flavor_id: 'unobtanium',
               destination_account_id: alice.id,
             )
           end
@@ -33,7 +33,7 @@ describe 'transactions' do
         expect {
           chain.transactions.transact do |b|
             b.issue(
-              asset_alias: create_alias('usd'),
+              flavor_id: create_id('usd'),
               destination_account_id: create_id('alice'),
             )
           end
@@ -41,7 +41,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :flavor_id or :asset_{id,alias}' do
+    context 'missing :flavor_id' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -60,7 +60,7 @@ describe 'transactions' do
           chain.transactions.transact do |b|
             b.issue(
               amount: 100,
-              asset_alias: create_alias('usd'),
+              flavor_id: create_id('usd'),
             )
           end
         }.to raise_error(ArgumentError)
@@ -69,18 +69,18 @@ describe 'transactions' do
   end
 
   describe '#transfer' do
-    context 'for non-existent assets' do
+    context 'for non-existent flavors' do
       it 'raises API error' do
         alice = create_account('alice')
         bob = create_account('bob')
-        usd = create_asset('usd')
+        usd = create_flavor('usd')
         issue(100, usd, alice)
 
         expect {
           chain.transactions.transact do |b|
             b.transfer(
               amount: 100,
-              asset_alias: 'unobtanium',
+              flavor_id: 'unobtanium',
               source_account_id: alice.id,
               destination_account_id: bob.id,
             )
@@ -104,7 +104,7 @@ describe 'transactions' do
         expect {
           chain.transactions.transact do |b|
             b.transfer(
-              asset_alias: create_alias('usd'),
+              flavor_id: create_id('usd'),
               source_account_id: create_id('alice'),
               destination_account_id: create_id('bob'),
             )
@@ -113,7 +113,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :flavor_id or :asset_{id,alias}' do
+    context 'missing :flavor_id' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -127,13 +127,13 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :source_account_{id,alias,contract}' do
+    context 'missing :source_account_{id,alias}' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
             b.transfer(
               amount: 100,
-              asset_alias: create_alias('usd'),
+              flavor_id: create_id('usd'),
               destination_account_id: create_id('bob'),
             )
           end
@@ -147,7 +147,7 @@ describe 'transactions' do
           chain.transactions.transact do |b|
             b.transfer(
               amount: 100,
-              asset_alias: create_alias('usd'),
+              flavor_id: create_id('usd'),
               source_account_id: create_id('alice'),
             )
           end
@@ -157,17 +157,17 @@ describe 'transactions' do
   end
 
   describe '#retire' do
-    context 'for non-existent assets' do
+    context 'for non-existent flavors' do
       it 'raises API error' do
         alice = create_account('alice')
-        usd = create_asset('usd')
+        usd = create_flavor('usd')
         issue(100, usd, alice)
 
         expect {
           chain.transactions.transact do |b|
             b.retire(
               amount: 100,
-              asset_alias: 'unobtanium',
+              flavor_id: 'unobtanium',
               source_account_id: alice.id,
             )
           end
@@ -190,7 +190,7 @@ describe 'transactions' do
         expect {
           chain.transactions.transact do |b|
             b.retire(
-              asset_alias: create_alias('usd'),
+              flavor_id: create_id('usd'),
               source_account_id: create_id('alice'),
             )
           end
@@ -198,7 +198,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :flavor_id or :asset_{id,alias}' do
+    context 'missing :flavor_id' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -211,13 +211,13 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :source_account_{id,alias,contract}' do
+    context 'missing :source_account_{id,alias}' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
             b.retire(
               amount: 100,
-              asset_alias: create_alias('usd'),
+              flavor_id: create_id('usd'),
             )
           end
         }.to raise_error(ArgumentError)

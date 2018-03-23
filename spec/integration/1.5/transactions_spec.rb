@@ -6,7 +6,7 @@ describe 'transactions' do
       it 'lists transactions using snake_case' do
         alice = create_account('alice')
         usd = create_flavor('usd')
-        issue_flavor(100, usd, alice)
+        issue(100, usd, alice)
 
         items = chain.tokens.list(
           filter: 'account_id = $1',
@@ -20,7 +20,7 @@ describe 'transactions' do
       it 'fails to list transactions using camelCase' do
         alice = create_account('alice')
         usd = create_flavor('usd')
-        issue_flavor(100, usd, alice)
+        issue(100, usd, alice)
 
         expect {
           chain.tokens.list(

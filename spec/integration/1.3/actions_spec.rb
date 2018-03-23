@@ -4,15 +4,15 @@ describe 'actions' do
   describe '#list' do
     context '#page with :size, :cursor' do
       it 'paginates results with cursor' do
-        ref_data = create_refdata('test')
+        tags = create_tags('test')
         alice = create_account('alice')
         gold = create_flavor('gold')
         3.times do
-          issue_flavor(1, gold, alice, reference_data: ref_data)
+          issue(1, gold, alice, action_tags: tags)
         end
 
         page1 = chain.actions.list(
-          filter: "reference_data.test='#{ref_data['test']}'",
+          filter: "tags.test='#{tags['test']}'",
         ).page(size: 2)
 
         expect(page1).to be_a(Sequence::Page)
@@ -27,14 +27,14 @@ describe 'actions' do
 
     context '#page#each' do
       it 'yields the items in the page to the block' do
-        ref_data = create_refdata('test')
+        tags = create_tags('test')
         alice = create_account('alice')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice, reference_data: ref_data)
-        issue_flavor(1, gold, alice, reference_data: ref_data)
+        issue(1, gold, alice, action_tags: tags)
+        issue(1, gold, alice, action_tags: tags)
 
         chain.actions.list(
-          filter: "reference_data.test='#{ref_data['test']}'",
+          filter: "tags.test='#{tags['test']}'",
         ).page.each do |action|
           expect(action).to be_a(Sequence::Action)
           expect(action.amount).to eq(1)
@@ -44,16 +44,16 @@ describe 'actions' do
 
     context '#all#each' do
       it 'iterates through the result set' do
-        ref_data = create_refdata('test')
+        tags = create_tags('test')
         alice = create_account('alice')
         gold = create_flavor('gold')
         3.times do
-          issue_flavor(1, gold, alice, reference_data: ref_data)
+          issue(1, gold, alice, action_tags: tags)
         end
 
         results = []
         chain.actions.list(
-          filter: "reference_data.test='#{ref_data['test']}'",
+          filter: "tags.test='#{tags['test']}'",
         ).all.each do |x|
           results << x
         end
@@ -65,18 +65,18 @@ describe 'actions' do
 
   describe '#sum' do
     context '#page with :size, :cursor, :group_by' do
-      it 'paginates results' do
-        ref_data = create_refdata('test')
+      it 'paginates results with cursor' do
+        tags = create_tags('test')
         alice = create_account('alice')
         bob = create_account('bob')
         carol = create_account('carol')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice, reference_data: ref_data)
-        issue_flavor(1, gold, bob, reference_data: ref_data)
-        issue_flavor(1, gold, carol, reference_data: ref_data)
+        issue(1, gold, alice, action_tags: tags)
+        issue(1, gold, bob, action_tags: tags)
+        issue(1, gold, carol, action_tags: tags)
 
         page1 = chain.actions.sum(
-          filter: "reference_data.test='#{ref_data['test']}'",
+          filter: "tags.test='#{tags['test']}'",
           group_by: ['destination_account_id'],
         ).page(size: 2)
 
@@ -93,15 +93,15 @@ describe 'actions' do
 
     context '#page#each' do
       it 'yields the items in the page to the block' do
-        ref_data = create_refdata('test')
+        tags = create_tags('test')
         alice = create_account('alice')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice, reference_data: ref_data)
-        issue_flavor(1, gold, alice, reference_data: ref_data)
+        issue(1, gold, alice, action_tags: tags)
+        issue(1, gold, alice, action_tags: tags)
 
         chain.actions.sum(
-          filter: 'reference_data.test=$1',
-          filter_params: [ref_data['test']],
+          filter: 'tags.test=$1',
+          filter_params: [tags['test']],
           group_by: ['destination_account_id'],
         ).page.each do |action|
           expect(action).to be_a(Sequence::Action)
@@ -112,16 +112,16 @@ describe 'actions' do
 
     context 'with :group_by, using .all' do
       it 'iterates through the result set' do
-        ref_data = create_refdata('test')
+        tags = create_tags('test')
         alice = create_account('alice')
         bob = create_account('bob')
         gold = create_flavor('gold')
-        issue_flavor(1, gold, alice, reference_data: ref_data)
-        issue_flavor(1, gold, bob, reference_data: ref_data)
+        issue(1, gold, alice, action_tags: tags)
+        issue(1, gold, bob, action_tags: tags)
 
         results = []
         chain.actions.sum(
-          filter: "reference_data.test='#{ref_data['test']}'",
+          filter: "tags.test='#{tags['test']}'",
           group_by: ['destination_account_id'],
         ).all.each do |x|
           results << x

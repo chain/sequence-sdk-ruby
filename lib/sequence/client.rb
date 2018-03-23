@@ -2,9 +2,6 @@
 
 require_relative './account'
 require_relative './action'
-require_relative './asset'
-require_relative './balance'
-require_relative './contract'
 require_relative './dev_utils'
 require_relative './feed'
 require_relative './flavor'
@@ -55,11 +52,6 @@ module Sequence
       @accounts ||= Account::ClientModule.new(self)
     end
 
-    # @return [Asset::ClientModule]
-    def assets
-      @assets ||= Asset::ClientModule.new(self)
-    end
-
     # @return [Flavor::ClientModule]
     def flavors
       @flavors ||= Flavor::ClientModule.new(self)
@@ -68,11 +60,6 @@ module Sequence
     # @return [Action::ClientModule]
     def actions
       @actions ||= Action::ClientModule.new(self)
-    end
-
-    # @return [Balance::ClientModule]
-    def balances
-      @balances ||= Balance::ClientModule.new(self)
     end
 
     # @return [Key::ClientModule]
@@ -93,11 +80,6 @@ module Sequence
     # @return [Feed::ClientModule]
     def feeds
       @feeds ||= Feed::ClientModule.new(self)
-    end
-
-    # @return [Contract::ClientModule]
-    def contracts
-      @contracts ||= Contract::ClientModule.new(self)
     end
 
     # @private

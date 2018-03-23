@@ -38,11 +38,6 @@ module Sequence
     # @return [Array<Action>]
     attrib(:actions) { |raw| raw.map { |v| Action.new(v) } }
 
-    # @!attribute [r] contracts
-    #   List of contracts created by the transaction.
-    # @return [Array<Contract>]
-    attrib(:contracts) { |raw| raw.map { |v| Contract.new(v) } }
-
     class ClientModule < Sequence::ClientModule
       # Builds, signs, and submits a transaction.
       # @param [Builder] builder
@@ -155,20 +150,12 @@ module Sequence
       #   Amount of the flavor to be issued.
       # @option opts [String] :flavor_id
       #   ID of the flavor to be issued.
-      # @option opts [String] :asset_id
-      #   Deprecated. Use :flavor_id instead.
-      #   ID of the asset to be issued. You must specify either an ID or an
-      #   alias.
-      # @option opts [String] :asset_alias
-      #   Deprecated. Use :flavor_id instead.
-      #   Asset alias of the asset to be issued. You must specify either an ID
-      #   or an alias.
       # @option opts [String] :destination_account_id
       #   ID of the account receiving the flavor units. You must specify a
       #   destination account ID or alias.
       # @option opts [String] :destination_account_alias
       #   Deprecated. Use :destination_account_id instead.
-      #   Alias of the account receiving the asset units. You must specify a
+      #   Alias of the account receiving the flavor units. You must specify a
       #   destination account ID or alias.
       # @option opts [Hash] :token_tags
       #   Tags to add to the receiving tokens.
@@ -183,15 +170,13 @@ module Sequence
           opts,
           :amount,
           :flavor_id,
-          :asset_id,
-          :asset_alias,
           :destination_account_id,
           :destination_account_alias,
           :token_tags,
           :action_tags,
           :reference_data,
         )
-        validate_either!(opts, :flavor_id, :asset_id, :asset_alias)
+        validate_required!(opts, :flavor_id)
         validate_either!(
           opts,
           :destination_account_id,
@@ -200,7 +185,7 @@ module Sequence
         add_action(opts.merge(type: :issue))
       end
 
-      # Moves tokens from a source (an account or contract) to a
+      # Moves tokens from a source account to a
       # destination account.
       #
       # @param [Hash] opts
@@ -209,34 +194,23 @@ module Sequence
       #   Amount of the flavor to be transferred.
       # @option opts [String] :flavor_id
       #   ID of the flavor to be transferred.
-      # @option opts [String] :asset_id
-      #   Deprecated. Use :flavor_id instead.
-      #   ID of the asset to be transferred. You must specify either an ID or an
-      #   alias.
       # @option opts [String] filter
       #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
       # @option opts [Array<String|Integer>] filter_params
       #   A list of parameter values for filter string (if needed).
-      # @option opts [String] :asset_alias
-      #   Deprecated. Use :flavor_id instead.
-      #   Asset alias of the asset to be transferred. You must specify either an
-      #   ID or an alias.
       # @option opts [String] :source_account_id
       #   ID of the account serving as the source of flavor units. You must
-      #   specify a source account ID, account alias, or contract ID.
+      #   specify a source account ID or account alias.
       # @option opts [String] :source_account_alias
       #   Deprecated. Use :source_account_id instead.
-      #   Alias of the account serving as the source of asset units You must
-      #   specify a source account ID, account alias, or contract ID.
-      # @option opts [String] :source_contract_id
-      #   ID of the contract serving as the source of flavor units. You must
-      #   specify a source account ID, account alias, or contract ID.
+      #   Alias of the account serving as the source of flavor units You must
+      #   specify a source account ID or account alias.
       # @option opts [String] :destination_account_id
       #   ID of the account receiving the flavor units. You must specify a
       #   destination account ID or alias.
       # @option opts [String] :destination_account_alias
       #   Deprecated. Use :destination_account_id instead.
-      #   Alias of the account receiving the asset units. You must specify a
+      #   Alias of the account receiving the flavor units. You must specify a
       #   destination account ID or alias.
       # @option opts [Hash] :token_tags
       #   Tags to add to the receiving tokens.
@@ -247,7 +221,7 @@ module Sequence
       #   reference data for the action.
       # @option opts [Hash] :change_reference_data
       #   Deprecated. This happens automatically when using token tags.
-      #   reference data for the change contract.
+      #   reference data for the change.
       # @return [Builder]
       def transfer(opts = {})
         validate_inclusion_of!(
@@ -256,11 +230,8 @@ module Sequence
           :flavor_id,
           :filter,
           :filter_params,
-          :asset_id,
-          :asset_alias,
           :source_account_id,
           :source_account_alias,
-          :source_contract_id,
           :destination_account_id,
           :destination_account_alias,
           :token_tags,
@@ -268,12 +239,11 @@ module Sequence
           :reference_data,
           :change_reference_data,
         )
-        validate_either!(opts, :flavor_id, :asset_id, :asset_alias)
+        validate_required!(opts, :flavor_id)
         validate_either!(
           opts,
           :source_account_id,
           :source_account_alias,
-          :source_contract_id,
         )
         validate_either!(
           opts,
@@ -283,7 +253,7 @@ module Sequence
         add_action(opts.merge(type: :transfer))
       end
 
-      # Takes tokens from a source (an account or contract) and
+      # Takes tokens from a source account and
       # retires them.
       #
       # @param [Hash] opts Options hash
@@ -295,24 +265,13 @@ module Sequence
       #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
       # @option opts [Array<String|Integer>] filter_params
       #   A list of parameter values for filter string (if needed).
-      # @option opts [String] :asset_id
-      #   Deprecated. Use :flavor_id instead.
-      #   ID of the asset to be retired. You must specify either an ID or an
-      #   alias.
-      # @option opts [String] :asset_alias
-      #   Deprecated. Use :flavor_id instead.
-      #   Asset alias of the asset to be retired. You must specify either an ID
-      #   or an alias.
       # @option opts [String] :source_account_id
       #   ID of the account serving as the source of flavor units. You must
-      #   specify a source account ID, account alias, or contract ID.
+      #   specify a source account ID or account alias.
       # @option opts [String] :source_account_alias
       #   Deprecated. Use :source_account_id instead.
-      #   Alias of the account serving as the source of asset units You must
-      #   specify a source account ID, account alias, or contract ID.
-      # @option opts [String] :source_contract_id
-      #   ID of the contract serving as the source of flavor units. You must
-      #   specify a source account ID, account alias, or contract ID.
+      #   Alias of the account serving as the source of flavor units You must
+      #   specify a source account ID or account alias.
       # @option opts [Hash] :action_tags
       #   Tags to add to the action.
       # @option opts [Hash] :reference_data
@@ -320,7 +279,7 @@ module Sequence
       #   Reference data for the action.
       # @option opts [Hash] :change_reference_data
       #   Deprecated. This happens automatically when using token tags.
-      #   Reference data for the change contract.
+      #   Reference data for the change.
       # @return [Builder]
       def retire(opts = {})
         validate_inclusion_of!(
@@ -329,21 +288,17 @@ module Sequence
           :flavor_id,
           :filter,
           :filter_params,
-          :asset_id,
-          :asset_alias,
           :source_account_id,
           :source_account_alias,
-          :source_contract_id,
           :action_tags,
           :reference_data,
           :change_reference_data,
         )
-        validate_either!(opts, :flavor_id, :asset_id, :asset_alias)
+        validate_required!(opts, :flavor_id)
         validate_either!(
           opts,
           :source_account_id,
           :source_account_alias,
-          :source_contract_id,
         )
         add_action(opts.merge(type: :retire))
       end
