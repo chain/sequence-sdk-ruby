@@ -16,11 +16,12 @@ describe 'flavors' do
 
         expect(page1).to be_a(Sequence::Page)
         expect(page1.items.size).to eq(2)
+        expect(page1.last_page).to eq(false)
 
-        cursor = page1.cursor
-        page2 = chain.flavors.list.page(cursor: cursor)
+        page2 = chain.flavors.list.page(cursor: page1.cursor)
 
         expect(page2.items.size).to eq(1)
+        expect(page2.last_page).to eq(true)
       end
     end
 

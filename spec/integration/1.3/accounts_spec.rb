@@ -14,7 +14,7 @@ describe 'accounts' do
       end
     end
 
-    context 'with filter parameters and :size,:cursor pagination' do
+    context '#page(size:), #page(:cursor) with filter parameters' do
       it 'paginates results' do
         uuid = SecureRandom.uuid
         create_account('alice', tags: { foo: uuid })
@@ -28,11 +28,33 @@ describe 'accounts' do
 
         expect(page1).to be_a(Sequence::Page)
         expect(page1.items.size).to eq(2)
+        expect(page1.last_page).to eq(false)
 
-        cursor = page1.cursor
-        page2 = chain.accounts.list.page(cursor: cursor)
+        page2 = chain.accounts.list.page(cursor: page1.cursor)
 
         expect(page2.items.size).to eq(1)
+        expect(page2.last_page).to eq(true)
+      end
+    end
+
+    context '#page(size:), #page(:cursor) and last page is full' do
+      it 'recognizes the last page' do
+        uuid = SecureRandom.uuid
+        create_account('alice', tags: { foo: uuid })
+
+        page1 = chain.accounts.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).page(size: 1)
+
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(1)
+        expect(page1.last_page).to eq(false)
+
+        page2 = chain.accounts.list.page(cursor: page1.cursor)
+
+        expect(page2.items.size).to eq(0)
+        expect(page2.last_page).to eq(true)
       end
     end
 
