@@ -27,12 +27,6 @@ module Sequence
     # @return [Integer]
     attrib :sequence_number
 
-    # @!attribute [r] reference_data
-    #   Deprecated. Use {Sequence::Action#tags} instead.
-    #   User-specified key-value data embedded into the transaction.
-    # @return [Hash]
-    attrib :reference_data
-
     # @!attribute [r] actions
     #   List of actions taken by the transaction.
     # @return [Array<Action>]
@@ -108,9 +102,6 @@ module Sequence
     class Builder
       include Sequence::Validations
 
-      # @deprecated Use {Sequence::Action#tags} instead.
-      attr_accessor :reference_data
-
       def initialize(&block)
         yield(self) if block
       end
@@ -120,10 +111,7 @@ module Sequence
       end
 
       def to_h
-        {
-          actions: actions,
-          reference_data: reference_data,
-        }
+        { actions: actions }
       end
 
       def to_json(opts = nil)
@@ -156,9 +144,6 @@ module Sequence
       #   Tags to add to the receiving tokens.
       # @option opts [Hash] :action_tags
       #   Tags to add to the action.
-      # @option opts [Hash] :reference_data
-      #   Deprecated. Use :token_tags or :action_tags instead.
-      #   Reference data for the action.
       # @return [Builder]
       def issue(opts = {})
         validate_inclusion_of!(
@@ -168,7 +153,6 @@ module Sequence
           :destination_account_id,
           :token_tags,
           :action_tags,
-          :reference_data,
         )
         validate_required!(opts, :amount)
         validate_required!(opts, :destination_account_id)
@@ -197,12 +181,6 @@ module Sequence
       #   Tags to add to the receiving tokens.
       # @option opts [Hash] :action_tags
       #   Tags to add to the action.
-      # @option opts [Hash] :reference_data
-      #   Deprecated. Use :token_tags or :action_tags instead.
-      #   reference data for the action.
-      # @option opts [Hash] :change_reference_data
-      #   Deprecated. This happens automatically when using token tags.
-      #   reference data for the change.
       # @return [Builder]
       def transfer(opts = {})
         validate_inclusion_of!(
@@ -215,8 +193,6 @@ module Sequence
           :destination_account_id,
           :token_tags,
           :action_tags,
-          :reference_data,
-          :change_reference_data,
         )
         validate_required!(opts, :amount)
         validate_required!(opts, :destination_account_id)
@@ -241,12 +217,6 @@ module Sequence
       #   ID of the account serving as the source of flavor units.
       # @option opts [Hash] :action_tags
       #   Tags to add to the action.
-      # @option opts [Hash] :reference_data
-      #   Deprecated. Use :token_tags or :action_tags instead.
-      #   Reference data for the action.
-      # @option opts [Hash] :change_reference_data
-      #   Deprecated. This happens automatically when using token tags.
-      #   Reference data for the change.
       # @return [Builder]
       def retire(opts = {})
         validate_inclusion_of!(
@@ -257,8 +227,6 @@ module Sequence
           :filter_params,
           :source_account_id,
           :action_tags,
-          :reference_data,
-          :change_reference_data,
         )
         validate_required!(opts, :amount)
         validate_required!(opts, :flavor_id)

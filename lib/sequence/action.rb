@@ -80,12 +80,6 @@ module Sequence
     # @return [Hash]
     attrib :tags
 
-    # @!attribute [r] reference_data
-    #   Deprecated. Use {#tags} instead.
-    #   User-specified key-value data embedded in the action.
-    # @return [Hash]
-    attrib :reference_data
-
     class ClientModule < Sequence::ClientModule
       # Executes a query, returning an enumerable over individual actions.
       # @param [Hash] opts

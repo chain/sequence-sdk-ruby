@@ -31,9 +31,6 @@ describe Sequence::Action do
         destination_account_tags: {
           'bank' => 'first-republic',
         },
-        reference_data: {
-          'ride-share-id' => 'ride-share-123',
-        },
       }
 
       result = described_class.new(raw)
