@@ -11,7 +11,7 @@ module Sequence
   # A type or class of value that can be tracked on a ledger.
   class Flavor < ResponseObject
     # @!attribute [r] id
-    #   Unique, auto-generated identifier.
+    #   Unique identifier of the flavor.
     # @return [String]
     attrib :id
 
@@ -48,7 +48,7 @@ module Sequence
       # @param [Hash] opts
       #   Options hash
       # @option opts [String] id
-      #   Unique, user-specified identifier.
+      #   Unique identifier. Auto-generated if not specified.
       # @option opts [Array<String>] key_ids
       #   The set of key IDs used for signing transactions that issue tokens of
       #   the flavor.
@@ -85,9 +85,7 @@ module Sequence
       # @return [void]
       def update_tags(opts = {})
         validate_inclusion_of!(opts, :id, :tags)
-        if opts[:id].nil? || opts[:id].empty?
-          raise ArgumentError, ':id must be provided'
-        end
+        validate_required!(opts, :id)
         client.session.request('update-flavor-tags', opts)
       end
 

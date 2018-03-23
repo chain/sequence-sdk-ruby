@@ -13,24 +13,15 @@ module Sequence
     # @return [String]
     attrib :id
 
-    # @!attribute [r] alias
-    #   Deprecated. Use {#id} instead.
-    #   Unique, user-specified identifier of the key.
-    # @return [String]
-    attrib :alias
-
     class ClientModule < Sequence::ClientModule
       # Creates a key.
       # @param [Hash] opts
       #   Options hash
       # @option opts [String] id
-      #   Unique, user-specified identifier of the key.
-      # @option opts [String] alias
-      #   Deprecated. Use :id instead.
-      #   Unique, user-specified identifier of the key.
+      #   Unique identifier. Auto-generated if not specified.
       # @return [Key]
       def create(opts = {})
-        validate_inclusion_of!(opts, :alias, :id)
+        validate_inclusion_of!(opts, :id)
         Key.new(client.session.request('create-key', opts))
       end
 
@@ -38,9 +29,6 @@ module Sequence
       # Executes a query, returning an enumerable over individual keys.
       # @param [Hash] opts
       #   Options hash
-      # @option opts [Array<String>] aliases
-      #   Deprecated. Use :ids instead.
-      #   A list of aliases of keys to retrieve.
       # @option opts [Array<String>] ids
       #   A list of ids of keys to retrieve.
       # @option opts [Integer>] page_size
@@ -48,7 +36,7 @@ module Sequence
       #   The number of items to return in the result set.
       # @return [Query]
       def query(opts = {})
-        validate_inclusion_of!(opts, :aliases, :ids, :page_size, :after)
+        validate_inclusion_of!(opts, :ids, :page_size, :after)
         Query.new(client, opts)
       end
 

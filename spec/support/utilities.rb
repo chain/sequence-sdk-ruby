@@ -5,16 +5,12 @@ module Utilities
     RSpec.configuration.sequence_client
   end
 
-  def create_alias(name)
-    "#{name}-#{SecureRandom.uuid}"
-  end
-
   def create_id(name)
     "#{name}-#{SecureRandom.uuid}"
   end
 
   def create_key
-    chain.keys.create(alias: create_id('key'))
+    chain.keys.create(id: create_id('key'))
   end
 
   def create_flavor(name, opts = {})
@@ -30,7 +26,7 @@ module Utilities
   def create_account(name, opts = {})
     chain.accounts.create(
       opts.merge(
-        alias: create_id(name),
+        id: create_id(name),
         keys: [create_key],
         quorum: 1,
       ),

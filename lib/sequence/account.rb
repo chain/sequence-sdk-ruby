@@ -10,15 +10,9 @@ module Sequence
   # blockchain by creating and tracking control programs.
   class Account < ResponseObject
     # @!attribute [r] id
-    #   Unique, auto-generated identifier.
+    #   Unique identifier of the account.
     # @return [String]
     attrib :id
-
-    # @!attribute [r] alias
-    #   Deprecated. Use {#id} instead.
-    #   Unique, user-specified identifier.
-    # @return [String]
-    attrib :alias
 
     # @!attribute [r] key_ids
     #   The set of key IDs used for signing transactions that spend from the
@@ -46,7 +40,6 @@ module Sequence
 
     class Key < ResponseObject
       attrib :id
-      attrib :alias
     end
 
     class ClientModule < Sequence::ClientModule
@@ -54,17 +47,13 @@ module Sequence
       # @param [Hash] opts
       #   Options hash
       # @option opts [String] id
-      #   Unique, user-specified identifier.
-      # @option opts [String] alias
-      #   Deprecated. Use :id instead.
-      #   Unique, user-specified identifier.
+      #   Unique identifier. Auto-generated if not specified.
       # @option opts [Array<String>] key_ids
       #   The key IDs used for signing transactions that spend from the account.
       # @option opts [Array<Hash>, Array<Sequence::Key>] keys
       #   Deprecated. Use :key_ids instead.
       #   The keys used for signing transactions that spend from the account. A
-      #   key can be either a key object, or a hash containing either an `id` or
-      #   `alias` field.
+      #   key can be either a key object, or a hash containing an `id`.
       # @option opts [Integer] quorum
       #   The number of keys required to sign transactions that spend from the
       #   account. Defaults to the number of keys provided.
@@ -74,7 +63,6 @@ module Sequence
       def create(opts = {})
         validate_inclusion_of!(
           opts,
-          :alias,
           :id,
           :key_ids,
           :keys,
@@ -95,21 +83,13 @@ module Sequence
       # @param [Hash] opts
       #   Options hash
       # @option opts [String] id
-      #   The ID of the account. Either an ID or alias should be provided, but
-      #   not both.
-      # @option opts [String] alias
-      #   Deprecated. Use :id instead.
-      #   The alias of the account. Either an ID or alias should be provided,
-      #   but not both.
+      #   The ID of the account.
       # @option opts [Hash] tags
       #   A new set of tags, which will replace the existing tags.
       # @return [void]
       def update_tags(opts = {})
-        validate_inclusion_of!(opts, :id, :alias, :tags)
-        if (opts[:id].nil? || opts[:id].empty?) &&
-           (opts[:alias].nil? || opts[:alias].empty?)
-          raise ArgumentError, ':id or :alias (but not both) must be provided'
-        end
+        validate_inclusion_of!(opts, :id, :tags)
+        validate_required!(opts, :id)
         client.session.request('update-account-tags', opts)
       end
 

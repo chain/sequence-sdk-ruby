@@ -18,13 +18,13 @@ describe 'keys' do
       end
     end
 
-    context 'with the same alias' do
+    context 'with the same id' do
       it 'raises API error' do
         uuid = SecureRandom.uuid
-        chain.keys.create(alias: uuid)
+        chain.keys.create(id: uuid)
 
         expect {
-          chain.keys.create(alias: uuid)
+          chain.keys.create(id: uuid)
         }.to raise_error(Sequence::APIError)
       end
     end

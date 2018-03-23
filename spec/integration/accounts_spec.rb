@@ -46,7 +46,7 @@ describe 'accounts' do
       end
     end
 
-    context 'when :id and :alias are missing' do
+    context 'when :id is missing' do
       it 'raises argument error' do
         expect {
           chain.accounts.update_tags(tags: { x: 'three' })
@@ -58,14 +58,6 @@ describe 'accounts' do
       it 'raises argument error' do
         expect {
           chain.accounts.update_tags(id: '', tags: { x: 'three' })
-        }.to raise_error(ArgumentError)
-      end
-    end
-
-    context 'when :alias is blank' do
-      it 'raises argument error' do
-        expect {
-          chain.accounts.update_tags(alias: '', tags: { x: 'three' })
         }.to raise_error(ArgumentError)
       end
     end
@@ -90,7 +82,7 @@ describe 'accounts' do
     context 'with invalid option' do
       it 'raises argument error' do
         expect {
-          chain.accounts.query(alias: 'bad')
+          chain.accounts.query(id: 'bad')
         }.to raise_error(ArgumentError)
       end
     end

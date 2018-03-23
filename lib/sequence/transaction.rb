@@ -151,12 +151,7 @@ module Sequence
       # @option opts [String] :flavor_id
       #   ID of the flavor to be issued.
       # @option opts [String] :destination_account_id
-      #   ID of the account receiving the flavor units. You must specify a
-      #   destination account ID or alias.
-      # @option opts [String] :destination_account_alias
-      #   Deprecated. Use :destination_account_id instead.
-      #   Alias of the account receiving the flavor units. You must specify a
-      #   destination account ID or alias.
+      #   ID of the account receiving the flavor units.
       # @option opts [Hash] :token_tags
       #   Tags to add to the receiving tokens.
       # @option opts [Hash] :action_tags
@@ -171,17 +166,13 @@ module Sequence
           :amount,
           :flavor_id,
           :destination_account_id,
-          :destination_account_alias,
           :token_tags,
           :action_tags,
           :reference_data,
         )
+        validate_required!(opts, :amount)
+        validate_required!(opts, :destination_account_id)
         validate_required!(opts, :flavor_id)
-        validate_either!(
-          opts,
-          :destination_account_id,
-          :destination_account_alias,
-        )
         add_action(opts.merge(type: :issue))
       end
 
@@ -199,19 +190,9 @@ module Sequence
       # @option opts [Array<String|Integer>] filter_params
       #   A list of parameter values for filter string (if needed).
       # @option opts [String] :source_account_id
-      #   ID of the account serving as the source of flavor units. You must
-      #   specify a source account ID or account alias.
-      # @option opts [String] :source_account_alias
-      #   Deprecated. Use :source_account_id instead.
-      #   Alias of the account serving as the source of flavor units You must
-      #   specify a source account ID or account alias.
+      #   ID of the account serving as the source of flavor units.
       # @option opts [String] :destination_account_id
-      #   ID of the account receiving the flavor units. You must specify a
-      #   destination account ID or alias.
-      # @option opts [String] :destination_account_alias
-      #   Deprecated. Use :destination_account_id instead.
-      #   Alias of the account receiving the flavor units. You must specify a
-      #   destination account ID or alias.
+      #   ID of the account receiving the flavor units.
       # @option opts [Hash] :token_tags
       #   Tags to add to the receiving tokens.
       # @option opts [Hash] :action_tags
@@ -231,25 +212,16 @@ module Sequence
           :filter,
           :filter_params,
           :source_account_id,
-          :source_account_alias,
           :destination_account_id,
-          :destination_account_alias,
           :token_tags,
           :action_tags,
           :reference_data,
           :change_reference_data,
         )
+        validate_required!(opts, :amount)
+        validate_required!(opts, :destination_account_id)
         validate_required!(opts, :flavor_id)
-        validate_either!(
-          opts,
-          :source_account_id,
-          :source_account_alias,
-        )
-        validate_either!(
-          opts,
-          :destination_account_id,
-          :destination_account_alias,
-        )
+        validate_required!(opts, :source_account_id)
         add_action(opts.merge(type: :transfer))
       end
 
@@ -266,12 +238,7 @@ module Sequence
       # @option opts [Array<String|Integer>] filter_params
       #   A list of parameter values for filter string (if needed).
       # @option opts [String] :source_account_id
-      #   ID of the account serving as the source of flavor units. You must
-      #   specify a source account ID or account alias.
-      # @option opts [String] :source_account_alias
-      #   Deprecated. Use :source_account_id instead.
-      #   Alias of the account serving as the source of flavor units You must
-      #   specify a source account ID or account alias.
+      #   ID of the account serving as the source of flavor units.
       # @option opts [Hash] :action_tags
       #   Tags to add to the action.
       # @option opts [Hash] :reference_data
@@ -289,17 +256,13 @@ module Sequence
           :filter,
           :filter_params,
           :source_account_id,
-          :source_account_alias,
           :action_tags,
           :reference_data,
           :change_reference_data,
         )
+        validate_required!(opts, :amount)
         validate_required!(opts, :flavor_id)
-        validate_either!(
-          opts,
-          :source_account_id,
-          :source_account_alias,
-        )
+        validate_required!(opts, :source_account_id)
         add_action(opts.merge(type: :retire))
       end
     end

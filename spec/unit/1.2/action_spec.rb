@@ -24,12 +24,10 @@ describe Sequence::Action do
           },
         },
         source_account_id: 'source-account-id-123',
-        source_account_alias: 'alice',
         source_account_tags: {
           'bank' => 'td-bank',
         },
         destination_account_id: 'destination-account-id-123',
-        destination_account_alias: 'bob',
         destination_account_tags: {
           'bank' => 'first-republic',
         },

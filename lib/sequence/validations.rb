@@ -7,15 +7,8 @@ module Sequence
     private
 
     def validate_required!(opts, *keys)
-      if keys.all? { |k| opts[k].nil? || opts[k].empty? }
+      if keys.all? { |k| opts[k].nil? || opts[k].to_s.empty? }
         list = keys.map { |k| ":#{k}" }.join(' and ')
-        raise ArgumentError, "#{list} must be provided"
-      end
-    end
-
-    def validate_either!(opts, *keys)
-      if keys.all? { |k| opts[k].nil? || opts[k].empty? }
-        list = keys.map { |k| ":#{k}" }.join(' or ')
         raise ArgumentError, "#{list} must be provided"
       end
     end

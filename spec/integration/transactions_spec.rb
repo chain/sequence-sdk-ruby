@@ -54,7 +54,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :destination_account_{id,alias}' do
+    context 'missing :destination_account_id' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -127,7 +127,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :source_account_{id,alias}' do
+    context 'missing :source_account_id' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -141,7 +141,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :destination_account_{id,alias}' do
+    context 'missing :destination_account_id' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
@@ -211,7 +211,7 @@ describe 'transactions' do
       end
     end
 
-    context 'missing :source_account_{id,alias}' do
+    context 'missing :source_account_id' do
       it 'raises argument error' do
         expect {
           chain.transactions.transact do |b|
