@@ -10,6 +10,7 @@ describe Sequence::Session do
       expect(result).to eq(
         'asset_count' => 0,
         'account_count' => 0,
+        'flavor_count' => 0,
         'tx_count' => 0,
       )
     end
