@@ -16,7 +16,7 @@ describe 'flavors' do
           chain.flavors.create
         }.to raise_error(
           ArgumentError,
-          ':key_ids or :keys (but not both) must be provided',
+          ':key_ids must be provided',
         )
       end
     end
@@ -27,7 +27,7 @@ describe 'flavors' do
           chain.flavors.create(key_ids: [])
         }.to raise_error(
           ArgumentError,
-          ':key_ids or :keys (but not both) must be provided',
+          ':key_ids must be provided',
         )
       end
     end

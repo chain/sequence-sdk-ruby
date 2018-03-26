@@ -7,7 +7,7 @@ describe 'accounts' do
         key = create_key
         id = create_id('alice')
 
-        result = chain.accounts.create(id: id, keys: [key])
+        result = chain.accounts.create(id: id, key_ids: [key.id])
 
         expect(result.id).to eq(id)
       end

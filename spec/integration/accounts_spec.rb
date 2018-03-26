@@ -10,7 +10,7 @@ describe 'accounts' do
       end
     end
 
-    context 'when :keys are missing' do
+    context 'when :key_ids are missing' do
       it 'raises argument error' do
         expect {
           chain.accounts.create
@@ -18,19 +18,19 @@ describe 'accounts' do
       end
     end
 
-    context 'when :keys are empty' do
+    context 'when :key_ids are empty' do
       it 'raises argument error' do
         expect {
-          chain.accounts.create(keys: [])
+          chain.accounts.create(key_ids: [])
         }.to raise_error(ArgumentError)
       end
     end
 
-    context 'when :keys are provided' do
+    context 'when :key_ids are provided' do
       it 'creates an account' do
         key = create_key
 
-        result = chain.accounts.create(keys: [key])
+        result = chain.accounts.create(key_ids: [key.id])
 
         expect(result.id).not_to be_empty
       end
@@ -65,8 +65,8 @@ describe 'accounts' do
     context 'with :id' do
       it 'updates tags for account' do
         key = create_key
-        account = chain.accounts.create(keys: [key], tags: { x: 'foo' })
-        other = chain.accounts.create(keys: [key], tags: { y: 'bar' })
+        account = chain.accounts.create(key_ids: [key.id], tags: { x: 'foo' })
+        other = chain.accounts.create(key_ids: [key.id], tags: { y: 'bar' })
 
         chain.accounts.update_tags(id: account.id, tags: { x: 'baz' })
 
@@ -101,7 +101,7 @@ describe 'accounts' do
       it 'finds the account' do
         key = create_key
         account = chain.accounts.create(
-          keys: [key],
+          key_ids: [key.id],
           tags: { type: 'checking' },
         )
 

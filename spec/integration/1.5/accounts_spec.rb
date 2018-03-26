@@ -8,7 +8,7 @@ describe 'accounts' do
           chain.accounts.create
         }.to raise_error(
           ArgumentError,
-          ':key_ids or :keys (but not both) must be provided',
+          ':key_ids must be provided',
         )
       end
     end
@@ -19,7 +19,7 @@ describe 'accounts' do
           chain.accounts.create(key_ids: [])
         }.to raise_error(
           ArgumentError,
-          ':key_ids or :keys (but not both) must be provided',
+          ':key_ids must be provided',
         )
       end
     end

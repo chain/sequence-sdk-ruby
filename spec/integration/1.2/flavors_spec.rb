@@ -10,7 +10,7 @@ describe 'flavors' do
       end
     end
 
-    context 'when :keys are missing' do
+    context 'when :key_ids are missing' do
       it 'raises argument error' do
         expect {
           chain.flavors.create
@@ -18,30 +18,30 @@ describe 'flavors' do
       end
     end
 
-    context 'when :keys are empty' do
+    context 'when :key_ids are empty' do
       it 'raises argument error' do
         expect {
-          chain.flavors.create(keys: [])
+          chain.flavors.create(key_ids: [])
         }.to raise_error(ArgumentError)
       end
     end
 
-    context 'when :keys are provided' do
+    context 'when :key_ids are provided' do
       it 'creates a flavor' do
         key = create_key
 
-        result = chain.flavors.create(keys: [key])
+        result = chain.flavors.create(key_ids: [key.id])
 
         expect(result.id).not_to be_empty
       end
     end
 
-    context 'when :keys and :id are provided' do
+    context 'when :key_ids and :id are provided' do
       it 'creates a flavor with user specified id' do
         key = create_key
         id = create_id('user-specified')
 
-        result = chain.flavors.create(id: id, keys: [key])
+        result = chain.flavors.create(id: id, key_ids: [key.id])
 
         expect(result.id).to eq(id)
       end
@@ -76,8 +76,8 @@ describe 'flavors' do
     context 'with :id' do
       it 'updates tags for flavor' do
         key = create_key
-        flavor = chain.flavors.create(keys: [key], tags: { x: 'foo' })
-        other = chain.flavors.create(keys: [key], tags: { y: 'bar' })
+        flavor = chain.flavors.create(key_ids: [key.id], tags: { x: 'foo' })
+        other = chain.flavors.create(key_ids: [key.id], tags: { y: 'bar' })
 
         chain.flavors.update_tags(id: flavor.id, tags: { x: 'baz' })
 
@@ -101,7 +101,7 @@ describe 'flavors' do
     context 'with filter' do
       it 'finds the flavor' do
         key = create_key
-        flavor = chain.flavors.create(keys: [key])
+        flavor = chain.flavors.create(key_ids: [key.id])
 
         list = chain.flavors.list(filter: "id='#{flavor.id}'").first
 

@@ -6,8 +6,8 @@ describe 'stats' do
     initial = chain.stats.get
 
     key = create_key
-    account = chain.accounts.create(keys: [key], quorum: 1)
-    flavor = chain.flavors.create(keys: [key], quorum: 1)
+    account = chain.accounts.create(key_ids: [key.id], quorum: 1)
+    flavor = chain.flavors.create(key_ids: [key.id], quorum: 1)
 
     chain.transactions.transact do |b|
       b.issue flavor_id: flavor.id, amount: 1, destination_account_id: account.id

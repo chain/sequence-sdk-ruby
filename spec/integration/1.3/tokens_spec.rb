@@ -46,7 +46,7 @@ describe 'tokens' do
             vin: vin,
             year: '2010',
           },
-          keys: [create_key],
+          key_ids: [create_key.id],
         )
         issue(1, q5, oakland)
 

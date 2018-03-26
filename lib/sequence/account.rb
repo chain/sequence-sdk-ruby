@@ -20,13 +20,6 @@ module Sequence
     # @return [Array<String>]
     attrib(:key_ids)
 
-    # @!attribute [r] keys
-    #   Deprecated. Use {#key_ids} instead.
-    #   The set of keys used for signing transactions that spend from the
-    #   account.
-    # @return [Array<Key>]
-    attrib(:keys) { |raw| raw.map { |k| Key.new(k) } }
-
     # @!attribute [r] quorum
     #   The number of keys required to sign transactions that spend from the
     #   account.
@@ -50,10 +43,6 @@ module Sequence
       #   Unique identifier. Auto-generated if not specified.
       # @option opts [Array<String>] key_ids
       #   The key IDs used for signing transactions that spend from the account.
-      # @option opts [Array<Hash>, Array<Sequence::Key>] keys
-      #   Deprecated. Use :key_ids instead.
-      #   The keys used for signing transactions that spend from the account. A
-      #   key can be either a key object, or a hash containing an `id`.
       # @option opts [Integer] quorum
       #   The number of keys required to sign transactions that spend from the
       #   account. Defaults to the number of keys provided.
@@ -65,17 +54,10 @@ module Sequence
           opts,
           :id,
           :key_ids,
-          :keys,
           :quorum,
           :tags,
         )
-        if (opts[:key_ids].nil? || opts[:key_ids].empty?) &&
-           (opts[:keys].nil? || opts[:keys].empty?)
-          raise(
-            ArgumentError,
-            ':key_ids or :keys (but not both) must be provided',
-          )
-        end
+        validate_required!(opts, :key_ids)
         Account.new(client.session.request('create-account', opts))
       end
 

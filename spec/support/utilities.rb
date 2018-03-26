@@ -17,7 +17,7 @@ module Utilities
     chain.flavors.create(
       opts.merge(
         id: create_id(name),
-        keys: [create_key],
+        key_ids: [create_key.id],
         quorum: 1,
       ),
     )
@@ -27,7 +27,7 @@ module Utilities
     chain.accounts.create(
       opts.merge(
         id: create_id(name),
-        keys: [create_key],
+        key_ids: [create_key.id],
         quorum: 1,
       ),
     )
