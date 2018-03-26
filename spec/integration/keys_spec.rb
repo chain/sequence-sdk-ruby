@@ -30,41 +30,66 @@ describe 'keys' do
     end
   end
 
-  describe '#query' do
+  describe '#list' do
     context 'with invalid option' do
       it 'raises argument error' do
         expect {
-          chain.keys.query(not: 'an-option')
+          chain.keys.list(id: 'bad')
+        }.to raise_error(ArgumentError)
+
+        expect {
+          chain.keys.list(page_size: 1)
         }.to raise_error(ArgumentError)
       end
     end
 
-    context 'with no options' do
-      it 'finds all keys' do
-        key = create_key
+    context 'with :size, :cursor pagination' do
+      it 'paginates results' do
+        chain.dev_utils.reset
 
-        query = chain.keys.query.first
+        create_key
+        create_key
+        create_key
 
-        expect(query.id).to eq key.id
+        page1 = chain.keys.list.page(size: 2)
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(2)
+        expect(page1.last_page).to eq(false)
+
+        page2 = chain.keys.list.page(cursor: page1.cursor)
+
+        expect(page2.items.size).to eq(1)
+        expect(page2.last_page).to eq(true)
       end
     end
 
-    context 'with :page_size, :after' do
-      it 'paginates results reverse chronologically' do
-        old_key = create_key
-        new_key = create_key
+    context '#page#each' do
+      it 'yields keys in the page to the block' do
+        chain.dev_utils.reset
 
-        first_page = chain.keys.query(page_size: 1).pages.first
+        key = create_key
 
-        expect(first_page).to be_a(Sequence::Page)
-        expect(first_page.items.size).to eq(1)
-        expect(first_page.items.first.id).to eq(new_key.id)
+        chain.keys.list.page.each do |item|
+          expect(item).to be_a(Sequence::Key)
+          expect(item.id).to eq(key.id)
+        end
+      end
+    end
 
-        second_page = chain.keys.query(
-          after: first_page.next['after'],
-        ).pages.first
+    context '#all#each' do
+      it 'yields keys to the block' do
+        chain.dev_utils.reset
 
-        expect(second_page.items.first.id).to eq(old_key.id)
+        create_key
+        create_key
+
+        results = []
+        chain.keys.list.all.each do |item|
+          expect(item).to be_a(Sequence::Key)
+          results << item
+        end
+
+        expect(results.size).to eq(2)
       end
     end
   end

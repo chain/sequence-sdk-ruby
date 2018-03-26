@@ -70,66 +70,103 @@ describe 'accounts' do
 
         chain.accounts.update_tags(id: account.id, tags: { x: 'baz' })
 
-        query = chain.accounts.query(filter: "id='#{account.id}'").first
+        query = chain.accounts.list(filter: "id='#{account.id}'").all.first
         expect(query.tags).to eq('x' => 'baz')
-        query = chain.accounts.query(filter: "id='#{other.id}'").first
+        query = chain.accounts.list(filter: "id='#{other.id}'").all.first
         expect(query.tags).to eq('y' => 'bar')
       end
     end
   end
 
-  describe '#query' do
+  describe '#list' do
     context 'with invalid option' do
       it 'raises argument error' do
         expect {
-          chain.accounts.query(id: 'bad')
+          chain.accounts.list(id: 'bad')
+        }.to raise_error(ArgumentError)
+
+        expect {
+          chain.accounts.list(page_size: 1)
         }.to raise_error(ArgumentError)
       end
     end
 
-    context 'with filter' do
-      it 'finds the account' do
-        account = create_account('alice')
+    context '#page(size:), #page(:cursor) with filter parameters' do
+      it 'paginates results' do
+        uuid = SecureRandom.uuid
+        create_account('alice', tags: { foo: uuid })
+        create_account('bob', tags: { foo: uuid })
+        create_account('carol', tags: { foo: uuid })
 
-        query = chain.accounts.query(filter: "id='#{account.id}'").first
+        page1 = chain.accounts.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).page(size: 2)
 
-        expect(query.id).to eq account.id
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(2)
+        expect(page1.last_page).to eq(false)
+
+        page2 = chain.accounts.list.page(cursor: page1.cursor)
+
+        expect(page2.items.size).to eq(1)
+        expect(page2.last_page).to eq(true)
       end
     end
 
-    context 'with filter parameters' do
-      it 'finds the account' do
-        key = create_key
-        account = chain.accounts.create(
-          key_ids: [key.id],
-          tags: { type: 'checking' },
-        )
+    context '#page(size:), #page(:cursor) and last page is full' do
+      it 'recognizes the last page' do
+        uuid = SecureRandom.uuid
+        create_account('alice', tags: { foo: uuid })
 
-        query = chain.accounts.query(
-          filter: 'tags.type=$1',
-          filter_params: ['checking'],
-        ).first
+        page1 = chain.accounts.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).page(size: 1)
 
-        expect(query.id).to eq account.id
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(1)
+        expect(page1.last_page).to eq(false)
+
+        page2 = chain.accounts.list.page(cursor: page1.cursor)
+
+        expect(page2.items.size).to eq(0)
+        expect(page2.last_page).to eq(true)
       end
     end
 
-    context 'with :page_size, :after' do
-      it 'paginates results reverse chronologically' do
-        alice = create_account('alice')
-        bob = create_account('bob')
+    context '#page#each' do
+      it 'yields accounts in the page to the block' do
+        uuid = SecureRandom.uuid
+        alice = create_account('alice', tags: { foo: uuid })
+        create_account('bob')
 
-        first_page = chain.accounts.query(page_size: 1).pages.first
+        chain.accounts.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).page.each do |item|
+          expect(item).to be_a(Sequence::Account)
+          expect(item.id).to eq(alice.id)
+        end
+      end
+    end
 
-        expect(first_page).to be_a(Sequence::Page)
-        expect(first_page.items.size).to eq(1)
-        expect(first_page.items.first.id).to eq(bob.id)
+    context '#all#each' do
+      it 'yields accounts to the block' do
+        uuid = SecureRandom.uuid
+        create_account('alice', tags: { foo: uuid })
+        create_account('bob', tags: { foo: uuid })
 
-        second_page = chain.accounts.query(
-          after: first_page.next['after'],
-        ).pages.first
+        results = []
+        chain.accounts.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).all.each do |item|
+          expect(item).to be_a(Sequence::Account)
+          results << item
+        end
 
-        expect(second_page.items.first.id).to eq(alice.id)
+        expect(results.size).to eq(2)
       end
     end
   end

@@ -50,27 +50,6 @@ module Sequence
         )
       end
 
-      # @deprecated Use list instead.
-      # Executes a query, returning an enumerable over individual transactions.
-      # @param [Hash] opts Options hash
-      # @option opts [String] filter
-      #   A filter expression.
-      # @option opts [Array<String|Integer>] filter_params
-      #   A list of values that will be interpolated into the filter expression.
-      # @option opts [Integer] start_time
-      #   A Unix timestamp in milliseconds of the earliest transaction timestamp
-      #   to include in the query results.
-      # @option opts [Integer] end_time
-      #   A Unix timestamp in milliseconds of the most recent transaction
-      #   timestamp to include in the query results.
-      # @option opts [Integer>] page_size
-      #   Deprecated. Use list.page(size: size) instead.
-      #   The number of items to return in the result set.
-      # @return [Query]
-      def query(opts = {})
-        Query.new(client, opts)
-      end
-
       # Executes a query, returning an enumerable over individual transactions.
       # @param [Hash] opts Options hash
       # @option opts [String] filter

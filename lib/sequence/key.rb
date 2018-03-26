@@ -25,21 +25,6 @@ module Sequence
         Key.new(client.session.request('create-key', opts))
       end
 
-      # @deprecated Use list instead.
-      # Executes a query, returning an enumerable over individual keys.
-      # @param [Hash] opts
-      #   Options hash
-      # @option opts [Array<String>] ids
-      #   A list of ids of keys to retrieve.
-      # @option opts [Integer>] page_size
-      #   Deprecated. Use list.page(size: size) instead.
-      #   The number of items to return in the result set.
-      # @return [Query]
-      def query(opts = {})
-        validate_inclusion_of!(opts, :ids, :page_size, :after)
-        Query.new(client, opts)
-      end
-
       # Lists all keys.
       # Executes a query, returning an enumerable over individual keys.
       # @return [Query]
