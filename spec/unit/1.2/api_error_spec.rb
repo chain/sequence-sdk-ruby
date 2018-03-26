@@ -3,13 +3,9 @@
 describe Sequence::APIError do
   describe '#new' do
     it 'includes deprecated #code and current #seq_code' do
-      body = {
-        'code' => 'CH008',
-        'seq_code' => 'SEQ008',
-      }
+      body = { 'seq_code' => 'SEQ008' }
       error = described_class.new(body, nil)
 
-      expect(error.code).to eq('CH008')
       expect(error.seq_code).to eq('SEQ008')
     end
   end
@@ -17,7 +13,6 @@ describe Sequence::APIError do
   describe '#to_s' do
     it 'includes information from API response in error message' do
       body = {
-        'code' => 'CH008',
         'detail' => 'deets',
         'message' => 'not found',
         'seq_code' => 'SEQ008',

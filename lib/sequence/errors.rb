@@ -45,12 +45,8 @@ module Sequence
       :seq_code,
       :temporary,
     )
-    # Use {#seq_code} instead.
-    # @deprecated
-    attr_accessor :code
 
     def initialize(body, response)
-      self.code = body['code']
       self.chain_message = body['message']
       self.detail = body['detail']
       self.retriable = body['retriable']
