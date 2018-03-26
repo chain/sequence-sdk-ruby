@@ -58,22 +58,10 @@ module Sequence
     # @return [String]
     attrib :source_account_id
 
-    # @!attribute [r] source_account_tags
-    #   Deprecated. Use {#snapshot} instead.
-    #   The tags of the source account executing the action.
-    # @return [Hash]
-    attrib :source_account_tags
-
     # @!attribute [r] destination_account_id
     #   The ID of the destination account affected by the action.
     # @return [String]
     attrib :destination_account_id
-
-    # @!attribute [r] destination_account_tags
-    #   Deprecated. Use {#snapshot} instead.
-    #   The tags of the destination account affected by the action.
-    # @return [Hash]
-    attrib :destination_account_tags
 
     # @!attribute [r] tags
     #   User-specified key-value data embedded in the action.
@@ -105,7 +93,6 @@ module Sequence
           :filter,
           :filter_params,
           :page_size,
-          :after,
         )
         ListQuery.new(client, opts)
       end

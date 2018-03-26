@@ -44,43 +44,6 @@ describe Sequence::Action::ClientModule do
 
       expect(num_actions.size).to eq(2)
     end
-
-    context 'with :page_size, :after' do
-      it 'paginates results reverse chronologically' do
-        tags = create_tags('test')
-        alice = create_account('alice')
-        gold = create_flavor('gold')
-        issue(1, gold, alice, action_tags: tags)
-        bob = create_account('bob')
-        btc = create_flavor('btc')
-        issue(1, btc, bob, action_tags: tags)
-
-        first_page = chain.actions.list(
-          filter: "tags.test='#{tags['test']}'",
-          page_size: 1,
-        ).pages.first
-
-        expect(first_page).to be_a(Sequence::Page)
-        expect(first_page.items.size).to eq(1)
-
-        action = first_page.items.first
-
-        expect(action.type).to eq('issue')
-        expect(action.flavor_id).to eq(btc.id)
-        expect(action.destination_account_id).to eq(bob.id)
-
-        second_page = chain.actions.list(
-          filter: "tags.test='#{tags['test']}'",
-          after: first_page.next['after'],
-        ).pages.first
-
-        action = second_page.items.first
-
-        expect(action.type).to eq('issue')
-        expect(action.flavor_id).to eq(gold.id)
-        expect(action.destination_account_id).to eq(alice.id)
-      end
-    end
   end
 
   describe '#sum' do

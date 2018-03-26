@@ -4,7 +4,7 @@ require_relative '../spec_helper'
 
 describe Sequence::Client do
   describe '#new' do
-    context 'when missing :ledger_name and missing :ledger' do
+    context 'when missing :ledger_name' do
       it 'raises argument error' do
         expect {
           Sequence::Client.new(credential: 'foo')
@@ -12,7 +12,7 @@ describe Sequence::Client do
       end
     end
 
-    context 'when nil :ledger_name and missing :ledger' do
+    context 'when nil :ledger_name' do
       it 'raises argument error' do
         expect {
           Sequence::Client.new(credential: 'foo', ledger_name: nil)
@@ -20,26 +20,10 @@ describe Sequence::Client do
       end
     end
 
-    context 'when blank :ledger_name and missing :ledger' do
+    context 'when blank :ledger_name' do
       it 'raises argument error' do
         expect {
           Sequence::Client.new(credential: 'foo', ledger_name: '')
-        }.to raise_error(ArgumentError)
-      end
-    end
-
-    context 'when nil :ledger and missing :ledger_name' do
-      it 'raises argument error' do
-        expect {
-          Sequence::Client.new(credential: 'foo', ledger: nil)
-        }.to raise_error(ArgumentError)
-      end
-    end
-
-    context 'when blank :ledger and missing :ledger_name' do
-      it 'raises argument error' do
-        expect {
-          Sequence::Client.new(credential: 'foo', ledger: '')
         }.to raise_error(ArgumentError)
       end
     end

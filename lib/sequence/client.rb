@@ -12,27 +12,18 @@ require_relative './transaction'
 
 module Sequence
   class Client
+    include Sequence::Validations
+
     # @param [Hash] opts
     #   Options hash
     # @option opts [String] ledger_name
-    #   Ledger name.
-    # @option opts [String] ledger
-    #   Deprecated. Use :ledger_name instead.
     #   Ledger name.
     # @option opts [String] credential
     #   API credential secret.
     # @return [Query]
     def initialize(opts = {})
-      if (opts[:ledger_name].nil? || opts[:ledger_name].empty?) == (opts[:ledger].nil? || opts[:ledger].empty?)
-        raise ArgumentError, ':ledger_name or :ledger (but not both) must be provided'
-      end
-      if opts[:credential].nil? || opts[:credential].empty?
-        raise ArgumentError, ':credential must be provided'
-      end
-
-      if opts[:ledger_name].nil? || opts[:ledger_name].empty?
-        opts[:ledger_name] = opts[:ledger]
-      end
+      validate_required!(opts, :ledger_name)
+      validate_required!(opts, :credential)
       @opts = opts
     end
 

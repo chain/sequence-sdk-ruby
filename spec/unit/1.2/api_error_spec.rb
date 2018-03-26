@@ -2,7 +2,7 @@
 
 describe Sequence::APIError do
   describe '#new' do
-    it 'includes deprecated #code and current #seq_code' do
+    it 'includes #seq_code' do
       body = { 'seq_code' => 'SEQ008' }
       error = described_class.new(body, nil)
 

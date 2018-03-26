@@ -152,10 +152,12 @@ describe 'accounts' do
     end
 
     context '#all#each' do
+
       it 'yields accounts to the block' do
         uuid = SecureRandom.uuid
-        create_account('alice', tags: { foo: uuid })
-        create_account('bob', tags: { foo: uuid })
+        101.times do
+          create_account('alice', tags: { foo: uuid })
+        end
 
         results = []
         chain.accounts.list(
@@ -166,7 +168,7 @@ describe 'accounts' do
           results << item
         end
 
-        expect(results.size).to eq(2)
+        expect(results.size).to eq(101)
       end
     end
   end

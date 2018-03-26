@@ -76,8 +76,7 @@ module Sequence
 
         loop do
           page = Page.new(@fetch.call(@query), @translate)
-          @query = page.next
-
+          @query = { cursor: page.cursor }
           yield page
 
           break if page.last_page
