@@ -17,5 +17,6 @@ describe 'stats' do
     expect(got.flavor_count).to eql(initial.flavor_count + 1)
     expect(got.account_count).to eql(initial.account_count + 1)
     expect(got.tx_count).to eql(initial.tx_count + 1)
+    expect(got.ledger_type).to eql('dev')
   end
 end

@@ -23,6 +23,11 @@ module Sequence
     # @return [Integer]
     attrib :tx_count
 
+    # @!attribute [r] ledger_type
+    # The ledger type. Value can be 'dev' or 'prod'.
+    # @return [Integer]
+    attrib :ledger_type
+
     class ClientModule < Sequence::ClientModule
       # Gets stats from the ledger.
       # @return [Stats]
