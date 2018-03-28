@@ -25,11 +25,11 @@ RSpec.configure do |config|
     opts = {
       host: 'https://chain.localhost:1999',
       ledger_name: ENV.fetch('LEDGER_NAME', 'test'),
-      credential: ENV['MACAROON'],
+      credential: ENV['SEQCRED'],
       refresh_method: lambda { |_|
         {
           'team_name' => ENV.fetch('TEAM_NAME', 'team'),
-          'refresh_token' => ENV['DISCHARGE_MACAROON'],
+          'refresh_token' => '',
           'refresh_at' => Time.now.to_i + 1000,
         }
       },
