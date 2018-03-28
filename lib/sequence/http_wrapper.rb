@@ -26,13 +26,10 @@ module Sequence
       Errno::ECONNREFUSED,
     ].freeze
 
-    attr_accessor :dis_macaroon
-
-    def initialize(base_url, macaroon, opts = {})
+    def initialize(base_url, credential, opts = {})
       @mutex = Mutex.new
       @base_url = URI(base_url)
-      @macaroon = macaroon
-      @dis_macaroon = nil
+      @credential = credential
       @opts = opts
       @connection = setup_connection
     end
@@ -57,10 +54,7 @@ module Sequence
           req['Idempotency-Key'] = idempotency_key
           req['Name-Set'] = 'snake'
           req['User-Agent'] = 'chain-sdk-ruby/' + Sequence::VERSION
-          if !@macaroon.nil? && !@dis_macaroon.nil?
-            req['Macaroon'] = @macaroon
-            req['Discharge-Macaroon'] = @dis_macaroon
-          end
+          req['Credential'] = @credential
           if !@opts[:user].nil? && !@opts[:pass].nil?
             req.basic_auth(@opts[:user], @opts[:pass])
           end

@@ -5,6 +5,7 @@ require_relative './action'
 require_relative './dev_utils'
 require_relative './feed'
 require_relative './flavor'
+require_relative './http_wrapper'
 require_relative './key'
 require_relative './stats'
 require_relative './token'
@@ -24,7 +25,10 @@ module Sequence
     def initialize(opts = {})
       validate_required!(opts, :ledger_name)
       validate_required!(opts, :credential)
-      @opts = opts
+
+      addr = ENV['SEQADDR'] || 'api.seq.com'
+      api = HttpWrapper.new('https://' + addr, opts[:credential], opts)
+      @opts = opts.merge(team_name: team_name(api), addr: addr)
     end
 
     # @private
@@ -82,6 +86,12 @@ module Sequence
     # @return [DevUtils::ClientModule]
     def dev_utils
       @dev_utils ||= DevUtils::ClientModule.new(self)
+    end
+
+    private
+
+    def team_name(api)
+      api.post(SecureRandom.hex(10), '/hello', {})[:parsed_body]['team_name']
     end
   end
 end

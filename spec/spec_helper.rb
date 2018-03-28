@@ -26,13 +26,6 @@ RSpec.configure do |config|
       host: 'https://chain.localhost:1999',
       ledger_name: ENV.fetch('LEDGER_NAME', 'test'),
       credential: ENV['SEQCRED'],
-      refresh_method: lambda { |_|
-        {
-          'team_name' => ENV.fetch('TEAM_NAME', 'team'),
-          'refresh_token' => '',
-          'refresh_at' => Time.now.to_i + 1000,
-        }
-      },
       ssl_params: {
         ca_file: ENV['CHAIN'] + '/certs/dev-ca.crt',
       },

@@ -15,35 +15,15 @@ module Sequence
         ArgumentError,
         'missing ledger_name',
       )
-      @macaroon = @opts[:credential] || raise(
+      @credential = @opts[:credential] || raise(
         ArgumentError,
         'missing credential',
       )
-
-      # Start at 0 to trigger an immediate refresh
-      @refresh_at = 0
-
-      # Expect this to get set in #refresh!
-      @team_name = nil
-
-      # This can be used to avoid making an http request to get a
-      # new discharge macaroon.
-      @refresh_method = @opts[:refresh_method]
-      if @refresh_method
-        unless @refresh_method.respond_to?(:call)
-          raise ArgumentError, 'refresh_method is not a lambda'
-        end
-        if @refresh_method.arity != 1
-          raise(
-            ArgumentError,
-            'refresh_method must take 1 argument. (the macaroon)',
-          )
-        end
-      end
-
-      addr = ENV['SEQADDR'] || 'api.seq.com'
-      @session_api = HttpWrapper.new('https://session-' + addr, nil)
-      @ledger_api = HttpWrapper.new('https://' + addr, @macaroon, @opts)
+      @team_name = @opts[:team_name] || raise(
+        ArgumentError,
+        'missing team_name',
+      )
+      @ledger_api = HttpWrapper.new('https://' + @opts[:addr], @credential, @opts)
     end
 
     def dup
@@ -55,7 +35,6 @@ module Sequence
     end
 
     def request_full_resp(id, path, body = {})
-      refresh!(id)
       id ||= SecureRandom.hex(10)
       @ledger_api.post(id, ledger_url(path), body) do |response|
         # require that the response contains the Chain-Request-ID
@@ -76,24 +55,6 @@ module Sequence
     def ledger_url(path)
       path = path[1..-1] if path.start_with?('/')
       "/#{@team_name}/#{@ledger}/#{path}"
-    end
-
-    def refresh!(id)
-      return if @refresh_at > Time.now.to_i
-
-      if @refresh_method
-        result = @refresh_method.call(@macaroon)
-      else
-        result = @session_api.post(
-          id,
-          '/sessions/validate',
-          macaroon: @macaroon,
-        )[:parsed_body]
-      end
-
-      @team_name = result['team_name']
-      @refresh_at = Integer(result['refresh_at'])
-      @ledger_api.dis_macaroon = result['refresh_token']
     end
   end
 end
