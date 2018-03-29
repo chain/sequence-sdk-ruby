@@ -126,10 +126,13 @@ module Sequence
 
       # TLS configuration
       connection.use_ssl = true
-      connection.verify_mode = @opts[:verify_mode] || OpenSSL::SSL::VERIFY_PEER
-      [:ca_file, :cert, :key].each do |k|
-        next unless @opts.key?(:ssl_params) && @opts[:ssl_params].key?(k)
-        connection.send("#{k}=", @opts[:ssl_params][k])
+      connection.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      if ENV['SEQTLSVERIFYNONE']
+        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      if ENV['SEQTLSCA']
+        puts "setting ca_file #{ENV['SEQTLSCA']}"
+        connection.ca_file = ENV['SEQTLSCA']
       end
 
       # Timeout configuration

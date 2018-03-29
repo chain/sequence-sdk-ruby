@@ -23,12 +23,8 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     opts = {
-      host: 'https://chain.localhost:1999',
       ledger_name: ENV.fetch('LEDGER_NAME', 'test'),
       credential: ENV['SEQCRED'],
-      ssl_params: {
-        ca_file: ENV['CHAIN'] + '/certs/dev-ca.crt',
-      },
     }
 
     if ENV['LEGACY_VERSION']
