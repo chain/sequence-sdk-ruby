@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Sequence::Feed do
+describe 'feeds' do
   describe '#consume' do
     it 'consumes every spend and every issuance transaction' do
       gold = create_flavor('gold')

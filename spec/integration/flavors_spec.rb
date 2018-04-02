@@ -14,7 +14,10 @@ describe 'flavors' do
       it 'raises argument error' do
         expect {
           chain.flavors.create
-        }.to raise_error(ArgumentError)
+        }.to raise_error(
+          ArgumentError,
+          ':key_ids must be provided',
+        )
       end
     end
 
@@ -22,7 +25,10 @@ describe 'flavors' do
       it 'raises argument error' do
         expect {
           chain.flavors.create(key_ids: [])
-        }.to raise_error(ArgumentError)
+        }.to raise_error(
+          ArgumentError,
+          ':key_ids must be provided',
+        )
       end
     end
 
@@ -119,6 +125,64 @@ describe 'flavors' do
         ).first
 
         expect(list.id).to eq flavor.id
+      end
+    end
+
+    context 'with filter parameters and :size, :cursor pagination' do
+      it 'paginates results' do
+        uuid = SecureRandom.uuid
+        create_flavor('btc', tags: { foo: uuid })
+        create_flavor('eth', tags: { foo: uuid })
+        create_flavor('ltc', tags: { foo: uuid })
+
+        page1 = chain.flavors.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).page(size: 2)
+
+        expect(page1).to be_a(Sequence::Page)
+        expect(page1.items.size).to eq(2)
+        expect(page1.last_page).to eq(false)
+
+        page2 = chain.flavors.list.page(cursor: page1.cursor)
+
+        expect(page2.items.size).to eq(1)
+        expect(page2.last_page).to eq(true)
+      end
+    end
+
+    context '#page#each' do
+      it 'yields flavors in the page to the block' do
+        uuid = SecureRandom.uuid
+        btc = create_flavor('btc', tags: { foo: uuid })
+        create_flavor('eth')
+
+        chain.flavors.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).page.each do |item|
+          expect(item).to be_a(Sequence::Flavor)
+          expect(item.id).to eq(btc.id)
+        end
+      end
+    end
+
+    context '#all#each' do
+      it 'yields flavors to the block' do
+        uuid = SecureRandom.uuid
+        create_flavor('btc', tags: { foo: uuid })
+        create_flavor('eth', tags: { foo: uuid })
+
+        results = []
+        chain.flavors.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).all.each do |item|
+          expect(item).to be_a(Sequence::Flavor)
+          results << item
+        end
+
+        expect(results.size).to eq(2)
       end
     end
   end
