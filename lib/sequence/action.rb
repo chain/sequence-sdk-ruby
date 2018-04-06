@@ -76,8 +76,6 @@ module Sequence
       #   A filter expression.
       # @option opts [Array<String|Integer>] filter_params
       #   A list of values that will be interpolated into the filter expression.
-      # @option opts [Integer>] page_size
-      #   The number of items to return in the result set.
       # @return [Query]
       # @example List all actions after a certain time
       #    ledger.actions.list(
@@ -92,7 +90,6 @@ module Sequence
           opts,
           :filter,
           :filter_params,
-          :page_size,
         )
         ListQuery.new(client, opts)
       end
@@ -106,8 +103,6 @@ module Sequence
       #   A list of values that will be interpolated into the filter expression.
       # @option opts [Array<String>] group_by
       #   A list of fields along which action values will be summed.
-      # @option opts [Integer>] page_size
-      #   The number of items to return in the result set.
       # @return [Query]
       def sum(opts = {})
         validate_inclusion_of!(
@@ -115,7 +110,6 @@ module Sequence
           :filter,
           :filter_params,
           :group_by,
-          :page_size,
         )
         SumQuery.new(client, opts)
       end
