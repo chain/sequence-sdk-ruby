@@ -4,6 +4,9 @@
 
 * Removed assets, balances, contracts, and all other deprecated code.
 * Added `Stats#ledger_type`.
+* Upgraded minimum required Ruby version to 2.3.
+  [Ruby 2.2 is now EOL and has received its final security
+  patch](https://www.ruby-lang.org/en/news/2018/03/28/ruby-2-2-10-released/).
 
 ## 1.5 (20180316)
 

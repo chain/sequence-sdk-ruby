@@ -7,7 +7,7 @@
 The Ruby SDK is available
 [via Rubygems](https://rubygems.org/gems/sequence-sdk).
 
-Ruby >= 2.2 is required. We recommend upgrading to Ruby >= 2.3. See
+Ruby >= 2.3 is required. See
 [Ruby Maintenance Branches](https://www.ruby-lang.org/en/downloads/branches/)
 for the language's schedule for security and bug fixes.
 
