@@ -8,39 +8,40 @@ module Sequence
   #  More info: {https://dashboard.seq.com/docs/tokens}
   module Token
     class ClientModule < Sequence::ClientModule
-      # @param [Hash] opts
-      #   Options hash.
-      # @option opts [String] filter
+      # Execute a query, returning an enumerable over tokens.
+      # @param filter [String]
       #   A filter expression.
-      # @option opts [Array<String|Integer>] filter_params
+      # @param filter_params [Array<String|Integer>]
       #   A list of values that will be interpolated into the filter expression.
       # @return [Query]
-      def list(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :filter,
-          :filter_params,
-        )
-        GroupQuery.new(client, opts)
+      # @example List all tokens after a certain time
+      #    ledger.tokens.list(
+      #      filter: 'timestamp > $1',
+      #      filter_params: ['1985-10-26T01:21:00Z']
+      #    ).each do |token|
+      #      puts 'amount: ' + token.amount
+      #      puts 'flavor_id: ' + token.flavor_id
+      #      puts 'account_id: ' + token.account_id
+      #    end
+      def list(filter: nil, filter_params: nil)
+        GroupQuery.new(client, filter: filter, filter_params: filter_params)
       end
 
-      # @param [Hash] opts
-      #   Options hash.
-      # @option opts [String] filter
+      # Execute a query, returning an enumerable over sums of tokens.
+      # @param filter [String]
       #   A filter expression.
-      # @option opts [Array<String|Integer>] filter_params
+      # @param filter_params [Array<String|Integer>]
       #   A list of values that will be interpolated into the filter expression.
-      # @option opts [Array<String>] group_by
+      # @param group_by [Array<String>]
       #   A list of token fields to be summed.
       # @return [Query]
-      def sum(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :filter,
-          :filter_params,
-          :group_by,
+      def sum(filter: nil, filter_params: nil, group_by: nil)
+        SumQuery.new(
+          client,
+          filter: filter,
+          filter_params: filter_params,
+          group_by: group_by,
         )
-        SumQuery.new(client, opts)
       end
     end
 

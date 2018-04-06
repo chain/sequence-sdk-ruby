@@ -82,49 +82,46 @@ module Sequence
     end
 
     class ClientModule < Sequence::ClientModule
-      # @param [Hash] opts Parameters for creating a Feed.
-      # @option opts [String] id A unique id for the feed.
-      # @option opts [String] type The type of the feed: "action" or
-      #   "transaction".
-      # @option opts [String] filter A valid filter string. The feed will be
-      #   composed of items that match the filter.
-      # @option opts [Array<String|Integer>] filter_params A list of values that
-      #   will be interpolated into the filter expression.
+      # Create a feed.
+      # @param type [String] The type of the feed: "action" or "transaction".
+      # @param id [String] A unique id for the feed.
+      # @param filter [String] A valid filter string. The feed will be composed
+      #   of items that match the filter.
+      # @param filter_params [Array<String|Integer>] A list of values that will
+      #   be interpolated into the filter expression.
       # @return [Feed] Newly created feed.
-      def create(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :id,
-          :type,
-          :filter,
-          :filter_params,
-        )
-        validate_required!(opts, :type)
-        if opts[:type] != 'action' && opts[:type] != 'transaction'
+      def create(type:, id: nil, filter: nil, filter_params: nil)
+        if type != 'action' && type != 'transaction'
           raise ArgumentError, ':type must equal action or transaction'
         end
-        Feed.new(client.session.request('create-feed', opts), client.session)
+        Feed.new(
+          client.session.request(
+            'create-feed',
+            id: id,
+            type: type,
+            filter: filter,
+            filter_params: filter_params,
+          ),
+          client.session,
+        )
       end
 
-      # Get single feed given an id.
-      # @param [Hash] opts Parameters to get single feed.
-      # @option opts [String] id The unique ID of a feed.
+      # Get feed by id.
+      # @param id [String] The unique ID of a feed.
       # @return [Feed] Requested feed object.
-      def get(opts = {})
-        validate_required!(opts, :id)
-        Feed.new(client.session.request('get-feed', opts), client.session)
+      def get(id:)
+        Feed.new(client.session.request('get-feed', id: id), client.session)
       end
 
-      # @param [Hash] opts
-      # @option opts [String] id The unique ID of a feed.
+      # Delete feed by id.
+      # @option id [String] The unique ID of a feed.
       # @return [void]
-      def delete(opts = {})
-        validate_required!(opts, :id)
-        client.session.request('delete-feed', opts)
+      def delete(id:)
+        client.session.request('delete-feed', id: id)
         nil
       end
 
-      # Executes a query, returning an enumerable over individual feeds.
+      # Execute a query, returning an enumerable over individual feeds.
       # @return [Query]
       def list
         Query.new(client)

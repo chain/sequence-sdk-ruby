@@ -5,7 +5,6 @@ require 'securerandom'
 require_relative './client_module'
 require_relative './query'
 require_relative './response_object'
-require_relative './validations'
 
 module Sequence
   # A transaction is an atomic update to the state of the ledger. Transactions
@@ -33,7 +32,7 @@ module Sequence
     attrib(:actions) { |raw| raw.map { |v| Action.new(v) } }
 
     class ClientModule < Sequence::ClientModule
-      # Builds, signs, and submits a transaction.
+      # Build, sign, and submit a transaction.
       # @param [Builder] builder
       #   Builder object with actions defined. If provided, overrides block
       #   parameter.
@@ -50,20 +49,14 @@ module Sequence
         )
       end
 
-      # Executes a query, returning an enumerable over individual transactions.
-      # @param [Hash] opts Options hash
-      # @option opts [String] filter
+      # Execute a query, returning an enumerable over individual transactions.
+      # @param filter [String]
       #   A filter expression.
-      # @option opts [Array<String|Integer>] filter_params
+      # @param filter_params [Array<String|Integer>]
       #   A list of values that will be interpolated into the filter expression.
       # @return [Query]
-      def list(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :filter,
-          :filter_params,
-        )
-        Query.new(client, opts)
+      def list(filter: nil, filter_params: nil)
+        Query.new(client, filter: filter, filter_params: filter_params)
       end
     end
 
@@ -79,8 +72,6 @@ module Sequence
 
     # A configuration object for creating and submitting transactions.
     class Builder
-      include Sequence::Validations
-
       def initialize(&block)
         yield(self) if block
       end
@@ -97,7 +88,7 @@ module Sequence
         to_h.to_json(opts)
       end
 
-      # Adds an action to a transaction builder.
+      # Add an action to a transaction builder.
       # @param [Hash] opts
       #   Action parameters.
       # @return [Builder]
@@ -109,108 +100,107 @@ module Sequence
         self
       end
 
-      # Issues new tokens to a destination account.
-      #
-      # @param [Hash] opts
-      #   Options hash
-      # @option opts [Integer] :amount
+      # Issue new tokens to a destination account.
+      # @param amount [Integer]
       #   Amount of the flavor to be issued.
-      # @option opts [String] :flavor_id
+      # @param flavor_id [String]
       #   ID of the flavor to be issued.
-      # @option opts [String] :destination_account_id
+      # @param destination_account_id [String]
       #   ID of the account receiving the flavor units.
-      # @option opts [Hash] :token_tags
+      # @param token_tags [Hash]
       #   Tags to add to the receiving tokens.
-      # @option opts [Hash] :action_tags
+      # @param action_tags [Hash]
       #   Tags to add to the action.
       # @return [Builder]
-      def issue(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :amount,
-          :flavor_id,
-          :destination_account_id,
-          :token_tags,
-          :action_tags,
+      def issue(
+        amount:,
+        flavor_id:,
+        destination_account_id:,
+        token_tags: {},
+        action_tags: {}
+      )
+        add_action(
+          type: :issue,
+          amount: amount,
+          flavor_id: flavor_id,
+          destination_account_id: destination_account_id,
+          token_tags: token_tags,
+          action_tags: action_tags,
         )
-        validate_required!(opts, :amount)
-        validate_required!(opts, :destination_account_id)
-        validate_required!(opts, :flavor_id)
-        add_action(opts.merge(type: :issue))
       end
 
-      # Moves tokens from a source account to a
-      # destination account.
-      #
-      # @param [Hash] opts
-      #   Options hash
-      # @option opts [Integer] :amount
+      # Move tokens from a source account to a destination account.
+      # @param amount [Integer]
       #   Amount of the flavor to be transferred.
-      # @option opts [String] :flavor_id
+      # @param flavor_id [String]
       #   ID of the flavor to be transferred.
-      # @option opts [String] filter
-      #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
-      # @option opts [Array<String|Integer>] filter_params
-      #   A list of parameter values for filter string (if needed).
-      # @option opts [String] :source_account_id
+      # @param source_account_id [String]
       #   ID of the account serving as the source of flavor units.
-      # @option opts [String] :destination_account_id
+      # @param destination_account_id [String]
       #   ID of the account receiving the flavor units.
-      # @option opts [Hash] :token_tags
+      # @param filter [String]
+      #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
+      # @param filter_params [Array<String|Integer>]
+      #   A list of parameter values for filter string (if needed).
+      # @param token_tags [Hash]
       #   Tags to add to the receiving tokens.
-      # @option opts [Hash] :action_tags
+      # @param action_tags [Hash]
       #   Tags to add to the action.
       # @return [Builder]
-      def transfer(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :amount,
-          :flavor_id,
-          :filter,
-          :filter_params,
-          :source_account_id,
-          :destination_account_id,
-          :token_tags,
-          :action_tags,
+      def transfer(
+        amount:,
+        flavor_id:,
+        source_account_id:,
+        destination_account_id:,
+        filter: nil,
+        filter_params: nil,
+        token_tags: {},
+        action_tags: {}
+      )
+        add_action(
+          type: :transfer,
+          amount: amount,
+          flavor_id: flavor_id,
+          source_account_id: source_account_id,
+          destination_account_id: destination_account_id,
+          filter: filter,
+          filter_params: filter_params,
+          token_tags: token_tags,
+          action_tags: action_tags,
         )
-        validate_required!(opts, :amount)
-        validate_required!(opts, :destination_account_id)
-        validate_required!(opts, :flavor_id)
-        validate_required!(opts, :source_account_id)
-        add_action(opts.merge(type: :transfer))
       end
 
-      # Takes tokens from a source account and
-      # retires them.
-      #
-      # @param [Hash] opts Options hash
-      # @option opts [Integer] :amount
+      # Take tokens from a source account and retire them.
+      # @param amount [Integer]
       #   Amount of the flavor to be retired.
-      # @option opts [String] :flavor_id
+      # @param flavor_id [String]
       #   ID of the flavor to be retired.
-      # @option opts [String] filter
-      #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
-      # @option opts [Array<String|Integer>] filter_params
-      #   A list of parameter values for filter string (if needed).
-      # @option opts [String] :source_account_id
+      # @param source_account_id [String]
       #   ID of the account serving as the source of flavor units.
-      # @option opts [Hash] :action_tags
+      # @param filter [String]
+      #   Token filter string. See {https://dashboard.seq.com/docs/filters}.
+      # @param filter_params [Array<String|Integer>]
+      #   A list of parameter values for filter string (if needed).
+      # @param action_tags [Hash]
       #   Tags to add to the action.
       # @return [Builder]
-      def retire(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :amount,
-          :flavor_id,
-          :filter,
-          :filter_params,
-          :source_account_id,
-          :action_tags,
+      def retire(
+        amount:,
+        flavor_id:,
+        source_account_id:,
+        filter: nil,
+        filter_params: nil,
+        action_tags: {}
+      )
+        add_action(
+          type: :retire,
+          amount: amount,
+          flavor_id: flavor_id,
+          source_account_id: source_account_id,
+          filter: filter,
+          filter_params: filter_params,
+          action_tags: action_tags,
         )
-        validate_required!(opts, :amount)
-        validate_required!(opts, :flavor_id)
-        validate_required!(opts, :source_account_id)
-        add_action(opts.merge(type: :retire))
       end
     end
   end

@@ -14,18 +14,15 @@ module Sequence
     attrib :id
 
     class ClientModule < Sequence::ClientModule
-      # Creates a key.
-      # @param [Hash] opts
-      #   Options hash
-      # @option opts [String] id
+      # Create a key.
+      # @param id [String]
       #   Unique identifier. Auto-generated if not specified.
       # @return [Key]
-      def create(opts = {})
-        validate_inclusion_of!(opts, :id)
-        Key.new(client.session.request('create-key', opts))
+      def create(id: nil)
+        Key.new(client.session.request('create-key', id: id))
       end
 
-      # Lists all keys.
+      # List all keys.
       # Executes a query, returning an enumerable over individual keys.
       # @return [Query]
       def list

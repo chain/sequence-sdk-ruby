@@ -5,8 +5,6 @@ require_relative './page'
 module Sequence
   class Query
     include ::Enumerable
-    include Sequence::Validations
-
     # @private
     # @return [Client]
     attr_reader :client
@@ -51,10 +49,10 @@ module Sequence
       PageQuery.new(client, query, method(:fetch), method(:translate))
     end
 
-    def page(opts = {})
-      validate_inclusion_of!(opts, :size, :cursor)
-      unless opts[:size].nil? || opts[:size].zero?
-        opts[:page_size] = opts.delete(:size)
+    def page(size: nil, cursor: nil)
+      opts = { size: size, cursor: cursor }
+      unless size.nil? || size.zero?
+        opts[:page_size] = size
       end
       @query = @query.merge(opts)
       pages.page

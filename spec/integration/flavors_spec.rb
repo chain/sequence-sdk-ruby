@@ -14,10 +14,7 @@ describe 'flavors' do
       it 'raises argument error' do
         expect {
           chain.flavors.create
-        }.to raise_error(
-          ArgumentError,
-          ':key_ids must be provided',
-        )
+        }.to raise_error(ArgumentError)
       end
     end
 
@@ -27,7 +24,7 @@ describe 'flavors' do
           chain.flavors.create(key_ids: [])
         }.to raise_error(
           ArgumentError,
-          ':key_ids must be provided',
+          ':key_ids cannot be empty',
         )
       end
     end

@@ -226,7 +226,7 @@ describe 'feeds' do
       it 'raises argument error' do
         expect {
           chain.feeds.create
-        }.to raise_error(ArgumentError, ':type must be provided')
+        }.to raise_error(ArgumentError)
       end
     end
 
@@ -272,7 +272,7 @@ describe 'feeds' do
       it 'raises argument error' do
         expect {
           chain.feeds.get
-        }.to raise_error(ArgumentError, ':id must be provided')
+        }.to raise_error(ArgumentError)
       end
     end
 
@@ -291,7 +291,7 @@ describe 'feeds' do
       it 'raises argument error' do
         expect {
           chain.feeds.delete
-        }.to raise_error(ArgumentError, ':id must be provided')
+        }.to raise_error(ArgumentError)
       end
     end
 

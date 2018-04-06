@@ -13,22 +13,29 @@ require_relative './transaction'
 
 module Sequence
   class Client
-    include Sequence::Validations
-
-    # @param [Hash] opts
-    #   Options hash
-    # @option opts [String] ledger_name
+    # Set up a Sequence client.
+    # This is the entry point for all other Sequence interaction.
+    # @param ledger_name [String]
     #   Ledger name.
-    # @option opts [String] credential
+    # @param credential [String]
     #   API credential secret.
     # @return [Query]
-    def initialize(opts = {})
-      validate_required!(opts, :ledger_name)
-      validate_required!(opts, :credential)
+    def initialize(ledger_name:, credential:)
+      if ledger_name.nil? || ledger_name == ''
+        raise ArgumentError, ':ledger_name cannot be blank'
+      end
+      if credential.nil? || credential == ''
+        raise ArgumentError, ':credential cannot be blank'
+      end
 
       addr = ENV['SEQADDR'] || 'api.seq.com'
-      api = HttpWrapper.new('https://' + addr, opts[:credential], opts)
-      @opts = opts.merge(team_name: team_name(api), addr: addr)
+      api = HttpWrapper.new('https://' + addr, credential)
+      @opts = {
+        addr: addr,
+        credential: credential,
+        ledger_name: ledger_name,
+        team_name: team_name(api),
+      }
     end
 
     # @private

@@ -69,12 +69,10 @@ module Sequence
     attrib :tags
 
     class ClientModule < Sequence::ClientModule
-      # Executes a query, returning an enumerable over individual actions.
-      # @param [Hash] opts
-      #   Options hash
-      # @option opts [String] filter
+      # Execute a query, returning an enumerable over individual actions.
+      # @param filter [String]
       #   A filter expression.
-      # @option opts [Array<String|Integer>] filter_params
+      # @param filter_params [Array<String|Integer>]
       #   A list of values that will be interpolated into the filter expression.
       # @return [Query]
       # @example List all actions after a certain time
@@ -85,33 +83,25 @@ module Sequence
       #      puts 'timestamp: ' + action.timestamp
       #      puts 'amount: ' + action.amount
       #    end
-      def list(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :filter,
-          :filter_params,
-        )
-        ListQuery.new(client, opts)
+      def list(filter: nil, filter_params: nil)
+        ListQuery.new(client, filter: filter, filter_params: filter_params)
       end
 
-      # Executes a query, returning an enumerable over individual actionsums.
-      # @param [Hash] opts
-      #   Options hash
-      # @option opts [String] filter
+      # Execute a query, returning an enumerable over sums of actions.
+      # @param filter [String]
       #   A filter expression.
-      # @option opts [Array<String|Integer>] filter_params
+      # @param filter_params [Array<String|Integer>]
       #   A list of values that will be interpolated into the filter expression.
-      # @option opts [Array<String>] group_by
+      # @param group_by [Array<String>]
       #   A list of fields along which action values will be summed.
       # @return [Query]
-      def sum(opts = {})
-        validate_inclusion_of!(
-          opts,
-          :filter,
-          :filter_params,
-          :group_by,
+      def sum(filter: nil, filter_params: nil, group_by: nil)
+        SumQuery.new(
+          client,
+          filter: filter,
+          filter_params: filter_params,
+          group_by: group_by,
         )
-        SumQuery.new(client, opts)
       end
     end
 

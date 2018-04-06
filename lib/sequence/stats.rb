@@ -29,7 +29,7 @@ module Sequence
     attrib :ledger_type
 
     class ClientModule < Sequence::ClientModule
-      # Gets stats from the ledger.
+      # Get stats from the ledger.
       # @return [Stats]
       def get
         Stats.new(client.session.request('stats'))
