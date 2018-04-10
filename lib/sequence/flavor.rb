@@ -39,6 +39,7 @@ module Sequence
     # @return [Hash]
     attrib :tags
 
+    # @deprecated Use {#key_ids} instead.
     class Key < ResponseObject
       attrib :id
     end
