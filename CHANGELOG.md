@@ -1,5 +1,10 @@
 # Sequence Ruby SDK changelog
 
+## 1.5.1 (201804??)
+
+* The `asset_count` attribute on `Stats` has been deprecated; the field is
+  `flavor_count`.
+
 ## 1.5 (20180316)
 
 * Added `Feed`s. [More info](https://dashboard.seq.com/docs/feeds)
