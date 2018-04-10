@@ -39,6 +39,7 @@ module Sequence
     attrib(:actions) { |raw| raw.map { |v| Action.new(v) } }
 
     # @!attribute [r] contracts
+    #   Deprecated. Use {Token::ClientModule#list} instead.
     #   List of contracts created by the transaction.
     # @return [Array<Contract>]
     attrib(:contracts) { |raw| raw.map { |v| Contract.new(v) } }
