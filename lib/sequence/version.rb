@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Sequence
-  VERSION = '1.5'
+  VERSION = '2-rc.1'
 end

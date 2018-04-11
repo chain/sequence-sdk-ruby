@@ -1,6 +1,6 @@
 # Sequence Ruby SDK changelog
 
-## 2.0 (2018????)
+## 2-rc.1 (20180411)
 
 * Removed assets, balances, contracts, and all other deprecated code.
 * Added `Stats#ledger_type`.
