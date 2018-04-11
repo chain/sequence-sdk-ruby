@@ -1,9 +1,11 @@
 # Sequence Ruby SDK changelog
 
-## 1.5.1 (201804??)
+## 1.5.1 (20180411)
 
-* The `asset_count` attribute on `Stats` has been deprecated; the field is
+* The `asset_count` attribute on `Stats` has been deprecated; the new field is
   `flavor_count`.
+* The `contracts` attribute on `Transaction` has been deprecated. Use
+  `Token::ClientModule#list` instead.
 
 ## 1.5 (20180316)
 
