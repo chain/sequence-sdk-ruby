@@ -9,6 +9,13 @@
   patch](https://www.ruby-lang.org/en/news/2018/03/28/ruby-2-2-10-released/).
 * Switched from options hash parameter method signatures to named parameters.
 
+## 1.5.1 (20180411)
+
+* The `asset_count` attribute on `Stats` has been deprecated; the new field is
+  `flavor_count`.
+* The `contracts` attribute on `Transaction` has been deprecated. Use
+  `Token::ClientModule#list` instead.
+
 ## 1.5 (20180316)
 
 For full details on the 1.5 release and how to migrate your code,
