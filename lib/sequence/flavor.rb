@@ -8,7 +8,7 @@ require_relative './query'
 require_relative './response_object'
 
 module Sequence
-  # A type or class of value that can be tracked on a ledger.
+  # A taxonomy used to differentiate different types of tokens in a ledger.
   class Flavor < ResponseObject
     # @!attribute [r] id
     #   Unique identifier of the flavor.
@@ -16,8 +16,7 @@ module Sequence
     attrib :id
 
     # @!attribute [r] key_ids
-    #   The set of key IDs used to sign transactions that issue tokens of the
-    #   flavor.
+    #   The list of IDs for the keys that control the flavor.
     # @return [Array<String>]
     attrib(:key_ids)
 

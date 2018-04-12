@@ -6,8 +6,7 @@ require_relative './query'
 require_relative './response_object'
 
 module Sequence
-  # An account is an object in Sequence that tracks ownership of tokens on a
-  # blockchain by creating and tracking control programs.
+  # A container that holds tokens in a ledger.
   class Account < ResponseObject
     # @!attribute [r] id
     #   Unique identifier of the account.
@@ -15,14 +14,13 @@ module Sequence
     attrib :id
 
     # @!attribute [r] key_ids
-    #   The set of key IDs used for signing transactions that spend from the
-    #   account.
+    #   The list of IDs for the keys that control the account.
     # @return [Array<String>]
     attrib(:key_ids)
 
     # @!attribute [r] quorum
-    #   The number of keys required to sign transactions that spend from the
-    #   account.
+    #   The number of keys required to sign transactions that transfer or retire
+    #   tokens from the account.
     # @return [Integer]
     attrib :quorum
 
@@ -38,12 +36,13 @@ module Sequence
     class ClientModule < Sequence::ClientModule
       # Create a new account in the ledger.
       # @param key_ids [Array<String>]
-      #   The key IDs used for signing transactions that spend from the account.
+      #   The list of IDs for the keys that control the account.
       # @param id [String]
       #   Unique identifier. Auto-generated if not specified.
       # @param quorum [Integer]
-      #   The number of keys required to sign transactions that spend from the
-      #   account. Defaults to the number of keys provided.
+      #   The number of keys required to sign transactions that transfer or
+      #   retire tokens from the account. Defaults to the number of keys
+      #   provided.
       # @param tags [Hash]
       #   User-specified key-value data describing the account.
       # @return [Account]
