@@ -1,6 +1,6 @@
 # Sequence Ruby SDK changelog
 
-## 1.5.2 (201804??)
+## 1.5.2 (20180416)
 
 * Paginating objects using `.[list|sum].all` has
   been deprecated; the new interface is Ruby's `Enumerable` on the result
