@@ -296,14 +296,14 @@ describe 'feeds' do
     end
 
     it 'deletes a feed' do
-      pre_list = chain.feeds.list.all.map(&:id)
+      pre_list = chain.feeds.list.map(&:id)
       silver = create_flavor('silver')
       issuances_feed = create_tx_feed('issue', [silver])
       spends_feed = create_tx_feed('transfer', [silver])
 
       chain.feeds.delete(id: issuances_feed.id)
 
-      post_list = chain.feeds.list.all.map(&:id)
+      post_list = chain.feeds.list.map(&:id)
       list = post_list - pre_list
       expect(list).to eq([spends_feed.id])
     end
@@ -330,14 +330,14 @@ describe 'feeds' do
       end
     end
 
-    context '#all' do
+    context '#each' do
       it 'returns feeds' do
         chain.dev_utils.reset
         gold = create_flavor('gold')
         feed1 = create_tx_feed('issue', [gold])
         feed2 = create_tx_feed('transfer', [gold])
 
-        result = chain.feeds.list.all
+        result = chain.feeds.list
 
         expect(result.map(&:id)).to match_array([feed1.id, feed2.id])
       end

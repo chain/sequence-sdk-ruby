@@ -87,8 +87,9 @@ describe 'transactions' do
         items = chain.actions.list(
           filter: 'tags.acting_party=$1',
           filter_params: [action_tags['acting_party']],
-        )
-        expect(items.all.size).to eq 1
+        ).to_a
+
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(usd.id)
@@ -205,8 +206,9 @@ describe 'transactions' do
         items = chain.actions.list(
           filter: 'tags.acting_party=$1',
           filter_params: [action_tags['acting_party']],
-        )
-        expect(items.all.size).to eq 1
+        ).to_a
+
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(usd.id)
@@ -248,15 +250,15 @@ describe 'transactions' do
         unspent_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['false'],
-        )
+        ).to_a
         remaining_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['true'],
-        )
+        ).to_a
 
-        expect(unspent_tokens.all.size).to eq 1
-        expect(unspent_tokens.all.first.amount).to eq 200
-        expect(remaining_tokens.all.size).to eq 0
+        expect(unspent_tokens.size).to eq 1
+        expect(unspent_tokens.first.amount).to eq 200
+        expect(remaining_tokens.size).to eq 0
       end
 
       it 'spends tokens from before a given point' do
@@ -292,15 +294,15 @@ describe 'transactions' do
         unspent_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['false'],
-        )
+        ).to_a
         remaining_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['true'],
-        )
+        ).to_a
 
-        expect(unspent_tokens.all.size).to eq 1
-        expect(unspent_tokens.all.first.amount).to eq 200
-        expect(remaining_tokens.all.size).to eq 0
+        expect(unspent_tokens.size).to eq 1
+        expect(unspent_tokens.first.amount).to eq 200
+        expect(remaining_tokens.size).to eq 0
       end
 
       it 'fails to spend tokens if not from before given point' do
@@ -356,13 +358,16 @@ describe 'transactions' do
         items = chain.tokens.list(
           filter: 'account_id = $1',
           filter_params: [alice.id],
-        )
-        expect(items.all.size).to eq 0
+        ).to_a
+
+        expect(items.size).to eq 0
+
         items = chain.tokens.list(
           filter: 'account_id = $1',
           filter_params: [bob.id],
-        )
-        expect(items.all.size).to eq 1
+        ).to_a
+
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(usd.id)
@@ -457,8 +462,9 @@ describe 'transactions' do
         items = chain.actions.list(
           filter: 'tags.acting_party=$1',
           filter_params: [action_tags['acting_party']],
-        )
-        expect(items.all.size).to eq 1
+        ).to_a
+
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(usd.id)
@@ -505,15 +511,15 @@ describe 'transactions' do
         unspent_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['false'],
-        )
+        ).to_a
         remaining_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['true'],
-        )
+        ).to_a
 
-        expect(unspent_tokens.all.size).to eq 1
-        expect(unspent_tokens.all.first.amount).to eq 200
-        expect(remaining_tokens.all.size).to eq 0
+        expect(unspent_tokens.size).to eq 1
+        expect(unspent_tokens.first.amount).to eq 200
+        expect(remaining_tokens.size).to eq 0
       end
 
       it 'retires tokens from at or before a given point' do
@@ -553,15 +559,15 @@ describe 'transactions' do
         unspent_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['false'],
-        )
+        ).to_a
         remaining_tokens = chain.tokens.list(
           filter: 'tags.spend_me=$1',
           filter_params: ['true'],
-        )
+        ).to_a
 
-        expect(unspent_tokens.all.size).to eq 1
-        expect(unspent_tokens.all.first.amount).to eq 200
-        expect(remaining_tokens.all.size).to eq 0
+        expect(unspent_tokens.size).to eq 1
+        expect(unspent_tokens.first.amount).to eq 200
+        expect(remaining_tokens.size).to eq 0
       end
 
       it 'fails to retire tokens if not from after given point' do
@@ -613,8 +619,9 @@ describe 'transactions' do
           items = chain.tokens.list(
             filter: 'account_id = $1',
             filter_params: [alice.id],
-          )
-          expect(items.all.size).to eq 1
+          ).to_a
+
+          expect(items.size).to eq 1
           item = items.first
           expect(item.amount).to eq 100
           expect(item.flavor_id).to eq(usd.id)
@@ -633,10 +640,11 @@ describe 'transactions' do
         items = chain.tokens.list(
           filter: 'account_id = $1',
           filter_params: [alice.id],
-        )
-        expect(items.all.size).to eq 1
-        expect(items.all.first.amount).to eq 100
-        expect(items.all.first.flavor_id).to eq(usd.id)
+        ).to_a
+
+        expect(items.size).to eq 1
+        expect(items.first.amount).to eq 100
+        expect(items.first.flavor_id).to eq(usd.id)
       end
 
       it 'fails to list transactions using camelCase' do
@@ -648,7 +656,7 @@ describe 'transactions' do
           chain.tokens.list(
             filter: 'accountId = $1',
             filter_params: [alice.id],
-          ).all
+          ).to_a
         }.to raise_error(Sequence::APIError)
       end
     end
@@ -677,9 +685,10 @@ describe 'transactions' do
         items = chain.transactions.list(
           filter: 'timestamp > $1',
           filter_params: [first_tx.timestamp.to_datetime.rfc3339(3)],
-        )
-        expect(items.all.size).to eq 1
-        expect(items.all.first.id).to eq second_tx.id
+        ).to_a
+
+        expect(items.size).to eq 1
+        expect(items.first.id).to eq second_tx.id
       end
 
       it 'lists transactions occurring at or after a given point' do
@@ -694,10 +703,11 @@ describe 'transactions' do
         items = chain.transactions.list(
           filter: 'timestamp >= $1',
           filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
-        expect(items.all.size).to eq 2
-        expect(items.all.last.id).to eq second_tx.id
-        expect(items.all.first.id).to eq third_tx.id
+        ).to_a
+
+        expect(items.size).to eq 2
+        expect(items.last.id).to eq second_tx.id
+        expect(items.first.id).to eq third_tx.id
       end
 
       it 'lists transactions occurring before a given point' do
@@ -711,9 +721,10 @@ describe 'transactions' do
         items = chain.transactions.list(
           filter: 'timestamp < $1',
           filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
-        expect(items.all.size).to eq 1
-        expect(items.all.first.id).to eq first_tx.id
+        ).to_a
+
+        expect(items.size).to eq 1
+        expect(items.first.id).to eq first_tx.id
       end
 
       it 'lists transactions occurring at or before a given point' do
@@ -728,10 +739,11 @@ describe 'transactions' do
         items = chain.transactions.list(
           filter: 'timestamp <= $1',
           filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
-        expect(items.all.size).to eq 2
-        expect(items.all.last.id).to eq first_tx.id
-        expect(items.all.first.id).to eq second_tx.id
+        ).to_a
+
+        expect(items.size).to eq 2
+        expect(items.last.id).to eq first_tx.id
+        expect(items.first.id).to eq second_tx.id
       end
     end
 
@@ -774,7 +786,7 @@ describe 'transactions' do
       end
     end
 
-    context '#all#each' do
+    context '#each' do
       it 'yields transactions to the block' do
         chain.dev_utils.reset
 
@@ -784,7 +796,7 @@ describe 'transactions' do
         issue(100, usd, alice)
 
         results = []
-        chain.transactions.list.all.each do |item|
+        chain.transactions.list.each do |item|
           expect(item).to be_a(Sequence::Transaction)
           results << item
         end

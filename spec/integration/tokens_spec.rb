@@ -22,9 +22,9 @@ describe 'tokens' do
 
         items = chain.tokens.list(
           filter: "flavor_id='#{cert.id}'",
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(cert.id)
@@ -53,9 +53,9 @@ describe 'tokens' do
         items = chain.tokens.list(
           filter: 'flavor_tags.vin=$1 AND account_id=$2',
           filter_params: [vin, oakland.id],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 1
         expect(item.flavor_id).to eq(q5.id)
@@ -74,9 +74,9 @@ describe 'tokens' do
         items = chain.tokens.list(
           filter: 'tags.due_date=$1',
           filter_params: [token_tags['due_date']],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(cash.id)
@@ -109,7 +109,7 @@ describe 'tokens' do
       end
     end
 
-    context 'using .all' do
+    context '#each' do
       it 'iterates through the result set' do
         chain.dev_utils.reset
 
@@ -120,7 +120,7 @@ describe 'tokens' do
         issue(1, gold, alice, token_tags: { due: 'next week' })
 
         results = []
-        chain.tokens.list.all.each do |x|
+        chain.tokens.list.each do |x|
           results << x
         end
 
@@ -139,9 +139,9 @@ describe 'tokens' do
 
         items = chain.tokens.sum(
           filter: "flavor_id='#{cert.id}'",
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to be_nil
@@ -162,9 +162,9 @@ describe 'tokens' do
         items = chain.tokens.sum(
           filter: "flavor_id='#{cert.id}'",
           group_by: ['flavor_id', 'account_id'],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq cert.id
@@ -200,7 +200,7 @@ describe 'tokens' do
       end
     end
 
-    context 'with :group_by, using .all' do
+    context '#each with :group_by' do
       it 'iterates through the result set' do
         chain.dev_utils.reset
 
@@ -213,7 +213,7 @@ describe 'tokens' do
         results = []
         chain.tokens.sum(
           group_by: ['account_id'],
-        ).all.each do |x|
+        ).each do |x|
           results << x
         end
 

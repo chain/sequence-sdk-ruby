@@ -86,7 +86,7 @@ describe 'keys' do
       end
     end
 
-    context '#all#each' do
+    context '#each' do
       it 'yields keys to the block' do
         chain.dev_utils.reset
 
@@ -94,7 +94,7 @@ describe 'keys' do
         create_key
 
         results = []
-        chain.keys.list.all.each do |item|
+        chain.keys.list.each do |item|
           expect(item).to be_a(Sequence::Key)
           results << item
         end

@@ -164,7 +164,7 @@ describe 'flavors' do
       end
     end
 
-    context '#all#each' do
+    context '#each' do
       it 'yields flavors to the block' do
         uuid = SecureRandom.uuid
         create_flavor('btc', tags: { foo: uuid })
@@ -174,7 +174,7 @@ describe 'flavors' do
         chain.flavors.list(
           filter: 'tags.foo=$1',
           filter_params: [uuid],
-        ).all.each do |item|
+        ).each do |item|
           expect(item).to be_a(Sequence::Flavor)
           results << item
         end

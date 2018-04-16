@@ -81,9 +81,9 @@ describe 'accounts' do
 
         chain.accounts.update_tags(id: account.id, tags: { x: 'baz' })
 
-        query = chain.accounts.list(filter: "id='#{account.id}'").all.first
+        query = chain.accounts.list(filter: "id='#{account.id}'").first
         expect(query.tags).to eq('x' => 'baz')
-        query = chain.accounts.list(filter: "id='#{other.id}'").all.first
+        query = chain.accounts.list(filter: "id='#{other.id}'").first
         expect(query.tags).to eq('y' => 'bar')
       end
     end
@@ -162,9 +162,8 @@ describe 'accounts' do
       end
     end
 
-    context '#all#each' do
-
-      it 'yields accounts to the block' do
+    context '#each' do
+      it 'iterates through entire set, yields accounts to block' do
         uuid = SecureRandom.uuid
         101.times do
           create_account('alice', tags: { foo: uuid })
@@ -174,12 +173,33 @@ describe 'accounts' do
         chain.accounts.list(
           filter: 'tags.foo=$1',
           filter_params: [uuid],
-        ).all.each do |item|
+        ).each do |item|
           expect(item).to be_a(Sequence::Account)
           results << item
         end
 
         expect(results.size).to eq(101)
+      end
+
+      it 'can break early' do
+        uuid = SecureRandom.uuid
+        4.times do
+          create_account('alice', tags: { foo: uuid })
+        end
+
+        results = []
+        chain.accounts.list(
+          filter: 'tags.foo=$1',
+          filter_params: [uuid],
+        ).each do |item|
+          expect(item).to be_a(Sequence::Account)
+          results << item
+          if results.size == 3
+            break
+          end
+        end
+
+        expect(results.size).to eq(3)
       end
     end
   end

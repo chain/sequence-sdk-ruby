@@ -20,7 +20,7 @@ describe 'actions' do
 
       num_actions = chain.actions.list(
         filter: "tags.test='#{tags['test']}'",
-      ).all
+      ).to_a
 
       expect(num_actions.size).to eq(2)
     end
@@ -40,7 +40,7 @@ describe 'actions' do
       num_actions = chain.actions.list(
         filter: 'tags.test=$1 AND type=$2',
         filter_params: [tags['test'], 'transfer'],
-      ).all
+      ).to_a
 
       expect(num_actions.size).to eq(2)
     end
@@ -85,8 +85,8 @@ describe 'actions' do
       end
     end
 
-    context '#all#each' do
-      it 'iterates through the result set' do
+    context '#each' do
+      it 'iterates through entire set, yields actions to block' do
         tags = create_tags('test')
         alice = create_account('alice')
         gold = create_flavor('gold')
@@ -97,11 +97,32 @@ describe 'actions' do
         results = []
         chain.actions.list(
           filter: "tags.test='#{tags['test']}'",
-        ).all.each do |x|
+        ).each do |x|
           results << x
         end
 
         expect(results.size).to eq(3)
+      end
+
+      it 'can break early' do
+        tags = create_tags('test')
+        alice = create_account('alice')
+        gold = create_flavor('gold')
+        3.times do
+          issue(1, gold, alice, action_tags: tags)
+        end
+
+        results = []
+        chain.actions.list(
+          filter: "tags.test='#{tags['test']}'",
+        ).each do |x|
+          results << x
+          if results.size == 1
+            break
+          end
+        end
+
+        expect(results.size).to eq(1)
       end
     end
 
@@ -116,9 +137,9 @@ describe 'actions' do
         items = chain.actions.list(
           filter: 'tags.acting_party=$1',
           filter_params: [action_tags['acting_party']],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(cash.id)
@@ -139,10 +160,10 @@ describe 'actions' do
         items = chain.actions.list(
           filter: 'timestamp > $1',
           filter_params: [first_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
-        expect(items.all.first.amount).to eq 200
+        expect(items.size).to eq 1
+        expect(items.first.amount).to eq 200
       end
 
       it 'returns list of actions occurring at or after a given point' do
@@ -157,11 +178,11 @@ describe 'actions' do
         items = chain.actions.list(
           filter: 'timestamp >= $1',
           filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 2
-        expect(items.all.first.amount).to eq 300
-        expect(items.all.last.amount).to eq 200
+        expect(items.size).to eq 2
+        expect(items.first.amount).to eq 300
+        expect(items.last.amount).to eq 200
       end
 
       it 'returns list of actions occurring before a given point' do
@@ -175,10 +196,10 @@ describe 'actions' do
         items = chain.actions.list(
           filter: 'timestamp < $1',
           filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
-        expect(items.all.first.amount).to eq 100
+        expect(items.size).to eq 1
+        expect(items.first.amount).to eq 100
       end
 
       it 'returns list of actions occurring at or before a given point' do
@@ -193,11 +214,11 @@ describe 'actions' do
         items = chain.actions.list(
           filter: 'timestamp <= $1',
           filter_params: [second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 2
-        expect(items.all.first.amount).to eq 200
-        expect(items.all.last.amount).to eq 100
+        expect(items.size).to eq 2
+        expect(items.first.amount).to eq 200
+        expect(items.last.amount).to eq 100
       end
     end
   end
@@ -253,7 +274,7 @@ describe 'actions' do
 
       result = chain.actions.sum(
         group_by: ['type'],
-      ).all
+      ).to_a
 
       expect(result.size).to eq(2)
       expect(result.detect { |r| r.type == 'issue' }.amount).to eq(70)
@@ -273,7 +294,7 @@ describe 'actions' do
 
       result = chain.actions.sum(
         group_by: ['tags.one'],
-      ).all
+      ).to_a
 
       expect(result.size).to eq(2)
       expect(
@@ -330,7 +351,7 @@ describe 'actions' do
       end
     end
 
-    context 'with :group_by, using .all' do
+    context '#each with :group_by' do
       it 'iterates through the result set' do
         tags = create_tags('test')
         alice = create_account('alice')
@@ -343,7 +364,7 @@ describe 'actions' do
         chain.actions.sum(
           filter: "tags.test='#{tags['test']}'",
           group_by: ['destination_account_id'],
-        ).all.each do |x|
+        ).each do |x|
           results << x
         end
 
@@ -351,7 +372,7 @@ describe 'actions' do
       end
     end
 
-    context 'with filter for tags' do
+    context '#each with filter for tags' do
       it 'returns sum of actions' do
         alice = create_account('alice')
         cert = create_flavor('stock-certificate')
@@ -363,9 +384,9 @@ describe 'actions' do
         items = chain.actions.sum(
           filter: 'tags.acting_party=$1',
           filter_params: [action_tags['acting_party']],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
+        expect(items.size).to eq 1
         item = items.first
         expect(item.amount).to eq 100
       end
@@ -383,10 +404,10 @@ describe 'actions' do
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp > $2',
           filter_params: [bob.id, first_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
-        expect(items.all.first.amount).to eq 200
+        expect(items.size).to eq 1
+        expect(items.first.amount).to eq 200
       end
 
       it 'returns sum of actions occurring at or after a given point' do
@@ -401,10 +422,10 @@ describe 'actions' do
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp >= $2',
           filter_params: [bob.id, second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
-        expect(items.all.first.amount).to eq 500
+        expect(items.size).to eq 1
+        expect(items.first.amount).to eq 500
       end
 
       it 'returns sum of actions occurring before a given point' do
@@ -418,10 +439,10 @@ describe 'actions' do
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp < $2',
           filter_params: [bob.id, second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
-        expect(items.all.first.amount).to eq 100
+        expect(items.size).to eq 1
+        expect(items.first.amount).to eq 100
       end
 
       it 'returns sum of actions occurring at or before a given point' do
@@ -436,10 +457,10 @@ describe 'actions' do
         items = chain.actions.sum(
           filter: 'destination_account_id=$1 AND timestamp <= $2',
           filter_params: [bob.id, second_tx.timestamp.to_datetime.rfc3339(3)],
-        )
+        ).to_a
 
-        expect(items.all.size).to eq 1
-        expect(items.all.first.amount).to eq 300
+        expect(items.size).to eq 1
+        expect(items.first.amount).to eq 300
       end
     end
   end

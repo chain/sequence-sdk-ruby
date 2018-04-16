@@ -42,8 +42,6 @@ module Sequence
       raise NotImplementedError
     end
 
-    alias all to_a
-
     # @private
     def pages
       PageQuery.new(client, query, method(:fetch), method(:translate))
@@ -88,8 +86,6 @@ module Sequence
       def page
         Page.new(@fetch.call(@query), @translate)
       end
-
-      alias all to_a
     end
   end
 end

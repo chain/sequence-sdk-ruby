@@ -24,11 +24,11 @@ module Sequence
 
     def initialize(raw_attribs, translate)
       super(raw_attribs)
-      @items = @items.map { |i| translate.call(i) }
+      @items = (@items || []).map { |i| translate.call(i) }
     end
 
     def each
-      @items.to_a.each do |item|
+      @items.each do |item|
         yield item
       end
     end
