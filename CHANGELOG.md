@@ -1,9 +1,13 @@
 # Sequence Ruby SDK changelog
 
-## 2.rc.2 (201804??)
+## 2.rc.2 (20180416)
+
+* Removed deprecated `.[list|sum].all` code.
+
+## 1.5.2 (20180416)
 
 * Paginating objects using `.[list|sum].all` has
-  been removed; the new interface is Ruby's `Enumerable` on the result
+  been deprecated; the new interface is Ruby's `Enumerable` on the result
   of `.[list|sum}` e.g. `.[list|sum].to_a` and `.[list|sum].each`.
   This gives the calling code control to break out of the loop if needed,
   without blocking until all pages are requested from the API.
