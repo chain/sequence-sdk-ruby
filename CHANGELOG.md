@@ -1,5 +1,11 @@
 # Sequence Ruby SDK changelog
 
+## 1.5.2 (201804??)
+
+* Paginating objects using `.[list|sum].all` has
+  been deprecated; the new interface is Ruby's `Enumerable` on the result
+  of `.[list|sum}` e.g. `.[list|sum].to_a` and `.[list|sum].each`.
+
 ## 1.5.1 (20180411)
 
 * The `asset_count` attribute on `Stats` has been deprecated; the new field is

@@ -44,7 +44,14 @@ module Sequence
       raise NotImplementedError
     end
 
-    alias all to_a
+    # Returns all objects, blocking until complete.
+    # Deprecated: use
+    # {https://ruby-doc.org/core-2.5.0/Enumerable.html Enumerable}
+    # methods such as to_a instead.
+    # @deprecated
+    def all
+      to_a
+    end
 
     # @private
     def pages
@@ -92,7 +99,10 @@ module Sequence
         Page.new(@fetch.call(@query), @translate)
       end
 
-      alias all to_a
+      # @deprecated
+      def all
+        to_a
+      end
     end
   end
 end
