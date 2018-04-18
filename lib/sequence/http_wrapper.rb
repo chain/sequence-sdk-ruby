@@ -53,7 +53,7 @@ module Sequence
           req['Id'] = attempt_id
           req['Idempotency-Key'] = idempotency_key
           req['Name-Set'] = 'snake'
-          req['User-Agent'] = 'chain-sdk-ruby/' + Sequence::VERSION
+          req['User-Agent'] = 'sequence-sdk-ruby/' + Sequence::VERSION
           req['Credential'] = @credential
           if !@opts[:user].nil? && !@opts[:pass].nil?
             req.basic_auth(@opts[:user], @opts[:pass])
