@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
 
   s.add_development_dependency 'bundler', '~> 1.0'
-  s.add_development_dependency 'bundler-audit'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '~> 3.5.0', '>= 3.5.0'
   s.add_development_dependency 'rspec-its', '~> 1.2.0'
