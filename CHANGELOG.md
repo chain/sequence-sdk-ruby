@@ -1,5 +1,11 @@
 # Sequence Ruby SDK changelog
 
+## 2 (20180418)
+
+* Updated `User-Agent` header to be `sequence-sdk-ruby/#{VERSION}`.
+* Updated copyright year in LICENSE to be 2018.
+* Removed development dependency Bundler Audit.
+
 ## 2.rc.2 (20180416)
 
 * Removed deprecated `.[list|sum].all` code.
