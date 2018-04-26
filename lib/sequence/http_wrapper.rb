@@ -131,7 +131,6 @@ module Sequence
         connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
       if ENV['SEQTLSCA']
-        puts "setting ca_file #{ENV['SEQTLSCA']}"
         connection.ca_file = ENV['SEQTLSCA']
       end
 
