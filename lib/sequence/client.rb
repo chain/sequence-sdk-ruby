@@ -98,7 +98,7 @@ module Sequence
     private
 
     def team_name(api)
-      api.post(SecureRandom.hex(10), '/hello', {})[:parsed_body]['team_name']
+      api.post(SecureRandom.uuid, '/hello', {})[:parsed_body]['team_name']
     end
   end
 end
