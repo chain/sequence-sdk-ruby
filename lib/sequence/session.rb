@@ -35,7 +35,7 @@ module Sequence
     end
 
     def request_full_resp(id, path, body = {})
-      id ||= SecureRandom.uuid
+      id ||= SecureRandom.hex(10)
       @ledger_api.post(id, ledger_url(path), body) do |response|
         # require that the response contains the Chain-Request-ID
         # http header. Since the Sequence API will always set this
