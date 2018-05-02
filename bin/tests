@@ -1,6 +1,6 @@
 #!/bin/bash
 set -xeo pipefail
-dropdb --if-exists ledger; createdb ledger
+createdb-if-not-exists ledger
 cd $CHAIN/sdk/ruby
 gem install bundler --conservative
 bundle check || bundle install
