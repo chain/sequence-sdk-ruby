@@ -76,22 +76,22 @@ module Sequence
         yield(self) if block
       end
 
+      # @private
       def actions
         @actions ||= []
       end
 
+      # @private
       def to_h
         { actions: actions }
       end
 
+      # @private
       def to_json(opts = nil)
         to_h.to_json(opts)
       end
 
-      # Add an action to a transaction builder.
-      # @param [Hash] opts
-      #   Action parameters.
-      # @return [Builder]
+      # @private
       def add_action(opts = {})
         if opts[:amount].nil?
           raise ArgumentError, ':amount must be provided'
