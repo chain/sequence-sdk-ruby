@@ -67,7 +67,7 @@ describe 'transactions' do
       end
     end
 
-    context 'with tags' do
+    context 'with action tags' do
       it 'adds tags to issue action' do
         alice = create_account('alice')
         usd = create_flavor('usd')
@@ -94,6 +94,38 @@ describe 'transactions' do
         expect(item.amount).to eq 100
         expect(item.flavor_id).to eq(usd.id)
         expect(item.type).to eq('issue')
+      end
+    end
+
+    context 'with transaction tags' do
+      it 'adds tags to transaction' do
+        alice = create_account('alice')
+        usd = create_flavor('usd')
+        eur = create_flavor('eur')
+        tags = create_tags('foo')
+        issue(50, eur, alice)
+
+        chain.transactions.transact do |b|
+          b.issue(
+            amount: 100,
+            flavor_id: usd.id,
+            destination_account_id: alice.id,
+          )
+          b.transaction_tags = tags
+        end
+
+        tx = chain.transactions.list(
+          filter: 'actions(snapshot.transaction_tags.foo=$1)',
+          filter_params: [tags['foo']],
+        ).first
+        action = tx.actions.first
+
+        expect(tx.tags).to eq(tags)
+        expect(action.snapshot.transaction_tags).to eq(tags)
+        expect(action.type).to eq('issue')
+        expect(action.amount).to eq 100
+        expect(action.flavor_id).to eq(usd.id)
+        expect(action.destination_account_id).to eq(alice.id)
       end
     end
   end

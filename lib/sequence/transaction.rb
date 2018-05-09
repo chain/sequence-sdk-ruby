@@ -31,6 +31,11 @@ module Sequence
     # @return [Array<Action>]
     attrib(:actions) { |raw| raw.map { |v| Action.new(v) } }
 
+    # @!attribute [r] tags
+    #   User-specified key-value data embedded in the transaction.
+    # @return [Hash]
+    attrib :tags
+
     class ClientModule < Sequence::ClientModule
       # Build, sign, and submit a transaction.
       # @param [Builder] builder
@@ -82,8 +87,13 @@ module Sequence
       end
 
       # @private
+      def transaction_tags
+        @transaction_tags || {}
+      end
+
+      # @private
       def to_h
-        { actions: actions }
+        { actions: actions, transaction_tags: transaction_tags }
       end
 
       # @private
@@ -97,6 +107,15 @@ module Sequence
           raise ArgumentError, ':amount must be provided'
         end
         actions << opts
+        self
+      end
+
+      # Add tags to the transaction
+      # @param [Hash] tags
+      #   Transaction tags
+      # @return [Builder]
+      def transaction_tags=(tags)
+        @transaction_tags = tags
         self
       end
 

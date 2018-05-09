@@ -135,6 +135,12 @@ module Sequence
       def token_tags
         @data['token_tags']
       end
+
+      # A snapshot of the transaction's tags at the time of action creation
+      # @return [Hash]
+      def transaction_tags
+        @data['transaction_tags']
+      end
     end
 
     class TranslateError < StandardError
