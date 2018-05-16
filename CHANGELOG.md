@@ -1,5 +1,10 @@
 # Sequence Ruby SDK changelog
 
+## 2.1 (20180516)
+
+* Added transaction tags.
+  [More info](https://dashboard.seq.com/docs/transactions)
+
 ## 2 (20180418)
 
 * Updated `User-Agent` header to be `sequence-sdk-ruby/#{VERSION}`.
