@@ -87,6 +87,17 @@ module Sequence
         ListQuery.new(client, filter: filter, filter_params: filter_params)
       end
 
+      # Update an action's tags.
+      # @param id [String]
+      #    The ID of the action.
+      # @param tags [Hash]
+      #    A new set of tags, which will replace the existing tags.
+      # @return [void]
+      def update_tags(id:, tags: nil)
+        raise ArgumentError, ':id cannot be blank' if id == ''
+        client.session.request('update-action-tags', id: id, tags: tags)
+      end
+
       # Execute a query, returning an enumerable over sums of actions.
       # @param filter [String]
       #   A filter expression.
