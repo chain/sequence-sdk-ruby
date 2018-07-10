@@ -30,11 +30,12 @@ module Sequence
 
       addr = ENV['SEQADDR'] || 'api.seq.com'
       api = HttpWrapper.new('https://' + addr, credential)
+      hello_resp = hello(api)
       @opts = {
-        addr: addr,
+        addr: hello_resp['addr'],
         credential: credential,
         ledger_name: ledger_name,
-        team_name: team_name(api),
+        team_name: hello_resp['team_name'],
       }
     end
 
@@ -97,8 +98,8 @@ module Sequence
 
     private
 
-    def team_name(api)
-      api.post(SecureRandom.hex(10), '/hello', {})[:parsed_body]['team_name']
+    def hello(api)
+      api.post(SecureRandom.hex(10), '/hello', {})[:parsed_body]
     end
   end
 end

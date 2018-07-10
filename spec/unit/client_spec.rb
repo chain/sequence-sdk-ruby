@@ -4,6 +4,23 @@ require_relative '../spec_helper'
 
 describe Sequence::Client do
   describe '#new' do
+    context 'with valid options' do
+      it 'instantiates the client' do
+        credential = ENV['SEQCRED']
+        ledger_name = ENV.fetch('LEDGER_NAME', 'test')
+
+        ledger = Sequence::Client.new(
+          credential: credential,
+          ledger_name: ledger_name,
+        )
+
+        expect(ledger.opts[:addr]).to eq('chain.localhost:1999')
+        expect(ledger.opts[:credential]).to eq(credential)
+        expect(ledger.opts[:ledger_name]).to eq(ledger_name)
+        expect(ledger.opts[:team_name]).to eq('team')
+      end
+    end
+
     context 'when missing :ledger_name' do
       it 'raises argument error' do
         expect {
