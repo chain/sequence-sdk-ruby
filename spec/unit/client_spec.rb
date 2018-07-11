@@ -14,10 +14,8 @@ describe Sequence::Client do
           ledger_name: ledger_name,
         )
 
-        expect(ledger.opts[:addr]).to eq('chain.localhost:1999')
         expect(ledger.opts[:credential]).to eq(credential)
         expect(ledger.opts[:ledger_name]).to eq(ledger_name)
-        expect(ledger.opts[:team_name]).to eq('team')
       end
     end
 

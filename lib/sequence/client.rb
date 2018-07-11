@@ -28,15 +28,11 @@ module Sequence
         raise ArgumentError, ':credential cannot be blank'
       end
 
-      addr = ENV['SEQADDR'] || 'api.seq.com'
-      api = HttpWrapper.new('https://' + addr, credential)
-      hello_resp = hello(api)
       @opts = {
-        addr: hello_resp['addr'],
         credential: credential,
         ledger_name: ledger_name,
-        team_name: hello_resp['team_name'],
       }
+      @session = Session.new(@opts)
     end
 
     # @private
@@ -46,9 +42,7 @@ module Sequence
 
     # @private
     # @return [Session]
-    def session
-      @session ||= Session.new(@opts)
-    end
+    attr_reader :session
 
     # @return [Account::ClientModule]
     def accounts
@@ -94,12 +88,6 @@ module Sequence
     # @return [DevUtils::ClientModule]
     def dev_utils
       @dev_utils ||= DevUtils::ClientModule.new(self)
-    end
-
-    private
-
-    def hello(api)
-      api.post(SecureRandom.hex(10), '/hello', {})[:parsed_body]
     end
   end
 end
