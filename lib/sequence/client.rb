@@ -6,6 +6,7 @@ require_relative './dev_utils'
 require_relative './feed'
 require_relative './flavor'
 require_relative './http_wrapper'
+require_relative './index'
 require_relative './key'
 require_relative './stats'
 require_relative './token'
@@ -49,19 +50,35 @@ module Sequence
       @accounts ||= Account::ClientModule.new(self)
     end
 
-    # @return [Flavor::ClientModule]
-    def flavors
-      @flavors ||= Flavor::ClientModule.new(self)
-    end
-
     # @return [Action::ClientModule]
     def actions
       @actions ||= Action::ClientModule.new(self)
     end
 
+    # @return [Feed::ClientModule]
+    def feeds
+      @feeds ||= Feed::ClientModule.new(self)
+    end
+
+    # @return [Flavor::ClientModule]
+    def flavors
+      @flavors ||= Flavor::ClientModule.new(self)
+    end
+
+    # @return [Index::ClientModule]
+    def indexes
+      @indexes ||= Index::ClientModule.new(self)
+    end
+
     # @return [Key::ClientModule]
     def keys
       @keys ||= Key::ClientModule.new(self)
+    end
+
+    # @private
+    # @return [Stats::ClientModule]
+    def stats
+      @stats ||= Stats::ClientModule.new(self)
     end
 
     # @return [Token::ClientModule]
@@ -72,17 +89,6 @@ module Sequence
     # @return [Transaction::ClientModule]
     def transactions
       @transactions ||= Transaction::ClientModule.new(self)
-    end
-
-    # @return [Feed::ClientModule]
-    def feeds
-      @feeds ||= Feed::ClientModule.new(self)
-    end
-
-    # @private
-    # @return [Stats::ClientModule]
-    def stats
-      @stats ||= Stats::ClientModule.new(self)
     end
 
     # @return [DevUtils::ClientModule]

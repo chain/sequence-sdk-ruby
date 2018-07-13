@@ -51,6 +51,11 @@ module Utilities
     )
   end
 
+  def create_index
+    id = create_id('index')
+    chain.indexes.create(type: 'token', id: id, filter: "account_id = '#{id}'")
+  end
+
   def create_tags(name)
     { name => SecureRandom.uuid }
   end
