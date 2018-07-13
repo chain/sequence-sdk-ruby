@@ -1,5 +1,11 @@
 # Sequence Ruby SDK changelog
 
+## 2.2.rc.1 (20180713)
+
+* Added `Indexes` for precomputing complex queries.
+* Added preliminary support for dynamically addressing
+  different API hosts when needed.
+
 ## 2.1 (20180516)
 
 * Added transaction tags.
