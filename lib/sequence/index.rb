@@ -29,7 +29,7 @@ module Sequence
 
     # @!attribute [r] group_by
     # Token/Action object fields to group by.
-    # @return [String]
+    # @return [Array<String>]
     attrib :group_by
 
     class ClientModule < Sequence::ClientModule
