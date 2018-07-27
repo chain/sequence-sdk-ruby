@@ -18,8 +18,8 @@ module Utilities
       opts.merge(
         id: create_id(name),
         key_ids: [create_key.id],
-        quorum: 1,
-      ),
+        quorum: 1
+      )
     )
   end
 
@@ -28,8 +28,8 @@ module Utilities
       opts.merge(
         id: create_id(name),
         key_ids: [create_key.id],
-        quorum: 1,
-      ),
+        quorum: 1
+      )
     )
   end
 
@@ -38,7 +38,7 @@ module Utilities
     chain.feeds.create(
       id: create_id(type),
       type: 'transaction',
-      filter: "actions(type='#{type}' AND (#{filter}))",
+      filter: "actions(type='#{type}' AND (#{filter}))"
     )
   end
 
@@ -47,13 +47,18 @@ module Utilities
     chain.feeds.create(
       id: create_id(type),
       type: 'action',
-      filter: "type='#{type}' AND (#{filter})",
+      filter: "type='#{type}' AND (#{filter})"
     )
   end
 
   def create_index
     id = create_id('index')
-    chain.indexes.create(type: 'token', id: id, filter: "account_id = '#{id}'")
+    chain.indexes.create(
+      type: 'token',
+      method: 'sum',
+      id: id,
+      filter: "account_id = '#{id}'"
+    )
   end
 
   def create_tags(name)
@@ -66,8 +71,8 @@ module Utilities
         opts.merge(
           amount: amount,
           flavor_id: flavor.id,
-          destination_account_id: account.id,
-        ),
+          destination_account_id: account.id
+        )
       )
     end
   end
@@ -79,8 +84,8 @@ module Utilities
           amount: amount,
           flavor_id: flavor.id,
           destination_account_id: destination.id,
-          source_account_id: source.id,
-        ),
+          source_account_id: source.id
+        )
       )
     end
   end

@@ -18,9 +18,14 @@ module Sequence
     attrib :id
 
     # @!attribute [r] type
-    # Type of index, "action" or "token".
+    # Type of index, currently must be "token".
     # @return [String]
     attrib :type
+
+    # @!attribute [r] method
+    # Method for index, currently must be "sum".
+    # @return [String]
+    attrib :method
 
     # @!attribute [r] filter
     # The query filter used to select matching items.
@@ -37,11 +42,12 @@ module Sequence
       # @param id [String]
       #   Unique identifier. Auto-generated if not specified.
       # @return [Index]
-      def create(id: nil, type:, filter:, group_by: [])
+      def create(id: nil, type:, method:, filter:, group_by: [])
         Index.new(client.session.request(
                     'create-index',
                     id: id,
                     type: type,
+                    method: method,
                     filter: filter,
                     group_by: group_by,
                   ))

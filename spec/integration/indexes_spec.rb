@@ -4,27 +4,44 @@ describe 'indexes' do
   describe '#create' do
     context 'with invalid option' do
       it 'raises argument error' do
-        expect {
+        expect do
           chain.indexes.create(not: 'an-option')
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
 
     context 'with missing options' do
       it 'raises argument error' do
-        expect {
+        expect do
           chain.indexes.create(id: 'not-enough')
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
 
-    context 'when all options provided' do
-      it 'creates a index' do
+    context 'when valid options provided' do
+      it 'creates an index' do
         uuid = SecureRandom.uuid
 
-        index = chain.indexes.create(id: uuid, type: 'token', filter: "account_id = '#{uuid}'")
+        index = chain.indexes.create(
+          id: uuid,
+          type: 'token',
+          method: 'sum',
+          filter: "account_id = '#{uuid}'"
+        )
 
         expect(index.id).to eq(uuid)
+      end
+
+      it 'creates an index without id' do
+        uuid = SecureRandom.uuid
+
+        index = chain.indexes.create(
+          type: 'token',
+          method: 'sum',
+          filter: "account_id = '#{uuid}'"
+        )
+
+        expect(index.id).not_to be_empty
       end
     end
 
@@ -32,11 +49,21 @@ describe 'indexes' do
       it 'raises API error' do
         uuid = SecureRandom.uuid
 
-        chain.indexes.create(id: uuid, type: 'token', filter: "account_id = '#{uuid}-1'")
+        chain.indexes.create(
+          id: uuid,
+          type: 'token',
+          method: 'sum',
+          filter: "account_id = '#{uuid}-1'"
+        )
 
-        expect {
-          chain.indexes.create(id: uuid, type: 'token', filter: "account_id = '#{uuid}-2'")
-        }.to raise_error(Sequence::APIError)
+        expect do
+          chain.indexes.create(
+            id: uuid,
+            type: 'token',
+            method: 'sum',
+            filter: "account_id = '#{uuid}-2'"
+          )
+        end.to raise_error(Sequence::APIError)
       end
     end
 
@@ -44,11 +71,19 @@ describe 'indexes' do
       it 'raises API error' do
         uuid = SecureRandom.uuid
 
-        chain.indexes.create(type: 'token', filter: "account_id = '#{uuid}'")
+        chain.indexes.create(
+          type: 'token',
+          method: 'sum',
+          filter: "account_id = '#{uuid}'"
+        )
 
-        expect {
-          chain.indexes.create(type: 'token', filter: "account_id = '#{uuid}'")
-        }.to raise_error(Sequence::APIError)
+        expect do
+          chain.indexes.create(
+            type: 'token',
+            method: 'sum',
+            filter: "account_id = '#{uuid}'"
+          )
+        end.to raise_error(Sequence::APIError)
       end
     end
   end
@@ -56,9 +91,9 @@ describe 'indexes' do
   describe '#delete' do
     context 'when :id is missing' do
       it 'raises argument error' do
-        expect {
+        expect do
           chain.indexes.delete
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
 
@@ -80,13 +115,13 @@ describe 'indexes' do
   describe '#list' do
     context 'with invalid option' do
       it 'raises argument error' do
-        expect {
+        expect do
           chain.indexes.list(id: 'bad')
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
 
-        expect {
+        expect do
           chain.indexes.list(page_size: 1)
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
 
