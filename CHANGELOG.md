@@ -1,10 +1,16 @@
 # Sequence Ruby SDK changelog
 
+## 2.2.rc.2 (20180731)
+
+* Updated `Indexes` interface, requiring `type` and `method`
+  keys on creation.
+
 ## 2.2.rc.1 (20180713)
 
 * Added `Indexes` for precomputing complex queries.
 * Added preliminary support for dynamically addressing
   different API hosts when needed.
+* Added support for updating action tags
 
 ## 2.1 (20180516)
 
