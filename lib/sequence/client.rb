@@ -6,7 +6,6 @@ require_relative './dev_utils'
 require_relative './feed'
 require_relative './flavor'
 require_relative './http_wrapper'
-require_relative './index'
 require_relative './key'
 require_relative './stats'
 require_relative './token'
@@ -63,11 +62,6 @@ module Sequence
     # @return [Flavor::ClientModule]
     def flavors
       @flavors ||= Flavor::ClientModule.new(self)
-    end
-
-    # @return [Index::ClientModule]
-    def indexes
-      @indexes ||= Index::ClientModule.new(self)
     end
 
     # @return [Key::ClientModule]
