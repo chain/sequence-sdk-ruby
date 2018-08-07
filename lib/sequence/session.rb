@@ -99,7 +99,7 @@ module Sequence
     end
 
     def hello
-      Sequence::Hello.new(api(ENV['SEQADDR'] || 'api.seq.com'))
+      Sequence::Hello.new(api(ENV['SEQADDR'] || 'api.seq.com'), @ledger)
     end
 
     def api(addr)
