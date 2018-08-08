@@ -1,12 +1,15 @@
 # Sequence Ruby SDK changelog
 
-## 2.2.rc.2 (20180731)
+## 2.2 (20180808)
 
+* No changes from release candidates
+
+## 2.2.rc.2 (20180731)
 ## 2.2.rc.1 (20180713)
 
-* Added preliminary support for dynamically addressing
-  different API hosts when needed.
-* Added support for updating action tags
+* Added `update_tags` to `Action`.
+* Added support for dynamically addressing different API hosts for 
+  individual ledgers. Internal APIs only, works automatically.
 
 ## 2.1 (20180516)
 
