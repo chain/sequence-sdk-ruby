@@ -1,1 +1,1 @@
-tests: $CHAIN/sdk/ruby/bin/tests
+tests: $I10R/sdk/ruby/bin/tests
