@@ -1,3 +1,0 @@
-#!/bin/bash
-yardoc --no-private
-open doc/index.html

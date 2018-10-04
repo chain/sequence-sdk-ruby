@@ -1,7 +1,0 @@
-#!/bin/bash
-set -xeo pipefail
-createdb-if-not-exists ledger
-cd $I10R/sdk/ruby
-gem install bundler --conservative
-bundle check || bundle install
-with-ledgerd bin/rspec "$@"
