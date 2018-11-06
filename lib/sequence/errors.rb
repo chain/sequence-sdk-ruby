@@ -43,7 +43,6 @@ module Sequence
       :response,
       :retriable,
       :seq_code,
-      :temporary,
     )
 
     def initialize(body, response)
@@ -51,7 +50,6 @@ module Sequence
       self.detail = body['detail']
       self.retriable = body['retriable']
       self.seq_code = body['seq_code']
-      self.temporary = body['retriable']
 
       self.response = response
       self.request_id = response['Chain-Request-ID'] if response
