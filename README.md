@@ -32,4 +32,4 @@ ledger = Sequence::Client.new(
 ### Documentation
 
 Comprehensive instructions and examples are available in the
-[developer documentation](https://dashboard.seq.com/docs).
+[developer documentation](https://docs.chain.com/docs/sequence/get-started/introduction).
